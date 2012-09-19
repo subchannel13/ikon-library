@@ -1,0 +1,17 @@
+﻿{ Zvijezda
+	velicina = 2 @temp
+	x = 9
+	y = 4
+	ime "Alfa Kentaura"
+	planeti [
+		{ Planet velicina = 100 }
+		{ Planet velicina = 120 }
+		{ Planet velicina = 0 }
+	]
+	uprava { Uprava
+		igracID = 3
+	}
+}
+
+"neki glupi string"
+#temp

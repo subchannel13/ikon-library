@@ -1,0 +1,9 @@
+syntax: glob
+*.user
+*.suo
+source/IKON test app/bin/*
+source/IKON test app/obj/*
+source/IKON.STON/bin/*
+source/IKON.STON/obj/*
+source/IKON/bin/*
+source/IKON/obj/*
