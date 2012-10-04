@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using IKON.Utils;
+using Ikon.Utilities;
 
-namespace IKON
+namespace Ikon
 {
 	/// <summary>
 	/// Base class for IKON values.

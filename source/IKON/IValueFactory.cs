@@ -1,4 +1,4 @@
-﻿namespace IKON
+﻿namespace Ikon
 {
 	/// <summary>
 	/// Interface for IKON value factories usable by IKON parser.

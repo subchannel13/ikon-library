@@ -1,7 +1,7 @@
-﻿using IKON.STON.Factories;
-using IKON.Utils;
+﻿using Ikon.Ston.Factories;
+using Ikon.Utilities;
 
-namespace IKON.STON.Values
+namespace Ikon.Ston.Values
 {
 	/// <summary>
 	/// IKSTON numeric value.
@@ -13,15 +13,15 @@ namespace IKON.STON.Values
 		/// </summary>
 		public const string ValueTypeName = "IKSTON.Numeric";
 
-		private string texutalRepresentation;
+		private string textualRepresentation;
 
 		/// <summary>
 		/// Constructs IKSTON numeric value.
 		/// </summary>
-		/// <param name="texutalRepresentation">Textual representation of the value</param>
-		protected internal Numeric(string texutalRepresentation)
+		/// <param name="textualRepresentation">Textual representation of the value</param>
+		protected internal Numeric(string textualRepresentation)
 		{
-			this.texutalRepresentation = texutalRepresentation;
+			this.textualRepresentation = textualRepresentation;
 		}
 
 		/// <summary>
@@ -30,7 +30,7 @@ namespace IKON.STON.Values
 		/// <param name="value">The value</param>
 		public Numeric(decimal value)
 		{
-			this.texutalRepresentation = value.ToString(NumericFactory.NumberFormat);
+			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
 
 		/// <summary>
@@ -39,7 +39,7 @@ namespace IKON.STON.Values
 		/// <param name="value">The value</param>
 		public Numeric(double value)
 		{
-			this.texutalRepresentation = value.ToString(NumericFactory.NumberFormat);
+			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
 
 		/// <summary>
@@ -48,7 +48,7 @@ namespace IKON.STON.Values
 		/// <param name="value">The value</param>
 		public Numeric(float value)
 		{
-			this.texutalRepresentation = value.ToString(NumericFactory.NumberFormat);
+			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace IKON.STON.Values
 		/// <param name="value">The value</param>
 		public Numeric(long value)
 		{
-			this.texutalRepresentation = value.ToString(NumericFactory.NumberFormat);
+			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace IKON.STON.Values
 		/// <param name="value">The value</param>
 		public Numeric(int value)
 		{
-			this.texutalRepresentation = value.ToString(NumericFactory.NumberFormat);
+			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
 
 		/// <summary>
@@ -75,7 +75,7 @@ namespace IKON.STON.Values
 		/// <param name="value">The value</param>
 		public Numeric(short value)
 		{
-			this.texutalRepresentation = value.ToString(NumericFactory.NumberFormat);
+			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
 
 		/// <summary>
@@ -91,7 +91,7 @@ namespace IKON.STON.Values
 		/// </summary>
 		public decimal GetDecimal
 		{
-			get { return decimal.Parse(texutalRepresentation, NumericFactory.NumberStlye, NumericFactory.NumberFormat); }
+			get { return decimal.Parse(textualRepresentation, NumericFactory.NumberStyle, NumericFactory.NumberFormat); }
 		}
 
 		/// <summary>
@@ -99,7 +99,7 @@ namespace IKON.STON.Values
 		/// </summary>
 		public double GetDouble
 		{
-			get { return double.Parse(texutalRepresentation, NumericFactory.NumberStlye, NumericFactory.NumberFormat); }
+			get { return double.Parse(textualRepresentation, NumericFactory.NumberStyle, NumericFactory.NumberFormat); }
 		}
 
 		/// <summary>
@@ -107,7 +107,7 @@ namespace IKON.STON.Values
 		/// </summary>
 		public float GetFloat
 		{
-			get { return float.Parse(texutalRepresentation, NumericFactory.NumberStlye, NumericFactory.NumberFormat); }
+			get { return float.Parse(textualRepresentation, NumericFactory.NumberStyle, NumericFactory.NumberFormat); }
 		}
 
 		/// <summary>
@@ -115,7 +115,7 @@ namespace IKON.STON.Values
 		/// </summary>
 		public int GetInt
 		{
-			get { return int.Parse(texutalRepresentation, NumericFactory.NumberStlye, NumericFactory.NumberFormat); }
+			get { return int.Parse(textualRepresentation, NumericFactory.NumberStyle, NumericFactory.NumberFormat); }
 		}
 
 		/// <summary>
@@ -123,7 +123,7 @@ namespace IKON.STON.Values
 		/// </summary>
 		public long GetLong
 		{
-			get { return long.Parse(texutalRepresentation, NumericFactory.NumberStlye, NumericFactory.NumberFormat); }
+			get { return long.Parse(textualRepresentation, NumericFactory.NumberStyle, NumericFactory.NumberFormat); }
 		}
 
 		/// <summary>
@@ -131,7 +131,7 @@ namespace IKON.STON.Values
 		/// </summary>
 		public short GetShort
 		{
-			get { return short.Parse(texutalRepresentation, NumericFactory.NumberStlye, NumericFactory.NumberFormat); }
+			get { return short.Parse(textualRepresentation, NumericFactory.NumberStyle, NumericFactory.NumberFormat); }
 		}
 
 		/// <summary>
@@ -139,7 +139,7 @@ namespace IKON.STON.Values
 		/// </summary>
 		public string InvariantString
 		{
-			get	{ return texutalRepresentation; }
+			get	{ return textualRepresentation; }
 		}
 
 		/// <summary>
@@ -196,6 +196,9 @@ namespace IKON.STON.Values
 		/// <param name="composer">Target composer.</param>
 		public override void Compose(Composer composer)
 		{
+			if (composer == null)
+				throw new System.ArgumentNullException("composer");
+
 			composer.Write(NumericFactory.OpeningSign.ToString());
 			composer.Write(InvariantString);
 		}

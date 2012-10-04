@@ -1,9 +1,9 @@
-﻿namespace IKON.Utils
+﻿namespace Ikon.Utilities
 {
 	/// <summary>
 	/// Describes whitespace skipping run.
 	/// </summary>
-	public enum WhitespecSkipResult
+	public enum WhiteSpaceSkipResult
 	{
 		/// <summary>
 		/// Skipping whitespaces encountered end of stream/input.
@@ -13,6 +13,6 @@
 		/// <summary>
 		/// Skipping whitespaces has found non-whitespace character.
 		/// </summary>
-		NonWhiteChar
+		NonwhiteChar
 	}
 }

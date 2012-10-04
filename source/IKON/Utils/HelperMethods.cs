@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace IKON.Utils
+namespace Ikon.Utilities
 {
 	/// <summary>
 	/// Helper class with utility methods for parsing and composing
@@ -14,7 +14,7 @@ namespace IKON.Utils
 		/// <summary>
 		/// Value that System.IO.TextReader read methods return when end of the stream is reached.
 		/// </summary>
-		public const int EndOfStreamInt = -1;
+		public const int EndOfStreamResult = -1;
 		/// <summary>
 		/// Character that marks the beginning of the reference name.
 		/// </summary>
@@ -29,11 +29,14 @@ namespace IKON.Utils
 		/// <returns>Reference names.</returns>
 		public static IEnumerable<string> ParseReferences(TextReader reader)
 		{
+			if (reader == null)
+				throw new ArgumentNullException("reader");
+
 			while(true)
 			{
-				WhitespecSkipResult skipResult = SkipWhitespaces(reader);
+				WhiteSpaceSkipResult skipResult = SkipWhiteSpaces(reader);
 
-				if (skipResult == WhitespecSkipResult.EndOfStream)
+				if (skipResult == WhiteSpaceSkipResult.EndOfStream)
 					break;
 
 				char sign = (char)reader.Peek();
@@ -56,13 +59,16 @@ namespace IKON.Utils
 		/// <returns>An identifier value</returns>
 		public static string ParseIdentifier(TextReader reader)
 		{
-			if (SkipWhitespaces(reader) == WhitespecSkipResult.EndOfStream)
+			if (reader == null)
+				throw new ArgumentNullException("reader");
+
+			if (SkipWhiteSpaces(reader) == WhiteSpaceSkipResult.EndOfStream)
 				throw new EndOfStreamException();
 
 			StringBuilder stringBuilder = new StringBuilder();
 
 			for (int nextCharCode = reader.Peek();
-				nextCharCode != EndOfStreamInt && IdentifierChars.Contains((char)nextCharCode);
+				nextCharCode != EndOfStreamResult && IdentifierChars.Contains((char)nextCharCode);
 				nextCharCode = reader.Peek())
 			{
 				stringBuilder.Append((char)reader.Read());
@@ -80,9 +86,12 @@ namespace IKON.Utils
 		/// </summary>
 		/// <param name="reader">The input stream.</param>
 		/// <returns>A non-white character.</returns>
-		public static char NextNonWhite(TextReader reader)
+		public static char NextNonwhite(TextReader reader)
 		{
-			if (SkipWhitespaces(reader) == WhitespecSkipResult.EndOfStream)
+			if (reader == null)
+				throw new ArgumentNullException("reader");
+
+			if (SkipWhiteSpaces(reader) == WhiteSpaceSkipResult.EndOfStream)
 				throw new FormatException();
 
 			return (char)reader.Peek();
@@ -93,18 +102,21 @@ namespace IKON.Utils
 		/// </summary>
 		/// <param name="reader">The input stream.</param>
 		/// <returns>Descrtipion of the skipping process.</returns>
-		public static WhitespecSkipResult SkipWhitespaces(TextReader reader)
+		public static WhiteSpaceSkipResult SkipWhiteSpaces(TextReader reader)
 		{
+			if (reader == null)
+				throw new ArgumentNullException("reader");
+
 			do
 			{
 				int currentChar = reader.Peek();
 
-				if (currentChar == EndOfStreamInt) return WhitespecSkipResult.EndOfStream;
+				if (currentChar == EndOfStreamResult) return WhiteSpaceSkipResult.EndOfStream;
 
 				if (char.IsWhiteSpace((char)currentChar))
 					reader.Read();
 				else
-					return WhitespecSkipResult.NonWhiteChar;
+					return WhiteSpaceSkipResult.NonwhiteChar;
 
 			} while (true);
 		}

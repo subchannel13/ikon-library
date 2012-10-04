@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using IKON.STON.Factories;
-using IKON.Utils;
+using Ikon.Ston.Factories;
+using Ikon.Utilities;
 
-namespace IKON.STON.Values
+namespace Ikon.Ston.Values
 {
 	/// <summary>
 	/// IKSTON composite value with key-value pairs of nested IKON values.
@@ -45,7 +45,7 @@ namespace IKON.STON.Values
 		}
 
 		/// <summary>
-		/// Builder method fo adding an element to IKSTON object.
+		/// Builder method for adding an element to IKSTON object.
 		/// </summary>
 		/// <param name="key">Key of the value.</param>
 		/// <param name="value">Element's value.</param>
@@ -78,6 +78,9 @@ namespace IKON.STON.Values
 		/// <param name="composer">Target composer.</param>
 		public override void Compose(Composer composer)
 		{
+			if (composer == null)
+				throw new System.ArgumentNullException("composer");
+
 			composer.WriteLine(ObjectFactory.OpeningSign.ToString());
 			composer.Indentation.Increase();
 

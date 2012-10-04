@@ -1,8 +1,8 @@
 ﻿using System.Text;
-using IKON.STON.Factories;
-using IKON.Utils;
+using Ikon.Ston.Factories;
+using Ikon.Utilities;
 
-namespace IKON.STON.Values
+namespace Ikon.Ston.Values
 {
 	/// <summary>
 	/// IKSTON textual value.
@@ -55,6 +55,9 @@ namespace IKON.STON.Values
 		/// <param name="composer">Target composer.</param>
 		public override void Compose(Composer composer)
 		{
+			if (composer == null)
+				throw new System.ArgumentNullException("composer");
+
 			StringBuilder sb = new StringBuilder(text);
 			sb.Replace(@"\", @"\\");
 			sb.Replace(@"""", @"\""");

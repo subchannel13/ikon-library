@@ -1,14 +1,15 @@
-﻿using System.IO;
+﻿using System;
 using System.Collections.Generic;
-using IKON;
-using IKON.STON.Factories;
+using System.IO;
+using Ikon;
+using Ikon.Ston.Factories;
 
-namespace IKON.STON
+namespace Ikon.Ston
 {
 	/// <summary>
 	/// Parser that can parse input with IKSTON syntax.
 	/// </summary>
-	public class Parser : IKON.Parser
+	public class Parser : Ikon.Parser
 	{
 		/// <summary>
 		/// Constructs IKSTON parser with default IKSTON value factories.
@@ -31,6 +32,9 @@ namespace IKON.STON
 		public Parser(TextReader reader, IEnumerable<IValueFactory> factories)
 			: this(reader)
 		{
+			if (factories == null)
+				throw new ArgumentNullException("factories");
+
 			foreach (var factory in factories)
 				RegisterFactory(factory);
 		}

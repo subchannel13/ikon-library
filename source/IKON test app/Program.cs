@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
-using IKON.STON;
+using Ikon.Ston;
 
 namespace IKON_test_app
 {
@@ -25,7 +25,7 @@ namespace IKON_test_app
 			reader.Close();
 
 			StringWriter writer = new StringWriter();
-			var composer = new IKON.Composer(writer);
+			var composer = new Ikon.Composer(writer);
 
 			composer.Write(value2, "jen");
 			composer.Write(value3, "dva");

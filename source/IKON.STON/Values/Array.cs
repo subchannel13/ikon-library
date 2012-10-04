@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using IKON.STON.Factories;
-using IKON.Utils;
+using Ikon.Ston.Factories;
+using Ikon.Utilities;
 
-namespace IKON.STON.Values
+namespace Ikon.Ston.Values
 {
 	/// <summary>
 	/// Array of IKON values.
@@ -14,7 +14,7 @@ namespace IKON.STON.Values
 		/// </summary>
 		public const string ValueTypeName = "IKSTON.Array";
 
-		private IList<Value> values;
+		private IList<Value> elements;
 
 		/// <summary>
 		/// Constructs IKSTON array of IKON values
@@ -22,7 +22,7 @@ namespace IKON.STON.Values
 		/// <param name="values">Initial array contents.</param>
 		public Array(IList<Value> values)
 		{
-			this.values = values;
+			this.elements = values;
 		}
 
 		/// <summary>
@@ -38,7 +38,7 @@ namespace IKON.STON.Values
 		/// </summary>
 		public IList<Value> GetList
 		{
-			get { return values; }
+			get { return elements; }
 		}
 
 		/// <summary>
@@ -48,8 +48,11 @@ namespace IKON.STON.Values
 		/// <returns>Instance of the same IKSTON array method is called for.</returns>
 		public Array Add(params Value[] values)
 		{
+			if (values == null)
+				throw new System.ArgumentNullException("values");
+
 			foreach (var item in values)
-				this.values.Add(item);
+				this.elements.Add(item);
 			
 			return this;
 		}
@@ -60,10 +63,13 @@ namespace IKON.STON.Values
 		/// <param name="composer">Target composer.</param>
 		public override void Compose(Composer composer)
 		{
+			if (composer == null)
+				throw new System.ArgumentNullException("composer");
+
 			composer.WriteLine(ArrayFactory.OpeningSign.ToString());
 			composer.Indentation.Increase();
 
-			foreach (Value value in values)
+			foreach (Value value in elements)
 				composer.Write(value);
 
 			composer.Indentation.Decrease();

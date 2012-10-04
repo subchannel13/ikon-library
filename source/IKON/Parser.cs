@@ -1,32 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using IKON.Utils;
+using Ikon.Utilities;
 
-namespace IKON
+namespace Ikon
 {
 	/// <summary>
 	/// Basic parser for texts streams with IKON syntax.
 	/// </summary>
 	public class Parser : IDisposable
 	{
-		/// <summary>
-		/// IKON value parsed from input when testing whether input contains anoter IKON value.
-		/// </summary>
-		protected Value lastTryValue = null;
+		private Value lastTryValue = null;
 		/// <summary>
 		/// Collection on value factories.
 		/// </summary>
-		protected IDictionary<char, IValueFactory> factories = new Dictionary<char, IValueFactory>();
+		protected IDictionary<char, IValueFactory> Factories { get; private set; }
 		/// <summary>
 		/// Collection of named objects.
 		/// </summary>
-		protected IDictionary<string, Value> namedValues = new Dictionary<string, Value>();
+		protected IDictionary<string, Value> NamedValues { get; private set; }
 
 		/// <summary>
 		/// Input stream that is being parsed.
 		/// </summary>
-		protected TextReader reader;
+		protected TextReader Reader { get; private set; }
 
 		/// <summary>
 		/// Constructs parser without registerd value factories.
@@ -34,7 +31,13 @@ namespace IKON
 		/// <param name="reader">Input stream with IKON syntax</param>
 		public Parser(TextReader reader)
 		{
-			this.reader = reader;
+			if (reader == null)
+				throw new ArgumentNullException("reader");
+
+			this.Reader = reader;
+
+			this.Factories = new Dictionary<char, IValueFactory>();
+			this.NamedValues = new Dictionary<string, Value>();
 		}
 
 		/// <summary>
@@ -44,7 +47,10 @@ namespace IKON
 		/// <param name="factories">Collection of value factories.</param>
 		public Parser(TextReader reader, IEnumerable<IValueFactory> factories)
 			: this(reader)
-		{ 
+		{
+			if (factories == null)
+				throw new ArgumentNullException("factories");
+
 			foreach (var factory in factories)
 				RegisterFactory(factory);
 		}
@@ -56,10 +62,13 @@ namespace IKON
 		/// <param name="factory">A value factory.</param>
 		public void RegisterFactory(IValueFactory factory)
 		{
-			if (this.factories.ContainsKey(factory.Sign))
-				this.factories[factory.Sign] = factory;
+			if (factory == null)
+				throw new ArgumentNullException("factory");
+
+			if (this.Factories.ContainsKey(factory.Sign))
+				this.Factories[factory.Sign] = factory;
 			else
-				this.factories.Add(factory.Sign, factory);
+				this.Factories.Add(factory.Sign, factory);
 		}
 
 		/// <summary>
@@ -82,7 +91,7 @@ namespace IKON
 		/// <returns>True if it is possible.</returns>
 		public bool HasNext()
 		{
-			this.lastTryValue = this.lastTryValue ?? this.tryParseNext();
+			this.lastTryValue = this.lastTryValue ?? this.TryParseNext();
 
 			return (this.lastTryValue != null);
 		}
@@ -96,7 +105,7 @@ namespace IKON
 		/// <returns>An IKON value</returns>
 		public Value ParseNext()
 		{
-			Value res = this.lastTryValue ?? this.tryParseNext();
+			Value res = this.lastTryValue ?? this.TryParseNext();
 			this.lastTryValue = null;
 
 			if (res == null) throw new EndOfStreamException();
@@ -110,7 +119,7 @@ namespace IKON
 		/// </summary>
 		public bool CanRead
 		{
-			get { return reader.Peek() != HelperMethods.EndOfStreamInt; }
+			get { return Reader.Peek() != HelperMethods.EndOfStreamResult; }
 		}
 
 		/// <summary>
@@ -118,7 +127,7 @@ namespace IKON
 		/// </summary>
 		public char PeakReader
 		{
-			get { return (char)reader.Peek(); }
+			get { return (char)Reader.Peek(); }
 		}
 
 		/// <summary>
@@ -127,15 +136,15 @@ namespace IKON
 		/// <returns>Read character.</returns>
 		public char ReadChar()
 		{
-			return (char)reader.Read();
+			return (char)Reader.Read();
 		}
 
 		/// <summary>
 		/// Skips consequentive whitespace characters from the input stream. 
 		/// </summary>
-		public void SkipWhitespaces()
+		public void SkipWhiteSpaces()
 		{
-			HelperMethods.SkipWhitespaces(reader);
+			HelperMethods.SkipWhiteSpaces(Reader);
 		}
 
 		/// <summary>
@@ -145,7 +154,7 @@ namespace IKON
 		/// <returns>An identifier name</returns>
 		public string ReadIdentifier()
 		{
-			return HelperMethods.ParseIdentifier(reader);
+			return HelperMethods.ParseIdentifier(Reader);
 		}
 
 		/// <summary>
@@ -153,9 +162,9 @@ namespace IKON
 		/// if end of stream is reached before a such character.
 		/// </summary>
 		/// <returns>A non-white character</returns>
-		public char ReadNextNonWhite()
+		public char ReadNextNonwhite()
 		{
-			return HelperMethods.NextNonWhite(reader);
+			return HelperMethods.NextNonwhite(Reader);
 		}
 
 		/// <summary>
@@ -168,8 +177,8 @@ namespace IKON
 		/// <returns>Desired IKON value.</returns>
 		public Value GetNamedValue(string name)
 		{
-			if (namedValues.ContainsKey(name))
-				return namedValues[name];
+			if (NamedValues.ContainsKey(name))
+				return NamedValues[name];
 			else
 				throw new KeyNotFoundException("Value named '" + name + "' not found");
 		}
@@ -181,27 +190,43 @@ namespace IKON
 		/// that can parse curren state of the input.
 		/// </summary>
 		/// <returns>Return an IKON value if there is one, null otherwise.</returns>
-		protected Value tryParseNext()
+		protected Value TryParseNext()
 		{
-			WhitespecSkipResult skipResult = HelperMethods.SkipWhitespaces(this.reader);
+			WhiteSpaceSkipResult skipResult = HelperMethods.SkipWhiteSpaces(this.Reader);
 
-			if (skipResult == WhitespecSkipResult.EndOfStream)
+			if (skipResult == WhiteSpaceSkipResult.EndOfStream)
 				return null;
 
-			char sign = (char)reader.Read();
-			if (!factories.ContainsKey(sign)) throw new FormatException("No factory defined for a value starting with " + sign);
+			char sign = (char)Reader.Read();
+			if (!Factories.ContainsKey(sign)) throw new FormatException("No factory defined for a value starting with " + sign);
 
-			Value res = factories[sign].Parse(this);
+			Value res = Factories[sign].Parse(this);
 
-			foreach (string refernceName in HelperMethods.ParseReferences(this.reader))
-				namedValues.Add(refernceName, res);
+			foreach (string refernceName in HelperMethods.ParseReferences(this.Reader))
+				NamedValues.Add(refernceName, res);
 
 			return res;
 		}
 
-		public virtual void Dispose()
+		/// <summary>
+		/// Releases the unmanaged resources used by the System.IO.TextReader and optionally
+		/// releases the managed resources.
+		/// </summary>
+		/// <param name="disposing">true to release both managed and unmanaged resources; 
+		/// false to release only unmanaged resources.</param>
+		protected virtual void Dispose(bool disposing)
 		{
-			reader.Close();
+			Reader.Dispose();
+		}
+
+		/// <summary>
+		/// Performs application-defined tasks associated with freeing, releasing, or
+		/// resetting unmanaged resources.
+		/// </summary>
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
 		}
 	}
 }

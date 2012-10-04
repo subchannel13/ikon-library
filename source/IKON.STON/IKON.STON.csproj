@@ -8,8 +8,8 @@
     <ProjectGuid>{55998E01-1EE7-408D-9149-3A0DA2302381}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>IKON.STON</RootNamespace>
-    <AssemblyName>IKON.STON</AssemblyName>
+    <RootNamespace>Ikon.Ston</RootNamespace>
+    <AssemblyName>Ikon.Ston</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -21,7 +21,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\IKON.STON.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Ikon.Ston.xml</DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\IKON.STON.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Ikon.Ston.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -42,12 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions.cs" />
     <Compile Include="Factories\ArrayFactory.cs" />
     <Compile Include="Factories\NumericFactory.cs" />
     <Compile Include="Factories\ObjectFactory.cs" />
     <Compile Include="Factories\ReferencedFactory.cs" />
     <Compile Include="Factories\TextFactory.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Values\Array.cs" />
@@ -56,9 +57,9 @@
     <Compile Include="Values\Text.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IKON\IKON.csproj">
+    <ProjectReference Include="..\IKON\Ikon.csproj">
       <Project>{6F9B8B29-4ACF-4C44-B6E2-1146912E94A0}</Project>
-      <Name>IKON</Name>
+      <Name>Ikon</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

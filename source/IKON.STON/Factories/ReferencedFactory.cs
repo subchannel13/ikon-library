@@ -1,7 +1,7 @@
-﻿using IKON;
-using IKON.Utils;
+﻿using Ikon;
+using Ikon.Utilities;
 
-namespace IKON.STON.Factories
+namespace Ikon.Ston.Factories
 {
 	/// <summary>
 	/// IKON value factory for named value references.
@@ -26,8 +26,11 @@ namespace IKON.STON.Factories
 		/// </summary>
 		/// <param name="parser">IKON parser instance.</param>
 		/// <returns>Referenced IKON value.</returns>
-		public Value Parse(IKON.Parser parser)
+		public Value Parse(Ikon.Parser parser)
 		{
+			if (parser == null)
+				throw new System.ArgumentNullException("parser");
+
 			return parser.GetNamedValue(parser.ReadIdentifier());
 		}
 	}

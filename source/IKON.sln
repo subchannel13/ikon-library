@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKON", "IKON\IKON.csproj", "{6F9B8B29-4ACF-4C44-B6E2-1146912E94A0}"
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ikon", "IKON\Ikon.csproj", "{6F9B8B29-4ACF-4C44-B6E2-1146912E94A0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKON test app", "IKON test app\IKON test app.csproj", "{67F84DD4-FF87-4322-A1A7-BFE685B467D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKON.STON", "IKON.STON\IKON.STON.csproj", "{55998E01-1EE7-408D-9149-3A0DA2302381}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ikon.Ston", "IKON.STON\Ikon.Ston.csproj", "{55998E01-1EE7-408D-9149-3A0DA2302381}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

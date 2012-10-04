@@ -1,9 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Text;
-using IKON.Utils;
+using Ikon.Utilities;
 
-namespace IKON
+namespace Ikon
 {
 	/// <summary>
 	/// Base class for IKON composers. Composers transform IKON values to
@@ -14,7 +15,7 @@ namespace IKON
 		/// <summary>
 		/// Output stream where IKON values are being written.
 		/// </summary>
-		protected TextWriter writer;
+		protected TextWriter Writer { get; private set; }
 
 		/// <summary>
 		/// Indentation level.
@@ -24,7 +25,7 @@ namespace IKON
 		/// <summary>
 		/// Temporary line contents.
 		/// </summary>
-		protected StringBuilder line = new StringBuilder();
+		protected StringBuilder Line { get; private set; }
 
 		/// <summary>
 		/// Constructs basic IKON composer.
@@ -32,7 +33,9 @@ namespace IKON
 		/// <param name="writer">Output stream.</param>
 		public Composer(TextWriter writer)
 		{
-			this.writer = writer;
+			this.Writer = writer;
+
+			this.Line = new StringBuilder();
 			this.Indentation = new Indentation();
 		}
 
@@ -42,6 +45,9 @@ namespace IKON
 		/// <param name="ikonValue">An IKON value.</param>
 		public void Write(Value ikonValue)
 		{
+			if (ikonValue == null)
+				throw new ArgumentNullException("ikonValue");
+
 			ikonValue.Compose(this);
 			EndLine();
 		}
@@ -53,10 +59,15 @@ namespace IKON
 		/// <param name="referenceNames">List of reference names.</param>
 		public void Write(Value ikonValue, params string[] referenceNames)
 		{
+			if (ikonValue == null)
+				throw new ArgumentNullException("ikonValue");
+			if (referenceNames == null)
+				throw new ArgumentNullException("referenceNames");
+
 			ikonValue.Compose(this);
 
 			foreach (string name in referenceNames)
-				Write(" " + HelperMethods.ReferenceSign + name);
+				Write(' ' + HelperMethods.ReferenceSign + name);
 			EndLine();
 		}
 		
@@ -69,7 +80,10 @@ namespace IKON
 		/// <param name="text">Raw text.</param>
 		public void Write(string text)
 		{
-			line.Append(text);
+			if (text == null)
+				throw new ArgumentNullException("text");
+
+			Line.Append(text);
 		}
 
 		/// <summary>
@@ -79,7 +93,10 @@ namespace IKON
 		/// <param name="text">Raw text.</param>
 		public void WriteLine(string text)
 		{
-			line.Append(text);
+			if (text == null)
+				throw new ArgumentNullException("text");
+
+			Line.Append(text);
 			EndLine();
 		}
 
@@ -88,11 +105,11 @@ namespace IKON
 		/// </summary>
 		public void EndLine()
 		{
-			if (line.Length > 0)
+			if (Line.Length > 0)
 			{
-				writer.Write(Indentation);
-				writer.WriteLine(line);
-				line.Clear();
+				Writer.Write(Indentation);
+				Writer.WriteLine(Line);
+				Line.Clear();
 			}
 		}
 	}
