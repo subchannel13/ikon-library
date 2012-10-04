@@ -8,7 +8,7 @@ namespace IKON
 	/// <summary>
 	/// Basic parser for texts streams with IKON syntax.
 	/// </summary>
-	public class Parser
+	public class Parser : IDisposable
 	{
 		/// <summary>
 		/// IKON value parsed from input when testing whether input contains anoter IKON value.
@@ -44,7 +44,7 @@ namespace IKON
 		/// <param name="factories">Collection of value factories.</param>
 		public Parser(TextReader reader, IEnumerable<IValueFactory> factories)
 			: this(reader)
-		{
+		{ 
 			foreach (var factory in factories)
 				RegisterFactory(factory);
 		}
@@ -197,6 +197,11 @@ namespace IKON
 				namedValues.Add(refernceName, res);
 
 			return res;
+		}
+
+		public virtual void Dispose()
+		{
+			reader.Close();
 		}
 	}
 }
