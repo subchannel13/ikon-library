@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ikon", "IKON\Ikon.csproj", "{6F9B8B29-4ACF-4C44-B6E2-1146912E94A0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKON test app", "IKON test app\IKON test app.csproj", "{67F84DD4-FF87-4322-A1A7-BFE685B467D5}"
@@ -28,6 +28,7 @@ Global
 		{6F9B8B29-4ACF-4C44-B6E2-1146912E94A0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6F9B8B29-4ACF-4C44-B6E2-1146912E94A0}.Release|x86.ActiveCfg = Release|Any CPU
 		{67F84DD4-FF87-4322-A1A7-BFE685B467D5}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{67F84DD4-FF87-4322-A1A7-BFE685B467D5}.Debug|Any CPU.Build.0 = Debug|x86
 		{67F84DD4-FF87-4322-A1A7-BFE685B467D5}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{67F84DD4-FF87-4322-A1A7-BFE685B467D5}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{67F84DD4-FF87-4322-A1A7-BFE685B467D5}.Debug|x86.ActiveCfg = Debug|x86

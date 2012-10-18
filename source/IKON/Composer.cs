@@ -67,7 +67,7 @@ namespace Ikon
 			ikonValue.Compose(this);
 
 			foreach (string name in referenceNames)
-				Write(' ' + HelperMethods.ReferenceSign + name);
+				Write(" " + HelperMethods.ReferenceSign + name);
 			EndLine();
 		}
 		

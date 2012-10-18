@@ -81,7 +81,9 @@ namespace Ikon.Ston.Values
 			if (composer == null)
 				throw new System.ArgumentNullException("composer");
 
-			composer.WriteLine(ObjectFactory.OpeningSign.ToString());
+			composer.Write(ObjectFactory.OpeningSign.ToString());
+			composer.Write(" ");
+			composer.WriteLine(className);
 			composer.Indentation.Increase();
 
 			foreach (string key in members.Keys)

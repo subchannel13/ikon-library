@@ -4,6 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using Ikon.Ston;
+using Ikon.Ston.Values;
 
 namespace IKON_test_app
 {
@@ -14,9 +15,9 @@ namespace IKON_test_app
 			StreamReader reader = new StreamReader(args[0]);
 
 			Parser parser = new Parser(reader);
-			var value = parser.ParseNext().AsObject();
+			var value = parser.ParseNext() as Ikon.Ston.Values.Object;
 			
-			Console.WriteLine(value["ime"].AsText());
+			Console.WriteLine(value["ime"] as Text);
 			Console.WriteLine();
 
 			var value2 = parser.ParseNext();
