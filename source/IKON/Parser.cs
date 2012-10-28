@@ -23,7 +23,7 @@ namespace Ikon
 		/// <summary>
 		/// Input stream that is being parsed.
 		/// </summary>
-		protected TextReader Reader { get; private set; }
+		public IkonReader Reader { get; private set; }
 
 		/// <summary>
 		/// Constructs parser without registerd value factories.
@@ -34,7 +34,7 @@ namespace Ikon
 			if (reader == null)
 				throw new ArgumentNullException("reader");
 
-			this.Reader = reader;
+			this.Reader = new IkonReader(reader);
 
 			this.Factories = new Dictionary<char, IValueFactory>();
 			this.NamedValues = new Dictionary<string, Value>();
@@ -77,12 +77,12 @@ namespace Ikon
 		/// <returns>Queue of parsed IKON values.</returns>
 		public Queue<Value> ParseAll()
 		{
-			Queue<Value> res = new Queue<Value>();
+			Queue<Value> values = new Queue<Value>();
 
 			while (HasNext())
-				res.Enqueue(ParseNext());
+				values.Enqueue(ParseNext());
 
-			return res;
+			return values;
 		}
 
 		/// <summary>
@@ -114,60 +114,6 @@ namespace Ikon
 		}
 
 		/// <summary>
-		/// Indicates whether is it possible to read another character from the
-		/// input stream.
-		/// </summary>
-		public bool CanRead
-		{
-			get { return Reader.Peek() != HelperMethods.EndOfStreamResult; }
-		}
-
-		/// <summary>
-		/// Gets next character in the input stream without moving to the next.
-		/// </summary>
-		public char PeakReader
-		{
-			get { return (char)Reader.Peek(); }
-		}
-
-		/// <summary>
-		/// Reads next character from the input stream.
-		/// </summary>
-		/// <returns>Read character.</returns>
-		public char ReadChar()
-		{
-			return (char)Reader.Read();
-		}
-
-		/// <summary>
-		/// Skips consequentive whitespace characters from the input stream. 
-		/// </summary>
-		public void SkipWhiteSpaces()
-		{
-			HelperMethods.SkipWhiteSpaces(Reader);
-		}
-
-		/// <summary>
-		/// Reads the input stream for an IKON identifier. Throws System.FormatException if there is
-		/// no valid identifier.
-		/// </summary>
-		/// <returns>An identifier name</returns>
-		public string ReadIdentifier()
-		{
-			return HelperMethods.ParseIdentifier(Reader);
-		}
-
-		/// <summary>
-		/// Reads the input stream for the next non-whitespace character. Throws System.FormatException 
-		/// if end of stream is reached before a such character.
-		/// </summary>
-		/// <returns>A non-white character</returns>
-		public char ReadNextNonwhite()
-		{
-			return HelperMethods.NextNonwhite(Reader);
-		}
-
-		/// <summary>
 		/// Returns the IKON value with specified reference name. 
 		/// 
 		/// Throws System.Collections.Generic.KeyNotFoundException 
@@ -192,17 +138,17 @@ namespace Ikon
 		/// <returns>Return an IKON value if there is one, null otherwise.</returns>
 		protected Value TryParseNext()
 		{
-			WhiteSpaceSkipResult skipResult = HelperMethods.SkipWhiteSpaces(this.Reader);
+			WhiteSpaceSkipResult skipResult = this.Reader.SkipWhiteSpaces();
 
 			if (skipResult == WhiteSpaceSkipResult.EndOfStream)
 				return null;
 
-			char sign = (char)Reader.Read();
+			char sign = Reader.Read();
 			if (!Factories.ContainsKey(sign)) throw new FormatException("No factory defined for a value starting with " + sign);
 
 			Value res = Factories[sign].Parse(this);
 
-			foreach (string refernceName in HelperMethods.ParseReferences(this.Reader))
+			foreach (string refernceName in Reader.ReadReferences())
 				NamedValues.Add(refernceName, res);
 
 			return res;

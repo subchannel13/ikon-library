@@ -50,9 +50,9 @@ namespace Ikon.Ston.Factories
 			bool escaping = false;
 			char nextChar = '\0';
 
-			while (parser.CanRead)
+			while (parser.Reader.HasNext)
 			{
-				nextChar = parser.ReadChar();
+				nextChar = parser.Reader.Read();
 
 				if (nextChar == ClosingChar && !escaping)
 					break;
@@ -70,7 +70,7 @@ namespace Ikon.Ston.Factories
 					stringBuilder.Append(nextChar);
 			}
 
-			if (!parser.CanRead && nextChar != ClosingChar) 
+			if (!parser.Reader.HasNext && nextChar != ClosingChar) 
 				throw new EndOfStreamException();
 
 			return new Text(stringBuilder.ToString());

@@ -193,14 +193,14 @@ namespace Ikon.Ston.Values
 		/// <summary>
 		/// Writes an IKSTON numeric value to the composer.
 		/// </summary>
-		/// <param name="composer">Target composer.</param>
-		public override void Compose(Composer composer)
+		/// <param name="writer">Target composer.</param>
+		protected override void DoCompose(IkonWriter writer)
 		{
-			if (composer == null)
+			if (writer == null)
 				throw new System.ArgumentNullException("composer");
 
-			composer.Write(NumericFactory.OpeningSign.ToString());
-			composer.Write(InvariantString);
+			writer.Write(NumericFactory.OpeningSign.ToString());
+			writer.Write(InvariantString);
 		}
 	}
 }

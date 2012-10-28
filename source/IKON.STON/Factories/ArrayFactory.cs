@@ -41,11 +41,11 @@ namespace Ikon.Ston.Factories
 
 			List<Value> values = new List<Value>();
 
-			while (parser.ReadNextNonwhite() != ClosingChar)
+			while (parser.Reader.PeekNextNonwhite() != ClosingChar)
 			{
 				values.Add(parser.ParseNext());
 			}
-			parser.ReadChar();
+			parser.Reader.Read();
 
 			return new Array(values);
 		}

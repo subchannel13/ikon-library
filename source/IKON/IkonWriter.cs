@@ -10,7 +10,7 @@ namespace Ikon
 	/// Base class for IKON composers. Composers transform IKON values to
 	/// a text.
 	/// </summary>
-	public class Composer
+	public class IkonWriter
 	{
 		/// <summary>
 		/// Output stream where IKON values are being written.
@@ -31,46 +31,14 @@ namespace Ikon
 		/// Constructs basic IKON composer.
 		/// </summary>
 		/// <param name="writer">Output stream.</param>
-		public Composer(TextWriter writer)
+		public IkonWriter(TextWriter writer)
 		{
 			this.Writer = writer;
 
 			this.Line = new StringBuilder();
 			this.Indentation = new Indentation();
 		}
-
-		/// <summary>
-		/// Writes an IKON value to the output stream.
-		/// </summary>
-		/// <param name="ikonValue">An IKON value.</param>
-		public void Write(Value ikonValue)
-		{
-			if (ikonValue == null)
-				throw new ArgumentNullException("ikonValue");
-
-			ikonValue.Compose(this);
-			EndLine();
-		}
-
-		/// <summary>
-		/// Writes an IKON value with reference names to the output stream.
-		/// </summary>
-		/// <param name="ikonValue">An IKON value.</param>
-		/// <param name="referenceNames">List of reference names.</param>
-		public void Write(Value ikonValue, params string[] referenceNames)
-		{
-			if (ikonValue == null)
-				throw new ArgumentNullException("ikonValue");
-			if (referenceNames == null)
-				throw new ArgumentNullException("referenceNames");
-
-			ikonValue.Compose(this);
-
-			foreach (string name in referenceNames)
-				Write(" " + HelperMethods.ReferenceSign + name);
-			EndLine();
-		}
-		
+	
 		/// <summary>
 		/// Appends a text to the current line. Text entered with this method
 		/// is buffered and is not written immediately to the output stream.
@@ -98,6 +66,19 @@ namespace Ikon
 
 			Line.Append(text);
 			EndLine();
+		}
+
+		/// <summary>
+		/// Writes reference names to the output stream.
+		/// </summary>
+		/// <param name="referenceNames">List of reference names.</param>
+		public void WriteReferences(params string[] referenceNames)
+		{
+			if (referenceNames == null)
+				throw new ArgumentNullException("referenceNames");
+
+			foreach (string name in referenceNames)
+				Write(" " + IkonReader.ReferenceSign + name);
 		}
 
 		/// <summary>

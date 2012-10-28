@@ -75,27 +75,28 @@ namespace Ikon.Ston.Values
 		/// <summary>
 		/// Writes an IKSTON composite value to the composer.
 		/// </summary>
-		/// <param name="composer">Target composer.</param>
-		public override void Compose(Composer composer)
+		/// <param name="writer">Target composer.</param>
+		protected override void DoCompose(IkonWriter writer)
 		{
-			if (composer == null)
+			if (writer == null)
 				throw new System.ArgumentNullException("composer");
 
-			composer.Write(ObjectFactory.OpeningSign.ToString());
-			composer.Write(" ");
-			composer.WriteLine(className);
-			composer.Indentation.Increase();
+			writer.Write(ObjectFactory.OpeningSign.ToString());
+			writer.Write(" ");
+			writer.WriteLine(className);
+			writer.Indentation.Increase();
 
 			foreach (string key in members.Keys)
 			{
-				composer.Write(key);
-				composer.Write(" ");
-				composer.Write(members[key]);
-				composer.EndLine();
+				writer.Write(key);
+				writer.Write(" ");
+				//writer.Write();
+				members[key].Compose(writer);
+				//writer.EndLine();
 			}
 
-			composer.Indentation.Decrease();
-			composer.Write(ObjectFactory.ClosingChar.ToString());
+			writer.Indentation.Decrease();
+			writer.Write(ObjectFactory.ClosingChar.ToString());
 		}
 	}
 }

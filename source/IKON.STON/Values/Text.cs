@@ -52,10 +52,10 @@ namespace Ikon.Ston.Values
 		/// <summary>
 		/// Writes an IKSTON text value to the composer.
 		/// </summary>
-		/// <param name="composer">Target composer.</param>
-		public override void Compose(Composer composer)
+		/// <param name="writer">Target composer.</param>
+		protected override void DoCompose(IkonWriter writer)
 		{
-			if (composer == null)
+			if (writer == null)
 				throw new System.ArgumentNullException("composer");
 
 			StringBuilder sb = new StringBuilder(text);
@@ -65,9 +65,9 @@ namespace Ikon.Ston.Values
 			sb.Replace("\r", @"\r");
 			sb.Replace("\t", @"\t");
 
-			composer.Write(TextFactory.OpeningSign.ToString());
-			composer.Write(sb.ToString());
-			composer.Write(TextFactory.ClosingChar.ToString());
+			writer.Write(TextFactory.OpeningSign.ToString());
+			writer.Write(sb.ToString());
+			writer.Write(TextFactory.ClosingChar.ToString());
 		}
 	}
 }

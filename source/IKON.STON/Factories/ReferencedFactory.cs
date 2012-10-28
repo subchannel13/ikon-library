@@ -31,7 +31,7 @@ namespace Ikon.Ston.Factories
 			if (parser == null)
 				throw new System.ArgumentNullException("parser");
 
-			return parser.GetNamedValue(parser.ReadIdentifier());
+			return parser.GetNamedValue(parser.Reader.ReadIdentifier());
 		}
 	}
 }

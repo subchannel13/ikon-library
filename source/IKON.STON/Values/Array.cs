@@ -60,20 +60,20 @@ namespace Ikon.Ston.Values
 		/// <summary>
 		/// Writes an IKSTON array to the composer.
 		/// </summary>
-		/// <param name="composer">Target composer.</param>
-		public override void Compose(Composer composer)
+		/// <param name="writer">Target composer.</param>
+		protected override void DoCompose(IkonWriter writer)
 		{
-			if (composer == null)
+			if (writer == null)
 				throw new System.ArgumentNullException("composer");
 
-			composer.WriteLine(ArrayFactory.OpeningSign.ToString());
-			composer.Indentation.Increase();
+			writer.WriteLine(ArrayFactory.OpeningSign.ToString());
+			writer.Indentation.Increase();
 
 			foreach (Value value in elements)
-				composer.Write(value);
+				value.Compose(writer);
 
-			composer.Indentation.Decrease();
-			composer.Write(ArrayFactory.ClosingChar.ToString());
+			writer.Indentation.Decrease();
+			writer.Write(ArrayFactory.ClosingChar.ToString());
 		}
 	}
 }

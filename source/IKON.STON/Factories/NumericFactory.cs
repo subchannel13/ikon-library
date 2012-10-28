@@ -48,14 +48,14 @@ namespace Ikon.Ston.Factories
 			if (parser == null)
 				throw new System.ArgumentNullException("parser");
 
-			parser.SkipWhiteSpaces();
-			if (!parser.CanRead)
+			parser.Reader.SkipWhiteSpaces();
+			if (!parser.Reader.HasNext)
 				throw new EndOfStreamException();
 
 			StringBuilder stringBuilder = new StringBuilder();
 
-			while (parser.CanRead && ValidChars.Contains(parser.PeakReader))
-				stringBuilder.Append(parser.ReadChar());
+			while (parser.Reader.HasNext && ValidChars.Contains(parser.Reader.Peek()))
+				stringBuilder.Append(parser.Reader.Read());
 
 			if (stringBuilder.Length == 0)
 				throw new FormatException();

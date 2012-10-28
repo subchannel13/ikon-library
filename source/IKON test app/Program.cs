@@ -26,12 +26,11 @@ namespace IKON_test_app
 			reader.Close();
 
 			StringWriter writer = new StringWriter();
-			var composer = new Ikon.Composer(writer);
+			var ikonWriter = new Ikon.IkonWriter(writer);
 
-			composer.Write(value2, "jen");
-			composer.Write(value3, "dva");
-			composer.Write(value, "tri");
-			composer.EndLine();
+			value2.Compose(ikonWriter, "jen");
+			value3.Compose(ikonWriter, "dva");
+			value.Compose(ikonWriter, "tri");
 
 			Console.Write(writer.ToString());
 			Console.ReadKey();
