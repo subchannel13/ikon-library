@@ -9,3 +9,7 @@ source/IKON/bin/*
 source/IKON/obj/*
 source/Ikston Unit Tests/bin/*
 source/Ikston Unit Tests/obj/*
+source/IKON.vsmdi
+source/Local.testsettings
+source/TraceAndTestImpact.testsettings
+source/testimpactdata.sdf

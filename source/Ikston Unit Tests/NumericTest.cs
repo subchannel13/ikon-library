@@ -155,5 +155,131 @@ namespace Ikston_Unit_Tests
 
 			Assert.AreEqual(expectedValue, value.GetDouble);
 		}
+
+		[TestMethod]
+		public void NumericWriteValueLong()
+		{
+			long rawValue = 1234567890L;
+			string ikonData = "=" + rawValue;
+			StringBuilder output = new StringBuilder();
+
+			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			var value = new Numeric(rawValue);
+			value.Compose(writer);
+
+			Assert.AreEqual(ikonData, output.ToString().Trim());
+		}
+
+		[TestMethod]
+		public void NumericWriteValueLongNegative()
+		{
+			long rawValue = -1234567890L;
+			string ikonData = "=" + rawValue;
+			StringBuilder output = new StringBuilder();
+
+			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			var value = new Numeric(rawValue);
+			value.Compose(writer);
+
+			Assert.AreEqual(ikonData, output.ToString().Trim());
+		}
+
+		[TestMethod]
+		public void NumericWriteValueDouble()
+		{
+			double rawValue = 1.234567890;
+			string ikonData = "=" + rawValue.ToString(NumberFormatInfo.InvariantInfo);
+			StringBuilder output = new StringBuilder();
+
+			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			var value = new Numeric(rawValue);
+			value.Compose(writer);
+
+			Assert.AreEqual(ikonData, output.ToString().Trim());
+		}
+
+		[TestMethod]
+		public void NumericWriteValueDoubleNegative()
+		{
+			double rawValue = -1.234567890;
+			string ikonData = "=" + rawValue.ToString(NumberFormatInfo.InvariantInfo);
+			StringBuilder output = new StringBuilder();
+
+			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			var value = new Numeric(rawValue);
+			value.Compose(writer);
+
+			Assert.AreEqual(ikonData, output.ToString().Trim());
+		}
+
+		[TestMethod]
+		public void NumericWriteValueDoubleInfinity()
+		{
+			double rawValue = double.PositiveInfinity;
+			string ikonData = "=" + rawValue.ToString(NumberFormatInfo.InvariantInfo);
+			StringBuilder output = new StringBuilder();
+
+			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			var value = new Numeric(rawValue);
+			value.Compose(writer);
+
+			Assert.AreEqual(ikonData, output.ToString().Trim());
+		}
+
+		[TestMethod]
+		public void NumericWriteValueDoubleNegativeInfinity()
+		{
+			double rawValue = double.NegativeInfinity;
+			string ikonData = "=" + rawValue.ToString(NumberFormatInfo.InvariantInfo);
+			StringBuilder output = new StringBuilder();
+
+			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			var value = new Numeric(rawValue);
+			value.Compose(writer);
+
+			Assert.AreEqual(ikonData, output.ToString().Trim());
+		}
+
+		[TestMethod]
+		public void NumericWriteValueDoubleNaN()
+		{
+			double rawValue = double.NaN;
+			string ikonData = "=" + rawValue.ToString(NumberFormatInfo.InvariantInfo);
+			StringBuilder output = new StringBuilder();
+
+			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			var value = new Numeric(rawValue);
+			value.Compose(writer);
+
+			Assert.AreEqual(ikonData, output.ToString().Trim());
+		}
+
+		[TestMethod]
+		public void NumericWriteValueDecimal()
+		{
+			decimal rawValue = 1.234567890m;
+			string ikonData = "=" + rawValue.ToString(NumberFormatInfo.InvariantInfo);
+			StringBuilder output = new StringBuilder();
+
+			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			var value = new Numeric(rawValue);
+			value.Compose(writer);
+
+			Assert.AreEqual(ikonData, output.ToString().Trim());
+		}
+
+		[TestMethod]
+		public void NumericWriteValueDecimalNegative()
+		{
+			decimal rawValue = -1.234567890m;
+			string ikonData = "=" + rawValue.ToString(NumberFormatInfo.InvariantInfo);
+			StringBuilder output = new StringBuilder();
+
+			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			var value = new Numeric(rawValue);
+			value.Compose(writer);
+
+			Assert.AreEqual(ikonData, output.ToString().Trim());
+		}
 	}
 }
