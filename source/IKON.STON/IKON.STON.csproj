@@ -51,10 +51,10 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Values\Array.cs" />
-    <Compile Include="Values\Numeric.cs" />
-    <Compile Include="Values\Object.cs" />
-    <Compile Include="Values\Text.cs" />
+    <Compile Include="Values\ArrayValue.cs" />
+    <Compile Include="Values\NumericValue.cs" />
+    <Compile Include="Values\ObjectValue.cs" />
+    <Compile Include="Values\TextValue.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IKON\Ikon.csproj">

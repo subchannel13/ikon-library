@@ -7,7 +7,7 @@ namespace Ikon.Ston.Values
 	/// <summary>
 	/// IKSTON textual value.
 	/// </summary>
-	public class Text : Value
+	public class TextValue : Value
 	{
 		/// <summary>
 		/// Type name of IKSTON text values.
@@ -20,7 +20,7 @@ namespace Ikon.Ston.Values
 		/// Constructs IKSTON textual value with specified contents.
 		/// </summary>
 		/// <param name="value">Contents</param>
-		public Text(string value)
+		public TextValue(string value)
 		{
 			this.text = value;
 		}
@@ -44,7 +44,7 @@ namespace Ikon.Ston.Values
 		/// <summary>
 		/// Implicit conversion from IKON textual value to System.String value.
 		/// </summary>
-		public static implicit operator string(Text textValue)
+		public static implicit operator string(TextValue textValue)
 		{
 			return textValue.GetText;
 		}

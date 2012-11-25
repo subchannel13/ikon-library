@@ -72,7 +72,7 @@ namespace Ikon
 		/// Writes reference names to the output stream.
 		/// </summary>
 		/// <param name="referenceNames">List of reference names.</param>
-		public void WriteReferences(params string[] referenceNames)
+		public void WriteReferences(ICollection<string> referenceNames)
 		{
 			if (referenceNames == null)
 				throw new ArgumentNullException("referenceNames");

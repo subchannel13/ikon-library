@@ -7,7 +7,7 @@ namespace Ikon.Ston.Values
 	/// <summary>
 	/// IKSTON composite value with key-value pairs of nested IKON values.
 	/// </summary>
-	public class Object : Value
+	public class ObjectValue : Value
 	{
 		/// <summary>
 		/// The name of the data class contained in this instance
@@ -22,7 +22,7 @@ namespace Ikon.Ston.Values
 		/// Constructs IKSTON composite value marked as specified class of data.
 		/// </summary>
 		/// <param name="className">Name of the data class.</param>
-		public Object(string className)
+		public ObjectValue(string className)
 		{
 			this.className = className;
 		}
@@ -50,7 +50,7 @@ namespace Ikon.Ston.Values
 		/// <param name="key">Key of the value.</param>
 		/// <param name="value">Element's value.</param>
 		/// <returns>Instance of the same IKSTON object method is called for.</returns>
-		public Object Add(string key, Value value)
+		public ObjectValue Add(string key, Value value)
 		{
 			members.Add(key, value);
 			return this;

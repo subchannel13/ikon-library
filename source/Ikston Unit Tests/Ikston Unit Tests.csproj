@@ -45,6 +45,9 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayTests.cs" />
+    <Compile Include="CompositeTests.cs" />
+    <Compile Include="ReferenceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TextTests.cs" />
     <Compile Include="NumericTest.cs" />

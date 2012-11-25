@@ -73,7 +73,7 @@ namespace Ikon.Ston.Factories
 			if (!parser.Reader.HasNext && nextChar != ClosingChar) 
 				throw new EndOfStreamException();
 
-			return new Text(stringBuilder.ToString());
+			return new TextValue(stringBuilder.ToString());
 		}
 
 		private static Dictionary<string, char> DefineEscapeCodes()

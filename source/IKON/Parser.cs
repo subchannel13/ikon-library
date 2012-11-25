@@ -148,8 +148,10 @@ namespace Ikon
 
 			Value res = Factories[sign].Parse(this);
 
-			foreach (string refernceName in Reader.ReadReferences())
+			foreach (string refernceName in Reader.ReadReferences()) {
 				NamedValues.Add(refernceName, res);
+				res.ReferenceNames.Add(refernceName);
+			}
 
 			return res;
 		}

@@ -47,7 +47,7 @@ namespace Ikon.Ston.Factories
 			}
 			parser.Reader.Read();
 
-			return new Array(values);
+			return new ArrayValue(values);
 		}
 	}
 }

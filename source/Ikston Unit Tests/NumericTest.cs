@@ -21,7 +21,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext();
 
-			Assert.AreEqual(Numeric.ValueTypeName, value.TypeName);
+			Assert.AreEqual(NumericValue.ValueTypeName, value.TypeName);
 		}
 
 		[TestMethod]
@@ -31,7 +31,7 @@ namespace Ikston_Unit_Tests
 			string input = "=" + expectedValue;
 
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
-			var value = parser.ParseNext() as Numeric;
+			var value = parser.ParseNext() as NumericValue;
 
 			Assert.AreEqual(expectedValue, value.GetShort);
 		}
@@ -43,7 +43,7 @@ namespace Ikston_Unit_Tests
 			string input = "=" + expectedValue;
 
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
-			var value = parser.ParseNext() as Numeric;
+			var value = parser.ParseNext() as NumericValue;
 
 			Assert.AreEqual(expectedValue, value.GetInt);
 		}
@@ -55,7 +55,7 @@ namespace Ikston_Unit_Tests
 			string input = "=" + expectedValue;
 
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
-			var value = parser.ParseNext() as Numeric;
+			var value = parser.ParseNext() as NumericValue;
 
 			Assert.AreEqual(expectedValue, value.GetInt);
 		}
@@ -67,7 +67,7 @@ namespace Ikston_Unit_Tests
 			string input = "=" + expectedValue;
 
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
-			var value = parser.ParseNext() as Numeric;
+			var value = parser.ParseNext() as NumericValue;
 
 			Assert.AreEqual(expectedValue, value.GetLong);
 		}
@@ -79,7 +79,7 @@ namespace Ikston_Unit_Tests
 			string input = "=" + expectedValue.ToString(NumberFormatInfo.InvariantInfo);
 
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
-			var value = parser.ParseNext() as Numeric;
+			var value = parser.ParseNext() as NumericValue;
 
 			Assert.AreEqual(expectedValue, value.GetDecimal);
 		}
@@ -91,7 +91,7 @@ namespace Ikston_Unit_Tests
 			string input = "=" + expectedValue.ToString(NumberFormatInfo.InvariantInfo);
 
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
-			var value = parser.ParseNext() as Numeric;
+			var value = parser.ParseNext() as NumericValue;
 
 			Assert.AreEqual(expectedValue, value.GetFloat);
 		}
@@ -103,7 +103,7 @@ namespace Ikston_Unit_Tests
 			string input = "=" + expectedValue.ToString(NumberFormatInfo.InvariantInfo);
 
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
-			var value = parser.ParseNext() as Numeric;
+			var value = parser.ParseNext() as NumericValue;
 
 			Assert.AreEqual(expectedValue, value.GetDouble);
 		}
@@ -115,7 +115,7 @@ namespace Ikston_Unit_Tests
 			string input = "=" + expectedValue.ToString(NumberFormatInfo.InvariantInfo);
 
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
-			var value = parser.ParseNext() as Numeric;
+			var value = parser.ParseNext() as NumericValue;
 
 			Assert.AreEqual(expectedValue, value.GetDouble);
 		}
@@ -127,7 +127,7 @@ namespace Ikston_Unit_Tests
 			string input = "=" + expectedValue.ToString(NumberFormatInfo.InvariantInfo);
 
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
-			var value = parser.ParseNext() as Numeric;
+			var value = parser.ParseNext() as NumericValue;
 
 			Assert.AreEqual(expectedValue, value.GetDouble);
 		}
@@ -139,7 +139,7 @@ namespace Ikston_Unit_Tests
 			string input = "=" + expectedValue.ToString(NumberFormatInfo.InvariantInfo);
 
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
-			var value = parser.ParseNext() as Numeric;
+			var value = parser.ParseNext() as NumericValue;
 
 			Assert.AreEqual(expectedValue, value.GetDouble);
 		}
@@ -151,7 +151,7 @@ namespace Ikston_Unit_Tests
 			string input = "=" + expectedValue.ToString(NumberFormatInfo.InvariantInfo);
 
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
-			var value = parser.ParseNext() as Numeric;
+			var value = parser.ParseNext() as NumericValue;
 
 			Assert.AreEqual(expectedValue, value.GetDouble);
 		}
@@ -164,7 +164,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkonWriter writer = new IkonWriter(new StringWriter(output));
-			var value = new Numeric(rawValue);
+			var value = new NumericValue(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -178,7 +178,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkonWriter writer = new IkonWriter(new StringWriter(output));
-			var value = new Numeric(rawValue);
+			var value = new NumericValue(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -192,7 +192,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkonWriter writer = new IkonWriter(new StringWriter(output));
-			var value = new Numeric(rawValue);
+			var value = new NumericValue(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -206,7 +206,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkonWriter writer = new IkonWriter(new StringWriter(output));
-			var value = new Numeric(rawValue);
+			var value = new NumericValue(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -220,7 +220,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkonWriter writer = new IkonWriter(new StringWriter(output));
-			var value = new Numeric(rawValue);
+			var value = new NumericValue(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -234,7 +234,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkonWriter writer = new IkonWriter(new StringWriter(output));
-			var value = new Numeric(rawValue);
+			var value = new NumericValue(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -248,7 +248,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkonWriter writer = new IkonWriter(new StringWriter(output));
-			var value = new Numeric(rawValue);
+			var value = new NumericValue(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -262,7 +262,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkonWriter writer = new IkonWriter(new StringWriter(output));
-			var value = new Numeric(rawValue);
+			var value = new NumericValue(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -276,7 +276,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkonWriter writer = new IkonWriter(new StringWriter(output));
-			var value = new Numeric(rawValue);
+			var value = new NumericValue(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());

@@ -6,7 +6,7 @@ namespace Ikon.Ston.Values
 	/// <summary>
 	/// IKSTON numeric value.
 	/// </summary>
-	public class Numeric : Value
+	public class NumericValue : Value
 	{
 		/// <summary>
 		/// Type name of IKSTON numeric values.
@@ -19,7 +19,7 @@ namespace Ikon.Ston.Values
 		/// Constructs IKSTON numeric value.
 		/// </summary>
 		/// <param name="textualRepresentation">Textual representation of the value</param>
-		protected internal Numeric(string textualRepresentation)
+		protected internal NumericValue(string textualRepresentation)
 		{
 			this.textualRepresentation = textualRepresentation;
 		}
@@ -28,7 +28,7 @@ namespace Ikon.Ston.Values
 		/// Constructs IKSTON numeric value.
 		/// </summary>
 		/// <param name="value">The value</param>
-		public Numeric(decimal value)
+		public NumericValue(decimal value)
 		{
 			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
@@ -37,7 +37,7 @@ namespace Ikon.Ston.Values
 		/// Constructs IKSTON numeric value.
 		/// </summary>
 		/// <param name="value">The value</param>
-		public Numeric(double value)
+		public NumericValue(double value)
 		{
 			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
@@ -46,7 +46,7 @@ namespace Ikon.Ston.Values
 		/// Constructs IKSTON numeric value.
 		/// </summary>
 		/// <param name="value">The value</param>
-		public Numeric(float value)
+		public NumericValue(float value)
 		{
 			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
@@ -55,7 +55,7 @@ namespace Ikon.Ston.Values
 		/// Constructs IKSTON numeric value.
 		/// </summary>
 		/// <param name="value">The value</param>
-		public Numeric(long value)
+		public NumericValue(long value)
 		{
 			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
@@ -64,7 +64,7 @@ namespace Ikon.Ston.Values
 		/// Constructs IKSTON numeric value.
 		/// </summary>
 		/// <param name="value">The value</param>
-		public Numeric(int value)
+		public NumericValue(int value)
 		{
 			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
@@ -73,7 +73,7 @@ namespace Ikon.Ston.Values
 		/// Constructs IKSTON numeric value.
 		/// </summary>
 		/// <param name="value">The value</param>
-		public Numeric(short value)
+		public NumericValue(short value)
 		{
 			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
@@ -145,7 +145,7 @@ namespace Ikon.Ston.Values
 		/// <summary>
 		/// Implicit conversion from IKSTON numeric value to System.Decimal value.
 		/// </summary>
-		public static implicit operator decimal(Numeric textValue)
+		public static implicit operator decimal(NumericValue textValue)
 		{
 			return textValue.GetDecimal;
 		}
@@ -153,7 +153,7 @@ namespace Ikon.Ston.Values
 		/// <summary>
 		/// Implicit conversion from IKSTON numeric value to System.Double value.
 		/// </summary>
-		public static implicit operator double(Numeric textValue)
+		public static implicit operator double(NumericValue textValue)
 		{
 			return textValue.GetDouble;
 		}
@@ -161,7 +161,7 @@ namespace Ikon.Ston.Values
 		/// <summary>
 		/// Implicit conversion from IKSTON numeric value to System.Single value.
 		/// </summary>
-		public static implicit operator float(Numeric textValue)
+		public static implicit operator float(NumericValue textValue)
 		{
 			return textValue.GetFloat;
 		}
@@ -169,7 +169,7 @@ namespace Ikon.Ston.Values
 		/// <summary>
 		/// Implicit conversion from IKSTON numeric value to System.Int32 value.
 		/// </summary>
-		public static implicit operator int(Numeric textValue)
+		public static implicit operator int(NumericValue textValue)
 		{
 			return textValue.GetInt;
 		}
@@ -177,7 +177,7 @@ namespace Ikon.Ston.Values
 		/// <summary>
 		/// Implicit conversion from IKSTON numeric value to System.Int64 value.
 		/// </summary>
-		public static implicit operator long(Numeric textValue)
+		public static implicit operator long(NumericValue textValue)
 		{
 			return textValue.GetLong;
 		}
@@ -185,7 +185,7 @@ namespace Ikon.Ston.Values
 		/// <summary>
 		/// Implicit conversion from IKSTON numeric value to System.Int16 value.
 		/// </summary>
-		public static implicit operator short(Numeric textValue)
+		public static implicit operator short(NumericValue textValue)
 		{
 			return textValue.GetShort;
 		}

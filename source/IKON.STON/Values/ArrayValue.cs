@@ -7,7 +7,7 @@ namespace Ikon.Ston.Values
 	/// <summary>
 	/// Array of IKON values.
 	/// </summary>
-	public class Array : Value
+	public class ArrayValue : Value
 	{
 		/// <summary>
 		/// Type name of IKSTON arrays.
@@ -20,9 +20,17 @@ namespace Ikon.Ston.Values
 		/// Constructs IKSTON array of IKON values
 		/// </summary>
 		/// <param name="values">Initial array contents.</param>
-		public Array(IList<Value> values)
+		public ArrayValue(IList<Value> values)
 		{
 			this.elements = values;
+		}
+
+		/// <summary>
+		/// Constructs IKSTON array
+		/// </summary>
+		public ArrayValue()
+		{
+			this.elements = new List<Value>();
 		}
 
 		/// <summary>
@@ -46,7 +54,7 @@ namespace Ikon.Ston.Values
 		/// </summary>
 		/// <param name="values">Elements to be added.</param>
 		/// <returns>Instance of the same IKSTON array method is called for.</returns>
-		public Array Add(params Value[] values)
+		public ArrayValue Add(params Value[] values)
 		{
 			if (values == null)
 				throw new System.ArgumentNullException("values");

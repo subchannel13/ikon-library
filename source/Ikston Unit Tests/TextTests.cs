@@ -22,7 +22,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext();
 
-			Assert.AreEqual(value.TypeName, Text.ValueTypeName);
+			Assert.AreEqual(value.TypeName, TextValue.ValueTypeName);
 		}
 
 		[TestMethod]
@@ -32,7 +32,7 @@ namespace Ikston_Unit_Tests
 			string input = Q + inputValue + Q;
 
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
-			var value = parser.ParseNext() as Text;
+			var value = parser.ParseNext() as TextValue;
 
 			Assert.AreEqual(value.GetText, inputValue);
 		}
@@ -45,7 +45,7 @@ namespace Ikston_Unit_Tests
 			string input = Q + inputValue + Q;
 
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
-			var value = parser.ParseNext() as Text; 
+			var value = parser.ParseNext() as TextValue; 
 
 			Assert.AreEqual(value.GetText, expectedValue);
 		}
@@ -58,7 +58,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkonWriter writer = new IkonWriter(new StringWriter(output));
-			var value = new Text(inputValue);
+			var value = new TextValue(inputValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -73,7 +73,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkonWriter writer = new IkonWriter(new StringWriter(output));
-			var value = new Text(inputValue);
+			var value = new TextValue(inputValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());

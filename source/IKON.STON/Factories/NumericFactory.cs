@@ -72,7 +72,7 @@ namespace Ikon.Ston.Factories
 				throw new FormatException();
 			}
 
-			return new Numeric(stringBuilder.ToString());
+			return new NumericValue(stringBuilder.ToString());
 		}
 
 		private static HashSet<char> DefineValidChars()

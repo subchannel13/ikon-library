@@ -10,12 +10,22 @@ namespace Ikon
 	/// </summary>
 	public abstract class Value
 	{
+		private HashSet<string> referenceNames = new HashSet<string>();
+
 		/// <summary>
 		/// Type name of the IKON value instance.
 		/// </summary>
 		public abstract string TypeName
 		{
 			get;
+		}
+
+		/// <summary>
+		/// Set of objects that can be used as reference to the value.
+		/// </summary>
+		public ISet<string> ReferenceNames
+		{
+			get { return referenceNames; }
 		}
 
 		/// <summary>
@@ -28,15 +38,14 @@ namespace Ikon
 		/// Writes an IKON value to the output stream.
 		/// </summary>
 		/// <param name="writer">Wrapped around target output stream.</param>
-		/// <param name="referenceNames">List of reference names.</param>
-		public void Compose(IkonWriter writer, params string[] referenceNames)
+		public void Compose(IkonWriter writer)
 		{
 			if (writer == null)
 				throw new ArgumentNullException("writer");
 
 			DoCompose(writer);
 
-			if (referenceNames != null && referenceNames.Length > 0)
+			if (referenceNames != null && referenceNames.Count > 0)
 				writer.WriteReferences(referenceNames);
 			
 			writer.EndLine();

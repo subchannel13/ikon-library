@@ -38,7 +38,7 @@ namespace Ikon.Ston.Factories
 			if (parser == null)
 				throw new System.ArgumentNullException("parser");
 
-			Object res = new Object(parser.Reader.ReadIdentifier());
+			ObjectValue res = new ObjectValue(parser.Reader.ReadIdentifier());
 
 			while (parser.Reader.PeekNextNonwhite() != ClosingChar)
 			{
