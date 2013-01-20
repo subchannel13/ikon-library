@@ -13,9 +13,9 @@ namespace Ikon
 	public class IkonReader : IDisposable
 	{
 		/// <summary>
-		/// Value that System.IO.TextReader read methods return when end of the stream is reached.
+		/// Value returned by System.IO.TextReader methods when the end of the stream is reached.
 		/// </summary>
-		public const int EndOfStreamResult = -1;
+		private const int EndOfStreamResult = -1;
 		/// <summary>
 		/// Character that marks the beginning of the reference name.
 		/// </summary>

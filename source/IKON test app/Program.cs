@@ -15,9 +15,12 @@ namespace IKON_test_app
 			StreamReader reader = new StreamReader(args[0]);
 
 			Parser parser = new Parser(reader);
-			var value = parser.ParseNext() as Ikon.Ston.Values.ObjectValue;
+			parser.ParseNext();
+			parser.ParseNext();
+			var value = parser.ParseNext().As<ObjectValue>();
 			
-			Console.WriteLine(value["ime"] as TextValue);
+			Console.WriteLine(value["ime"].As<string>());
+			Console.WriteLine(value["planeti"].As<IList<Ikon.Value>>()[0].As<ObjectValue>()["velicina"].As<int>());
 			Console.WriteLine();
 
 			var value2 = parser.ParseNext();

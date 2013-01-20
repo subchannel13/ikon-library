@@ -34,7 +34,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as TextValue;
 
-			Assert.AreEqual(value.GetText, inputValue);
+			Assert.AreEqual(value.As<string>(), inputValue);
 		}
 		
 		[TestMethod]
@@ -45,9 +45,9 @@ namespace Ikston_Unit_Tests
 			string input = Q + inputValue + Q;
 
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
-			var value = parser.ParseNext() as TextValue; 
+			var value = parser.ParseNext() as TextValue;
 
-			Assert.AreEqual(value.GetText, expectedValue);
+			Assert.AreEqual(value.As<string>(), expectedValue);
 		}
 
 		[TestMethod]

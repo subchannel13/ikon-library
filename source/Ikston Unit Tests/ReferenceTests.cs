@@ -15,7 +15,7 @@ namespace Ikston_Unit_Tests
 		static string NamingTestInput =
 			"\"some text\" @text" + Environment.NewLine +
 			"=3 @number" + Environment.NewLine +
-			"=Infinity @notNumber" + Environment.NewLine +
+			"=Inf @notNumber" + Environment.NewLine +
 			"[] @array" + Environment.NewLine +
 			"{ NestedStuff" + Environment.NewLine +
 			"\t" + "atr1 =5 @nestedNumber" + Environment.NewLine +
@@ -130,7 +130,7 @@ namespace Ikston_Unit_Tests
 			var probe = parser.ParseNext();
 			var rootValue = parser.ParseNext() as TextValue;
 
-			Assert.AreEqual("the probe", rootValue.GetText);
+			Assert.AreEqual("the probe", rootValue.As<string>());
 		}
 
 		[TestMethod]
@@ -141,7 +141,7 @@ namespace Ikston_Unit_Tests
 			var rootValue = parser.ParseNext();
 			var array = parser.ParseNext() as ArrayValue;
 
-			Assert.AreEqual("the probe", (array.GetList[0] as TextValue).GetText);
+			Assert.AreEqual("the probe", (array.GetList[0] as TextValue).As<string>());
 		}
 
 		[TestMethod]
@@ -153,7 +153,7 @@ namespace Ikston_Unit_Tests
 			var array = parser.ParseNext() as ArrayValue;
 			var composite = parser.ParseNext() as ObjectValue;
 
-			Assert.AreEqual("the probe", (composite["child"] as TextValue).GetText);
+			Assert.AreEqual("the probe", (composite["child"] as TextValue).As<string>());
 		}
 
 

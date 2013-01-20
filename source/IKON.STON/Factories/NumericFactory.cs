@@ -6,6 +6,7 @@ using Ikon;
 using Ikon.Ston.Values;
 using System.Globalization;
 using Ikon.Utilities;
+using System.Text.RegularExpressions;
 
 namespace Ikon.Ston.Factories
 {
@@ -14,8 +15,6 @@ namespace Ikon.Ston.Factories
 	/// </summary>
 	public class NumericFactory : IValueFactory
 	{
-		static ICollection<char> ValidChars = DefineValidChars();
-
 		/// <summary>
 		/// Sign for IKON numeric value.
 		/// </summary>
@@ -60,32 +59,37 @@ namespace Ikon.Ston.Factories
 			if (stringBuilder.Length == 0)
 				throw new FormatException();
 
-			string numberText = stringBuilder.ToString();
-
-			decimal tempD;
-			double tempF;
-			long tempI;
-			if (!decimal.TryParse(numberText, NumberStyle, NumberFormat, out tempD) &&
-				!double.TryParse(numberText, NumberStyle, NumberFormat, out tempF) &&
-				long.TryParse(numberText, NumberStyle, NumberFormat, out tempI))
-			{
-				throw new FormatException();
+			string numberText = stringBuilder.ToString().Trim();
+			if (!SpecialValues.Contains(numberText)) {
+				decimal tempD;
+				double tempF;
+				long tempI;
+				if (!decimal.TryParse(numberText, NumberStyle, NumberFormat, out tempD) &&
+					!double.TryParse(numberText, NumberStyle, NumberFormat, out tempF) &&
+					long.TryParse(numberText, NumberStyle, NumberFormat, out tempI) ||
+					!NumberMatcher.IsMatch(numberText)) {
+					throw new FormatException();
+				}
 			}
 
 			return new NumericValue(stringBuilder.ToString());
 		}
 
-		private static HashSet<char> DefineValidChars()
+		static ICollection<char> ValidChars = new HashSet<char>(DefineValidChars());
+		static ICollection<string> SpecialValues = new HashSet<string>(new string[]{
+			NumericValue.PositiveInfinity,
+			NumericValue.NegativeInfinity,
+			NumericValue.NotANumber});
+		static Regex NumberMatcher = new Regex("[\\+\\-]?[0-9\\.eE]+");
+
+		private static IEnumerable<char> DefineValidChars()
 		{
-			HashSet<char> res = new HashSet<char>();
+			yield return '-';
+			yield return '.';
 
-			res.Add('-');
-			res.Add('.');
-			for (char c = 'a'; c <= 'z'; c++) res.Add(c);
-			for (char c = 'A'; c <= 'Z'; c++) res.Add(c);
-			for (char c = '0'; c <= '9'; c++) res.Add(c);
-
-			return res;
+			for (char c = 'a'; c <= 'z'; c++) yield return c;
+			for (char c = 'A'; c <= 'Z'; c++) yield return c;
+			for (char c = '0'; c <= '9'; c++) yield return c;
 		}
 	}
 }

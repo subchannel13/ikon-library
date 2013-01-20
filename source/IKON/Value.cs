@@ -29,6 +29,13 @@ namespace Ikon
 		}
 
 		/// <summary>
+		/// Converts IKON value to specified type.
+		/// </summary>
+		/// <typeparam name="T">Target type</typeparam>
+		/// <returns>Converted value</returns>
+		public abstract T As<T>();
+
+		/// <summary>
 		/// Writes value's content to the output stream.
 		/// </summary>
 		/// <param name="writer">Wrapped around target output stream.</param>

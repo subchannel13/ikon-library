@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Ikon.Ston.Factories;
 using Ikon.Utilities;
+using System;
 
 namespace Ikon.Ston.Values
 {
@@ -39,6 +40,26 @@ namespace Ikon.Ston.Values
 		public override string TypeName
 		{
 			get { return ValueTypeName; }
+		}
+
+		/// <summary>
+		/// Converts IKSTON object value to specified type. Supported target types:
+		/// 
+		/// System.Collections.Generic.IList&lt;Value&gt;
+		/// Ikon.Ston.Values.ArrayValue
+		/// </summary>
+		/// <typeparam name="T">Target type</typeparam>
+		/// <returns>Converted value</returns>
+		public override T As<T>()
+		{
+			Type target = typeof(T);
+
+			if (target.IsAssignableFrom(typeof(IList<Value>)))
+				return (T)elements;
+			else if (target.IsAssignableFrom(this.GetType()))
+				return (T)(object)this;
+			else
+				throw new InvalidOperationException("Cast to " + target.Name + " is not supported for " + TypeName);
 		}
 
 		/// <summary>

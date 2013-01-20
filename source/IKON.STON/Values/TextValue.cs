@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using Ikon.Ston.Factories;
 using Ikon.Utilities;
+using System;
 
 namespace Ikon.Ston.Values
 {
@@ -34,11 +35,23 @@ namespace Ikon.Ston.Values
 		}
 
 		/// <summary>
-		/// Gets System.String value from IKSTON textual value.
+		/// Converts IKSTON object value to specified type. Supported target types:
+		/// 
+		/// System.string
+		/// Ikon.Ston.Values.TextValue
 		/// </summary>
-		public string GetText
+		/// <typeparam name="T">Target type</typeparam>
+		/// <returns>Converted value</returns>
+		public override T As<T>()
 		{
-			get { return text; }
+			Type target = typeof(T);
+
+			if (target == typeof(string))
+				return (T)(object)text;
+			else if (target.IsAssignableFrom(this.GetType()))
+				return (T)(object)this;
+			else
+				throw new InvalidOperationException("Cast to " + target.Name + " is not supported for " + TypeName);
 		}
 
 		/// <summary>
@@ -46,7 +59,7 @@ namespace Ikon.Ston.Values
 		/// </summary>
 		public static implicit operator string(TextValue textValue)
 		{
-			return textValue.GetText;
+			return textValue.text;
 		}
 
 		/// <summary>

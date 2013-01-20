@@ -1,4 +1,7 @@
-﻿{ Zvijezda
+﻿=Inf
+=1e8
+=Infinity
+{ Zvijezda
 	velicina = 2 @temp
 	x = 9
 	y = 4
