@@ -60,6 +60,7 @@
     <Compile Include="Value.cs" />
     <Compile Include="Utils\WhiteSpaceSkipResult.cs" />
     <Compile Include="IkonWriter.cs" />
+    <Compile Include="ValueQueue.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

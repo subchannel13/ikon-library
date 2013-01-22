@@ -141,7 +141,7 @@ namespace Ikston_Unit_Tests
 			var rootValue = parser.ParseNext();
 			var array = parser.ParseNext() as ArrayValue;
 
-			Assert.AreEqual("the probe", (array.GetList[0] as TextValue).As<string>());
+			Assert.AreEqual("the probe", (array[0] as TextValue).As<string>());
 		}
 
 		[TestMethod]
@@ -186,7 +186,7 @@ namespace Ikston_Unit_Tests
 			namedValue.ReferenceNames.Add("name");
 
 			var array = new ArrayValue();
-			array.GetList.Add(namedValue);
+			array.Add(namedValue);
 			array.Compose(writer);
 
 			Assert.AreEqual(expected, output.ToString().Trim());

@@ -130,7 +130,7 @@ namespace Ikston_Unit_Tests
 
 			var subvalue = value["materials"] as ArrayValue;
 
-			Assert.AreEqual(3, subvalue.GetList.Count);
+			Assert.AreEqual(3, subvalue.Count);
 		}
 
 		[TestMethod]
@@ -151,9 +151,9 @@ namespace Ikston_Unit_Tests
 			IkonWriter writer = new IkonWriter(new StringWriter(output));
 
 			var subarray = new ArrayValue();
-			subarray.GetList.Add(new NumericValue(0));
-			subarray.GetList.Add(new NumericValue(1));
-			subarray.GetList.Add(new NumericValue(2));
+			subarray.Add(new NumericValue(0));
+			subarray.Add(new NumericValue(1));
+			subarray.Add(new NumericValue(2));
 			
 			var subvalue = new ObjectValue("Material");
 			subvalue["alpha"] = new NumericValue(1);

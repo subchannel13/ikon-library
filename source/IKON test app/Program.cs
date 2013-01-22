@@ -15,12 +15,9 @@ namespace IKON_test_app
 			StreamReader reader = new StreamReader(args[0]);
 
 			Parser parser = new Parser(reader);
-			parser.ParseNext();
-			parser.ParseNext();
 			var value = parser.ParseNext().As<ObjectValue>();
-			
-			Console.WriteLine(value["ime"].As<string>());
-			Console.WriteLine(value["planeti"].As<IList<Ikon.Value>>()[0].As<ObjectValue>()["velicina"].As<int>());
+
+			printStar(value);
 			Console.WriteLine();
 
 			var value2 = parser.ParseNext();
@@ -35,7 +32,29 @@ namespace IKON_test_app
 			value3.Compose(ikonWriter);
 			value.Compose(ikonWriter);
 			Console.Write(writer.ToString());
+
+			reader = new StreamReader(args[0]);
+			parser = new Parser(reader);
+			var values = parser.ParseAll();
+
+			Console.WriteLine("Random string: " + values.Dequeue(TextValue.ValueTypeName).As<string>());
+			reader.Close();
 			Console.ReadKey();
+		}
+
+		static void printStar(ObjectValue starData) {
+			Console.WriteLine("size: " + starData["velicina"].As<int>());
+			Console.WriteLine("position: " + starData["x"].As<int>() + ", " + starData["y"].As<int>());
+			Console.WriteLine("name: " + starData["ime"].As<string>());
+			Console.WriteLine();
+			Console.WriteLine("List of planets: ");
+			foreach (var planetData in starData["planeti"].As<ArrayValue>())
+				printPlanet(planetData.As<ObjectValue>());
+		}
+
+		static void printPlanet(ObjectValue planetData)
+		{
+			Console.WriteLine("size: " + planetData["velicina"].As<int>());
 		}
 	}
 }

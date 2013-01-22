@@ -75,9 +75,9 @@ namespace Ikon
 		/// Parses whole input stream.
 		/// </summary>
 		/// <returns>Queue of parsed IKON values.</returns>
-		public Queue<Value> ParseAll()
+		public ValueQueue ParseAll()
 		{
-			Queue<Value> values = new Queue<Value>();
+			ValueQueue values = new ValueQueue();
 
 			while (HasNext())
 				values.Enqueue(ParseNext());

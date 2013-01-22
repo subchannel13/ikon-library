@@ -31,7 +31,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
-			Assert.AreEqual(0, value.GetList.Count);
+			Assert.AreEqual(0, value.Count);
 		}
 
 		[TestMethod]
@@ -42,7 +42,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
-			Assert.AreEqual(4, value.GetList.Count);
+			Assert.AreEqual(4, value.Count);
 		}
 
 		[TestMethod]
@@ -53,7 +53,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
-			Assert.AreEqual(typeof(NumericValue), value.GetList[0].GetType());
+			Assert.AreEqual(typeof(NumericValue), value[0].GetType());
 		}
 
 		[TestMethod]
@@ -64,7 +64,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
-			Assert.AreEqual(typeof(TextValue), value.GetList[1].GetType());
+			Assert.AreEqual(typeof(TextValue), value[1].GetType());
 		}
 
 		[TestMethod]
@@ -75,7 +75,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
-			Assert.AreEqual(typeof(ArrayValue), value.GetList[2].GetType());
+			Assert.AreEqual(typeof(ArrayValue), value[2].GetType());
 		}
 
 		[TestMethod]
@@ -86,7 +86,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
-			Assert.AreEqual(typeof(ObjectValue), value.GetList[3].GetType());
+			Assert.AreEqual(typeof(ObjectValue), value[3].GetType());
 		}
 
 		[TestMethod]
@@ -114,9 +114,9 @@ namespace Ikston_Unit_Tests
 			IkonWriter writer = new IkonWriter(new StringWriter(output));
 
 			var value = new ArrayValue();
-			value.GetList.Add(new NumericValue(2));
-			value.GetList.Add(new NumericValue(5));
-			value.GetList.Add(new NumericValue(0.5));
+			value.Add(new NumericValue(2));
+			value.Add(new NumericValue(5));
+			value.Add(new NumericValue(0.5));
 			value.Compose(writer);
 
 			Assert.AreEqual(expected, output.ToString().Trim());
@@ -134,8 +134,8 @@ namespace Ikston_Unit_Tests
 			IkonWriter writer = new IkonWriter(new StringWriter(output));
 
 			var value = new ArrayValue();
-			value.GetList.Add(new TextValue("abc"));
-			value.GetList.Add(new TextValue("asdf"));
+			value.Add(new TextValue("abc"));
+			value.Add(new TextValue("asdf"));
 			value.Compose(writer);
 
 			Assert.AreEqual(expected, output.ToString().Trim());
@@ -153,7 +153,7 @@ namespace Ikston_Unit_Tests
 			IkonWriter writer = new IkonWriter(new StringWriter(output));
 
 			var value = new ArrayValue();
-			value.GetList.Add(new ArrayValue());
+			value.Add(new ArrayValue());
 			value.Compose(writer);
 
 			Assert.AreEqual(expected, output.ToString().Trim());
@@ -179,17 +179,17 @@ namespace Ikston_Unit_Tests
 			IkonWriter writer = new IkonWriter(new StringWriter(output));
 
 			var doubleNestedValue = new ArrayValue();
-			doubleNestedValue.GetList.Add(new NumericValue(-0.4));
+			doubleNestedValue.Add(new NumericValue(-0.4));
 
 			var nestedValue = new ArrayValue();
-			nestedValue.GetList.Add(new NumericValue(2.5));
-			nestedValue.GetList.Add(doubleNestedValue);
-			nestedValue.GetList.Add(new ArrayValue());
-			nestedValue.GetList.Add(new TextValue("foo"));
+			nestedValue.Add(new NumericValue(2.5));
+			nestedValue.Add(doubleNestedValue);
+			nestedValue.Add(new ArrayValue());
+			nestedValue.Add(new TextValue("foo"));
 			
 			var value = new ArrayValue();
-			value.GetList.Add(nestedValue);
-			value.GetList.Add(new TextValue("bar"));
+			value.Add(nestedValue);
+			value.Add(new TextValue("bar"));
 			
 			value.Compose(writer);
 
