@@ -15,10 +15,6 @@ namespace Ikon
 		/// Collection on value factories.
 		/// </summary>
 		protected IDictionary<char, IValueFactory> Factories { get; private set; }
-		/// <summary>
-		/// Collection of named objects.
-		/// </summary>
-		protected IDictionary<string, Value> NamedValues { get; private set; }
 
 		/// <summary>
 		/// Input stream that is being parsed.
@@ -37,7 +33,6 @@ namespace Ikon
 			this.Reader = new IkonReader(reader);
 
 			this.Factories = new Dictionary<char, IValueFactory>();
-			this.NamedValues = new Dictionary<string, Value>();
 		}
 
 		/// <summary>
@@ -114,29 +109,13 @@ namespace Ikon
 		}
 
 		/// <summary>
-		/// Returns the IKON value with specified reference name. 
-		/// 
-		/// Throws System.Collections.Generic.KeyNotFoundException 
-		/// if such value doesn't exist.
-		/// </summary>
-		/// <param name="name">Name of the value reference</param>
-		/// <returns>Desired IKON value.</returns>
-		public Value GetNamedValue(string name)
-		{
-			if (NamedValues.ContainsKey(name))
-				return NamedValues[name];
-			else
-				throw new KeyNotFoundException("Value named '" + name + "' not found");
-		}
-
-		/// <summary>
 		/// Trys to parse next IKON value from the input stream. 
 		/// 
 		/// Throws System.FormatException if there is no value factory
 		/// that can parse curren state of the input.
 		/// </summary>
 		/// <returns>Return an IKON value if there is one, null otherwise.</returns>
-		protected Value TryParseNext()
+		protected virtual Value TryParseNext()
 		{
 			WhiteSpaceSkipResult skipResult = this.Reader.SkipWhiteSpaces();
 
@@ -146,14 +125,7 @@ namespace Ikon
 			char sign = Reader.Read();
 			if (!Factories.ContainsKey(sign)) throw new FormatException("No factory defined for a value starting with " + sign);
 
-			Value res = Factories[sign].Parse(this);
-
-			foreach (string refernceName in Reader.ReadReferences()) {
-				NamedValues.Add(refernceName, res);
-				res.ReferenceNames.Add(refernceName);
-			}
-
-			return res;
+			return Factories[sign].Parse(this);
 		}
 
 		/// <summary>

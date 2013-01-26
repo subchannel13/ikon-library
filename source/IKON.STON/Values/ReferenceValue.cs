@@ -1,29 +1,30 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Ikon.Ston.Factories;
-using Ikon.Utilities;
-using System;
 
 namespace Ikon.Ston.Values
 {
 	/// <summary>
-	/// IKSTON textual value.
+	/// IKSTON reference value.
 	/// </summary>
-	public class TextValue : IkstonBaseValue
+	public class ReferenceValue : IkstonBaseValue
 	{
 		/// <summary>
 		/// Type name of IKSTON text values.
 		/// </summary>
-		public const string ValueTypeName = "IKSTON.Text";
+		public const string ValueTypeName = "IKSTON.Reference";
 
-		private string text;
+		private string name;
 
 		/// <summary>
-		/// Constructs IKSTON textual value with specified contents.
+		/// Constructs IKSTON reference value with specified name.
 		/// </summary>
-		/// <param name="value">Contents</param>
-		public TextValue(string value)
+		/// <param name="name">Name of the referenced object.</param>
+		public ReferenceValue(string name)
 		{
-			this.text = value;
+			this.name = name;
 		}
 
 		/// <summary>
@@ -35,7 +36,7 @@ namespace Ikon.Ston.Values
 		}
 
 		/// <summary>
-		/// Converts IKSTON text value to specified type. Supported target types:
+		/// Converts IKSTON reference value to specified type. Supported target types:
 		/// 
 		/// System.string
 		/// Ikon.Ston.Values.TextValue
@@ -47,7 +48,7 @@ namespace Ikon.Ston.Values
 			Type target = typeof(T);
 
 			if (target == typeof(string))
-				return (T)(object)text;
+				return (T)(object)name;
 			else if (target.IsAssignableFrom(this.GetType()))
 				return (T)(object)this;
 			else
@@ -55,18 +56,7 @@ namespace Ikon.Ston.Values
 		}
 
 		/// <summary>
-		/// Implicit conversion from IKON textual value to System.String value.
-		/// </summary>
-		public static implicit operator string(TextValue textValue)
-		{
-			if (textValue == null)
-				return null;
-
-			return textValue.text;
-		}
-
-		/// <summary>
-		/// Writes an IKSTON text value to the composer.
+		/// Writes an IKSTON reference value to the composer.
 		/// </summary>
 		/// <param name="writer">Target composer.</param>
 		protected override void DoCompose(IkonWriter writer)
@@ -74,16 +64,8 @@ namespace Ikon.Ston.Values
 			if (writer == null)
 				throw new System.ArgumentNullException("writer");
 
-			StringBuilder sb = new StringBuilder(text);
-			sb.Replace(@"\", @"\\");
-			sb.Replace(@"""", @"\""");
-			sb.Replace("\n", @"\n");
-			sb.Replace("\r", @"\r");
-			sb.Replace("\t", @"\t");
-
-			writer.Write(TextFactory.OpeningSign.ToString());
-			writer.Write(sb.ToString());
-			writer.Write(TextFactory.ClosingChar.ToString());
+			writer.Write(ReferencedFactory.OpeningSign.ToString());
+			writer.Write(name);
 
 			WriteReferences(writer);
 		}

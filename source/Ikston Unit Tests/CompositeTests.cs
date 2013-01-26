@@ -97,7 +97,7 @@ namespace Ikston_Unit_Tests
 
 			var subvalue = value["name"] as TextValue;
 
-			Assert.AreEqual("A-10", subvalue.As<string>());
+			Assert.AreEqual("A-10", subvalue.To<string>());
 		}
 
 		[TestMethod]
@@ -108,7 +108,7 @@ namespace Ikston_Unit_Tests
 
 			var subvalue = value["x"] as NumericValue;
 
-			Assert.AreEqual(2.1, subvalue.As<double>());
+			Assert.AreEqual(2.1, subvalue.To<double>());
 		}
 
 		[TestMethod]
@@ -119,7 +119,7 @@ namespace Ikston_Unit_Tests
 
 			var subvalue = value["y"] as NumericValue;
 
-			Assert.AreEqual(-3.4, subvalue.As<double>());
+			Assert.AreEqual(-3.4, subvalue.To<double>());
 		}
 
 		[TestMethod]

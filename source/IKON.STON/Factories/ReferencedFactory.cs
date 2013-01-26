@@ -1,5 +1,6 @@
 ﻿using Ikon;
 using Ikon.Utilities;
+using Ikon.Ston.Values;
 
 namespace Ikon.Ston.Factories
 {
@@ -31,7 +32,7 @@ namespace Ikon.Ston.Factories
 			if (parser == null)
 				throw new System.ArgumentNullException("parser");
 
-			return parser.GetNamedValue(parser.Reader.ReadIdentifier());
+			return new ReferenceValue(Ikon.Ston.Parser.ReadIdentifier(parser.Reader));
 		}
 	}
 }

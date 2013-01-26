@@ -14,3 +14,7 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Ston", Scope = "namespace", Target = "Ikon.Ston.Factories")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Ston", Scope = "namespace", Target = "Ikon.Ston.Values")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Ston")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Scope = "type", Target = "Ikon.Ston.Values.ArrayValue")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Ikston", Scope = "type", Target = "Ikon.Ston.Values.IkstonBaseValue")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Ikon.IkonWriter.Write(System.String)", Scope = "member", Target = "Ikon.Ston.Values.IkstonBaseValue.#WriteReferences(Ikon.IkonWriter)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "Ikon.IkonWriter.Write(System.String)", Scope = "member", Target = "Ikon.Ston.Values.ObjectValue.#DoCompose(Ikon.IkonWriter)")]

@@ -8,7 +8,7 @@ namespace Ikon.Ston.Values
 	/// <summary>
 	/// IKSTON numeric value.
 	/// </summary>
-	public class NumericValue : Value
+	public class NumericValue : IkstonBaseValue
 	{
 		/// <summary>
 		/// Type name of IKSTON numeric values.
@@ -104,7 +104,7 @@ namespace Ikon.Ston.Values
 		}
 
 		/// <summary>
-		/// Converts IKSTON object value to specified type. Supported target types:
+		/// Converts IKSTON numeric value to specified type. Supported target types:
 		/// 
 		/// System.decimal
 		/// System.double
@@ -116,7 +116,7 @@ namespace Ikon.Ston.Values
 		/// </summary>
 		/// <typeparam name="T">Target type</typeparam>
 		/// <returns>Converted value</returns>
-		public override T As<T>()
+		public override T To<T>()
 		{
 			Type target = typeof(T);
 
@@ -185,7 +185,7 @@ namespace Ikon.Ston.Values
 		{
 			return long.Parse(textualRepresentation, NumericFactory.NumberStyle, NumericFactory.NumberFormat);
 		}
-
+		
 		/// <summary>
 		/// Gets System.Int16 value from IKON numeric value.
 		/// </summary>
@@ -195,64 +195,18 @@ namespace Ikon.Ston.Values
 		}
 
 		/// <summary>
-		/// Implicit conversion from IKSTON numeric value to System.Decimal value.
-		/// </summary>
-		public static implicit operator decimal(NumericValue textValue)
-		{
-			return GetDecimal(textValue.textualRepresentation);
-		}
-
-		/// <summary>
-		/// Implicit conversion from IKSTON numeric value to System.Double value.
-		/// </summary>
-		public static implicit operator double(NumericValue textValue)
-		{
-			return GetDouble(textValue.textualRepresentation);
-		}
-
-		/// <summary>
-		/// Implicit conversion from IKSTON numeric value to System.Single value.
-		/// </summary>
-		public static implicit operator float(NumericValue textValue)
-		{
-			return GetFloat(textValue.textualRepresentation);
-		}
-
-		/// <summary>
-		/// Implicit conversion from IKSTON numeric value to System.Int32 value.
-		/// </summary>
-		public static implicit operator int(NumericValue textValue)
-		{
-			return GetInt(textValue.textualRepresentation);
-		}
-
-		/// <summary>
-		/// Implicit conversion from IKSTON numeric value to System.Int64 value.
-		/// </summary>
-		public static implicit operator long(NumericValue textValue)
-		{
-			return GetLong(textValue.textualRepresentation);
-		}
-
-		/// <summary>
-		/// Implicit conversion from IKSTON numeric value to System.Int16 value.
-		/// </summary>
-		public static implicit operator short(NumericValue textValue)
-		{
-			return GetShort(textValue.textualRepresentation);
-		}
-
-		/// <summary>
 		/// Writes an IKSTON numeric value to the composer.
 		/// </summary>
 		/// <param name="writer">Target composer.</param>
 		protected override void DoCompose(IkonWriter writer)
 		{
 			if (writer == null)
-				throw new System.ArgumentNullException("composer");
+				throw new System.ArgumentNullException("writer");
 
 			writer.Write(NumericFactory.OpeningSign.ToString());
 			writer.Write(textualRepresentation);
+
+			WriteReferences(writer);
 		}
 
 		private static Dictionary<Type, Func<string, object>> converters = new Dictionary<Type, Func<string, object>>() {

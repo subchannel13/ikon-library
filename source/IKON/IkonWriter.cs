@@ -69,19 +69,6 @@ namespace Ikon
 		}
 
 		/// <summary>
-		/// Writes reference names to the output stream.
-		/// </summary>
-		/// <param name="referenceNames">List of reference names.</param>
-		public void WriteReferences(ICollection<string> referenceNames)
-		{
-			if (referenceNames == null)
-				throw new ArgumentNullException("referenceNames");
-
-			foreach (string name in referenceNames)
-				Write(" " + IkonReader.ReferenceSign + name);
-		}
-
-		/// <summary>
 		/// Writes buffered line to the output stream.
 		/// </summary>
 		public void EndLine()

@@ -27,6 +27,9 @@ namespace Ikon
 		/// <param name="values">IKON values for populating the Ikon.ValueQueue.</param>
 		public ValueQueue(IEnumerable<Value> values)
 		{
+			if (values == null)
+				throw new ArgumentNullException("values");
+
 			foreach (Value value in values)
 				Enqueue(value);
 		}
@@ -113,6 +116,9 @@ namespace Ikon
 		/// </param>
 		public void Enqueue(Value item)
 		{
+			if (item == null)
+				throw new ArgumentNullException("item");
+
 			if (!typedQueue.ContainsKey(item.TypeName))
 				typedQueue.Add(item.TypeName, new Queue<Value>());
 			

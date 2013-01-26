@@ -10,8 +10,6 @@ namespace Ikon
 	/// </summary>
 	public abstract class Value
 	{
-		private HashSet<string> referenceNames = new HashSet<string>();
-
 		/// <summary>
 		/// Type name of the IKON value instance.
 		/// </summary>
@@ -21,19 +19,11 @@ namespace Ikon
 		}
 
 		/// <summary>
-		/// Set of objects that can be used as reference to the value.
-		/// </summary>
-		public ISet<string> ReferenceNames
-		{
-			get { return referenceNames; }
-		}
-
-		/// <summary>
 		/// Converts IKON value to specified type.
 		/// </summary>
 		/// <typeparam name="T">Target type</typeparam>
 		/// <returns>Converted value</returns>
-		public abstract T As<T>();
+		public abstract T To<T>();
 
 		/// <summary>
 		/// Writes value's content to the output stream.
@@ -51,9 +41,6 @@ namespace Ikon
 				throw new ArgumentNullException("writer");
 
 			DoCompose(writer);
-
-			if (referenceNames != null && referenceNames.Count > 0)
-				writer.WriteReferences(referenceNames);
 			
 			writer.EndLine();
 		}

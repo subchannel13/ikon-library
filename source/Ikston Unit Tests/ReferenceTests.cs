@@ -35,7 +35,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingText()
 		{
-			Parser parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual(TextValue.ValueTypeName, parser.GetNamedValue("text").TypeName);
@@ -44,7 +44,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingNumber()
 		{
-			Parser parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual(NumericValue.ValueTypeName, parser.GetNamedValue("number").TypeName);
@@ -53,7 +53,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingInfinity()
 		{
-			Parser parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual(NumericValue.ValueTypeName, parser.GetNamedValue("notNumber").TypeName);
@@ -62,7 +62,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingArray()
 		{
-			Parser parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual(ArrayValue.ValueTypeName, parser.GetNamedValue("array").TypeName);
@@ -71,7 +71,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingComposite()
 		{
-			Parser parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual("NestedStuff", parser.GetNamedValue("composite").TypeName);
@@ -80,7 +80,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingNestedNumber()
 		{
-			Parser parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual(NumericValue.ValueTypeName, parser.GetNamedValue("nestedNumber").TypeName);
@@ -89,7 +89,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingNestedText()
 		{
-			Parser parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual(TextValue.ValueTypeName, parser.GetNamedValue("nestedText").TypeName);
@@ -98,7 +98,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingSecondName()
 		{
-			Parser parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual("NestedStuff", parser.GetNamedValue("otherName").TypeName);
@@ -107,7 +107,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingNoSpace()
 		{
-			Parser parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual("NestedStuff", parser.GetNamedValue("noSpace").TypeName);
@@ -116,7 +116,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferencingRootType()
 		{
-			Parser parser = new Ikon.Ston.Parser(new StringReader(ReferencingTestInput));
+			var parser = new Ikon.Ston.Parser(new StringReader(ReferencingTestInput));
 			var probe = parser.ParseNext();
 			var rootValue = parser.ParseNext();
 
@@ -130,7 +130,7 @@ namespace Ikston_Unit_Tests
 			var probe = parser.ParseNext();
 			var rootValue = parser.ParseNext() as TextValue;
 
-			Assert.AreEqual("the probe", rootValue.As<string>());
+			Assert.AreEqual("the probe", rootValue.To<string>());
 		}
 
 		[TestMethod]
@@ -141,7 +141,7 @@ namespace Ikston_Unit_Tests
 			var rootValue = parser.ParseNext();
 			var array = parser.ParseNext() as ArrayValue;
 
-			Assert.AreEqual("the probe", (array[0] as TextValue).As<string>());
+			Assert.AreEqual("the probe", (array[0] as TextValue).To<string>());
 		}
 
 		[TestMethod]
@@ -153,7 +153,7 @@ namespace Ikston_Unit_Tests
 			var array = parser.ParseNext() as ArrayValue;
 			var composite = parser.ParseNext() as ObjectValue;
 
-			Assert.AreEqual("the probe", (composite["child"] as TextValue).As<string>());
+			Assert.AreEqual("the probe", (composite["child"] as TextValue).To<string>());
 		}
 
 

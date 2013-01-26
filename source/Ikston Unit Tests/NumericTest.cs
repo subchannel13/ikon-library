@@ -33,7 +33,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as NumericValue;
 
-			Assert.AreEqual(expectedValue, value.As<short>());
+			Assert.AreEqual(expectedValue, value.To<short>());
 		}
 
 		[TestMethod]
@@ -45,7 +45,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as NumericValue;
 
-			Assert.AreEqual(expectedValue, value.As<int>());
+			Assert.AreEqual(expectedValue, value.To<int>());
 		}
 
 		[TestMethod]
@@ -57,7 +57,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as NumericValue;
 
-			Assert.AreEqual(expectedValue, value.As<int>());
+			Assert.AreEqual(expectedValue, value.To<int>());
 		}
 
 		[TestMethod]
@@ -69,7 +69,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as NumericValue;
 
-			Assert.AreEqual(expectedValue, value.As<long>());
+			Assert.AreEqual(expectedValue, value.To<long>());
 		}
 
 		[TestMethod]
@@ -81,7 +81,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as NumericValue;
 
-			Assert.AreEqual(expectedValue, value.As<decimal>());
+			Assert.AreEqual(expectedValue, value.To<decimal>());
 		}
 
 		[TestMethod]
@@ -93,7 +93,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as NumericValue;
 
-			Assert.AreEqual(expectedValue, value.As<float>());
+			Assert.AreEqual(expectedValue, value.To<float>());
 		}
 
 		[TestMethod]
@@ -105,7 +105,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as NumericValue;
 
-			Assert.AreEqual(expectedValue, value.As<double>());
+			Assert.AreEqual(expectedValue, value.To<double>());
 		}
 
 		[TestMethod]
@@ -117,7 +117,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as NumericValue;
 
-			Assert.AreEqual(expectedValue, value.As<double>());
+			Assert.AreEqual(expectedValue, value.To<double>());
 		}
 
 		[TestMethod]
@@ -129,7 +129,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as NumericValue;
 
-			Assert.AreEqual(expectedValue, value.As<double>());
+			Assert.AreEqual(expectedValue, value.To<double>());
 		}
 
 		[TestMethod]
@@ -141,7 +141,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as NumericValue;
 
-			Assert.AreEqual(expectedValue, value.As<double>());
+			Assert.AreEqual(expectedValue, value.To<double>());
 		}
 
 		[TestMethod]
@@ -153,7 +153,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
 			var value = parser.ParseNext() as NumericValue;
 
-			Assert.AreEqual(expectedValue, value.As<double>());
+			Assert.AreEqual(expectedValue, value.To<double>());
 		}
 
 		[TestMethod]

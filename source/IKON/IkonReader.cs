@@ -16,12 +16,6 @@ namespace Ikon
 		/// Value returned by System.IO.TextReader methods when the end of the stream is reached.
 		/// </summary>
 		private const int EndOfStreamResult = -1;
-		/// <summary>
-		/// Character that marks the beginning of the reference name.
-		/// </summary>
-		public const char ReferenceSign = '@';
-
-		private static ICollection<char> IdentifierChars = DefineIdentifierChars();
 
 		private TextReader reader;
 
@@ -98,51 +92,6 @@ namespace Ikon
 
 			return this.Peek();
 		}
-
-		/// <summary>
-		/// Reads the input stream for an IKON identifier. Throws System.FormatException if there is
-		/// no valid identifier.
-		/// </summary>
-		/// <returns>An identifier name</returns>
-		public string ReadIdentifier()
-		{
-			if (SkipWhiteSpaces() == WhiteSpaceSkipResult.EndOfStream)
-				throw new EndOfStreamException();
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			while (HasNext && IdentifierChars.Contains(this.Peek())) {
-				stringBuilder.Append(this.Read());
-			}
-
-			if (stringBuilder.Length == 0)
-				throw new FormatException();
-
-			return stringBuilder.ToString();
-		}
-
-		/// <summary>
-		/// Returns all consequentive reference names from the current state of the input stream.
-		/// </summary>
-		/// <returns>Reference names.</returns>
-		public IEnumerable<string> ReadReferences()
-		{
-			while (true) {
-				WhiteSpaceSkipResult skipResult = SkipWhiteSpaces();
-
-				if (skipResult == WhiteSpaceSkipResult.EndOfStream)
-					break;
-
-				char sign = (char)reader.Peek();
-
-				if (sign == ReferenceSign) {
-					reader.Read();
-					yield return ReadIdentifier();
-				}
-				else
-					break;
-			}
-		}
 		#endregion
 
 		#region Disposable pattern
@@ -167,17 +116,5 @@ namespace Ikon
 			GC.SuppressFinalize(this);
 		}
 		#endregion
-
-		private static HashSet<char> DefineIdentifierChars()
-		{
-			HashSet<char> res = new HashSet<char>();
-
-			res.Add('_');
-			for (char c = 'a'; c <= 'z'; c++) res.Add(c);
-			for (char c = 'A'; c <= 'Z'; c++) res.Add(c);
-			for (char c = '0'; c <= '9'; c++) res.Add(c);
-
-			return res;
-		}
 	}
 }

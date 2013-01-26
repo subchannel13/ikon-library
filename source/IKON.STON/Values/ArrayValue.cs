@@ -8,7 +8,7 @@ namespace Ikon.Ston.Values
 	/// <summary>
 	/// Array of IKON values.
 	/// </summary>
-	public class ArrayValue : Value, IList<Value>
+	public class ArrayValue : IkstonBaseValue, IList<Value>
 	{
 		/// <summary>
 		/// Type name of IKSTON arrays.
@@ -43,14 +43,14 @@ namespace Ikon.Ston.Values
 		}
 
 		/// <summary>
-		/// Converts IKSTON object value to specified type. Supported target types:
+		/// Converts IKSTON array value to specified type. Supported target types:
 		/// 
 		/// System.Collections.Generic.IList&lt;Value&gt;
 		/// Ikon.Ston.Values.ArrayValue
 		/// </summary>
 		/// <typeparam name="T">Target type</typeparam>
 		/// <returns>Converted value</returns>
-		public override T As<T>()
+		public override T To<T>()
 		{
 			Type target = typeof(T);
 
@@ -85,7 +85,7 @@ namespace Ikon.Ston.Values
 		protected override void DoCompose(IkonWriter writer)
 		{
 			if (writer == null)
-				throw new System.ArgumentNullException("composer");
+				throw new System.ArgumentNullException("writer");
 
 			writer.WriteLine(ArrayFactory.OpeningSign.ToString());
 			writer.Indentation.Increase();
@@ -95,6 +95,8 @@ namespace Ikon.Ston.Values
 
 			writer.Indentation.Decrease();
 			writer.Write(ArrayFactory.ClosingChar.ToString());
+
+			WriteReferences(writer);
 		}
 
 		#region IList<Value> interface

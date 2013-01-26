@@ -8,16 +8,17 @@ namespace Ikon.Ston.Values
 	/// <summary>
 	/// IKSTON composite value with key-value pairs of nested IKON values.
 	/// </summary>
-	public class ObjectValue : Value
+	public class ObjectValue : IkstonBaseValue
 	{
 		/// <summary>
 		/// The name of the data class contained in this instance
 		/// </summary>
-		protected readonly string className;
+		private string className;
+
 		/// <summary>
 		/// Collection of the nested IKON values.
 		/// </summary>
-		protected IDictionary<string, Value> members = new Dictionary<string, Value>();
+		private IDictionary<string, Value> members = new Dictionary<string, Value>();
 
 		/// <summary>
 		/// Constructs IKSTON composite value marked as specified class of data.
@@ -35,7 +36,7 @@ namespace Ikon.Ston.Values
 		/// </summary>
 		/// <typeparam name="T">Target type</typeparam>
 		/// <returns>Converted value</returns>
-		public override T As<T>()
+		public override T To<T>()
 		{
 			Type target = typeof(T);
 
@@ -97,7 +98,7 @@ namespace Ikon.Ston.Values
 		protected override void DoCompose(IkonWriter writer)
 		{
 			if (writer == null)
-				throw new System.ArgumentNullException("composer");
+				throw new System.ArgumentNullException("writer");
 
 			writer.Write(ObjectFactory.OpeningSign.ToString());
 			writer.Write(" ");
@@ -108,13 +109,13 @@ namespace Ikon.Ston.Values
 			{
 				writer.Write(key);
 				writer.Write(" ");
-				//writer.Write();
 				members[key].Compose(writer);
-				//writer.EndLine();
 			}
 
 			writer.Indentation.Decrease();
 			writer.Write(ObjectFactory.ClosingChar.ToString());
+
+			WriteReferences(writer);
 		}
 	}
 }

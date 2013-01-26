@@ -24,6 +24,7 @@ namespace Ikon.Ston.Factories
 		/// Number format used for IKSTON numeric values.
 		/// </summary>
 		public static readonly IFormatProvider NumberFormat = NumberFormatInfo.InvariantInfo;
+
 		/// <summary>
 		/// Valid styles for IKSTON numeric values.
 		/// </summary>
