@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Describes whitespace skipping run.
 	/// </summary>
-	public enum WhiteSpaceSkipResult
+	public enum ReaderDoneReason
 	{
 		/// <summary>
 		/// Skipping whitespaces encountered end of stream/input.
@@ -11,8 +11,9 @@
 		EndOfStream,
 
 		/// <summary>
-		/// Skipping whitespaces has found non-whitespace character.
+		/// Skipping or reading was successful, character that doesn't satisfy
+		/// skipping or reading conditions has been found.
 		/// </summary>
-		NonwhiteChar
+		UnmatchedChar
 	}
 }

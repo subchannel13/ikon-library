@@ -58,7 +58,7 @@
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Value.cs" />
-    <Compile Include="Utils\WhiteSpaceSkipResult.cs" />
+    <Compile Include="Utils\ReaderDoneReason.cs" />
     <Compile Include="IkonWriter.cs" />
     <Compile Include="ValueQueue.cs" />
   </ItemGroup>

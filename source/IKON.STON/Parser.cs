@@ -71,9 +71,9 @@ namespace Ikon.Ston
 				value = NamedValues[value.To<string>()];
 
 			while (true) {
-				WhiteSpaceSkipResult skipResult = this.Reader.SkipWhiteSpaces();
+				ReaderDoneReason skipResult = this.Reader.SkipWhiteSpaces();
 
-				if (skipResult == WhiteSpaceSkipResult.EndOfStream)
+				if (skipResult == ReaderDoneReason.EndOfStream)
 					break;
 
 				char sign = this.Reader.Peek();
@@ -117,19 +117,14 @@ namespace Ikon.Ston
 			if (reader == null)
 				throw new ArgumentNullException("reader");
 
-			if (reader.SkipWhiteSpaces() == WhiteSpaceSkipResult.EndOfStream)
-				throw new EndOfStreamException();
-
-			StringBuilder stringBuilder = new StringBuilder();
-
-			while (reader.HasNext && IdentifierChars.Contains(reader.Peek())) {
-				stringBuilder.Append(reader.Read());
-			}
-
-			if (stringBuilder.Length == 0)
+			if (reader.SkipWhiteSpaces() == ReaderDoneReason.EndOfStream)
 				throw new FormatException();
 
-			return stringBuilder.ToString();
+			string identifier = reader.ReadWhile(IdentifierChars.Contains, true);
+			if (identifier.Length == 0)
+				throw new FormatException();
+
+			return identifier;
 		}
 
 		private static HashSet<char> DefineIdentifierChars()

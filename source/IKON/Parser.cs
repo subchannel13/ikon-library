@@ -117,9 +117,9 @@ namespace Ikon
 		/// <returns>Return an IKON value if there is one, null otherwise.</returns>
 		protected virtual Value TryParseNext()
 		{
-			WhiteSpaceSkipResult skipResult = this.Reader.SkipWhiteSpaces();
+			ReaderDoneReason skipResult = this.Reader.SkipWhiteSpaces();
 
-			if (skipResult == WhiteSpaceSkipResult.EndOfStream)
+			if (skipResult == ReaderDoneReason.EndOfStream)
 				return null;
 
 			char sign = Reader.Read();
