@@ -18,7 +18,7 @@ namespace Ikon.Ston.Values
 		/// <summary>
 		/// Collection of the nested IKON values.
 		/// </summary>
-		private IDictionary<string, Value> members = new Dictionary<string, Value>();
+		private IDictionary<string, IkonBaseValue> members = new Dictionary<string, IkonBaseValue>();
 
 		/// <summary>
 		/// Constructs IKSTON composite value marked as specified class of data.
@@ -51,7 +51,7 @@ namespace Ikon.Ston.Values
 		/// </summary>
 		/// <param name="memberName">Key of the value</param>
 		/// <returns>Nested IKON value</returns>
-		public Value this[string memberName]
+		public IkonBaseValue this[string memberName]
 		{
 			get { return members[memberName]; }
 			set
@@ -69,7 +69,7 @@ namespace Ikon.Ston.Values
 		/// <param name="key">Key of the value.</param>
 		/// <param name="value">Element's value.</param>
 		/// <returns>Instance of the same IKSTON object method is called for.</returns>
-		public ObjectValue Add(string key, Value value)
+		public ObjectValue Add(string key, IkonBaseValue value)
 		{
 			members.Add(key, value);
 			return this;

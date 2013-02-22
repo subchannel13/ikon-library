@@ -27,7 +27,7 @@ namespace Ikon.Ston.Factories
 		/// </summary>
 		/// <param name="parser">IKON parser instance.</param>
 		/// <returns>Referenced IKON value.</returns>
-		public Value Parse(Ikon.Parser parser)
+		public IkonBaseValue Parse(Ikon.Parser parser)
 		{
 			if (parser == null)
 				throw new System.ArgumentNullException("parser");

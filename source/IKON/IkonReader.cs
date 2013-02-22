@@ -18,6 +18,7 @@ namespace Ikon
 		private const int EndOfStreamResult = -1;
 
 		private TextReader reader;
+		private int lastCharacter = EndOfStreamResult;
 
 		/// <summary>
 		/// Wraps TextReader with IkonReader
@@ -29,7 +30,38 @@ namespace Ikon
 				throw new ArgumentNullException("reader");
 
 			this.reader = reader;
+			this.Index = 0;
+			this.Line = 0;
+			this.Column = 0;
 		}
+
+		#region Position report properties
+
+		/// <summary>
+		/// Index of the last read character.
+		/// </summary>
+		public int Index { get; private set; }
+		/// <summary>
+		/// Line of the last read character.
+		/// </summary>
+		public int Line { get; private set; }
+		/// <summary>
+		/// Column within the line of the last read character.
+		/// </summary>
+		public int Column { get; private set; }
+
+		/// <summary>
+		/// Gets text that describes position (line, column and index) of the last
+		/// successfuly read character from the stream.
+		/// </summary>
+		public string PositionDescription
+		{
+			get {
+				return "line " + Line + ", column " + Column + " (index: " + Index + ")";
+			}
+		}
+
+		#endregion
 
 		#region IKON stream peeking methods
 		/// <summary>
@@ -71,7 +103,18 @@ namespace Ikon
 		/// <returns>Read character.</returns>
 		public char Read()
 		{
-			return (char)reader.Read();
+			if (lastCharacter != EndOfStreamResult)
+				Index++;
+
+			if (lastCharacter == '\n') {
+				Line++;
+				Column = 0;
+			}
+			else if (lastCharacter != EndOfStreamResult && !char.IsControl((char)lastCharacter))
+				Column++;
+
+			lastCharacter = reader.Read();
+			return (char)lastCharacter;
 		}
 
 		/// <summary>
@@ -81,44 +124,66 @@ namespace Ikon
 		/// <returns>Successfully read part of the stream.</returns>
 		public string ReadWhile(params char[] readCondition)
 		{
-			return ReadWhile(new HashSet<char>(readCondition).Contains);
+			if (readCondition == null)
+				throw new ArgumentNullException("readCondition");
+
+			if (readCondition.Length == 0)
+				throw new ArgumentException("No readable characters specified", "readCondition");
+
+			return ReadWhile(new HashSet<char>(readCondition));
 		}
 
 		/// <summary>
 		/// Reads characters from the input stream until the stopping condition is met.
 		/// </summary>
 		/// <param name="readCondition">Set of characters that can be read.</param>
-		/// <param name="acceptEndOfStream">Indicates whether the end of stream is valid
-		/// stopping condition.</param>
 		/// <returns>Successfully read part of the stream.</returns>
-		public string ReadWhile(ISet<char> readCondition, bool acceptEndOfStream = false)
+		public string ReadWhile(ISet<char> readCondition)
 		{
-			return ReadWhile(readCondition.Contains);
+			if (reader == null)
+				throw new ArgumentNullException("readCondition");
+
+			return ReadWhile(c => {
+				if (readCondition.Contains(c))
+					return new ReadingDecision(c, CharacterAction.AcceptAsIs);
+				else
+					return new ReadingDecision(c, CharacterAction.Stop);
+			});
 		}
 
 		/// <summary>
 		/// Reads characters from the input stream until the stopping condition is met.
 		/// </summary>
-		/// <param name="readCondition">Returns whether character should be read
+		/// <param name="readingController">Returns whether character should be read
 		/// (if predicate is true). When predicate evaluates to flase, reading stops.</param>
-		/// <param name="acceptEndOfStream">Indicates whether the end of stream is valid
-		/// stopping condition.</param>
 		/// <returns>Successfully read part of the stream.</returns>
-		public string ReadWhile(Predicate<char> readCondition, bool acceptEndOfStream = false)
+		public string ReadWhile(Func<char, ReadingDecision> readingController)
 		{
+			if (readingController == null)
+				throw new ArgumentNullException("readingController");
+
 			StringBuilder readChars = new StringBuilder();
 			while (true) {
 				int currentChar = reader.Peek();
 
 				if (currentChar == EndOfStreamResult)
-					if (acceptEndOfStream)
-						return readChars.ToString();
-					else
-						throw new FormatException("Unexpected end of stream");
+					return readChars.ToString();
 
-				if (readCondition((char)currentChar))
-					readChars.Append((char)reader.Read());
-				else
+				ReadingDecision action = readingController((char)currentChar);
+				switch(action.Decision & CharacterAction.AllInputActions) {
+					case CharacterAction.AcceptAsIs:
+						readChars.Append(Read());
+						break;
+					case CharacterAction.Skip:
+						Read();
+						break;
+					case CharacterAction.Supstitute:
+						readChars.Append(action.Character);
+						Read();
+						break;
+				}
+
+				if (action.Decision.HasFlag(CharacterAction.Stop))
 					return readChars.ToString();
 			}
 		}
@@ -141,6 +206,11 @@ namespace Ikon
 		/// <returns>Descrtipion of the skipping process.</returns>
 		public ReaderDoneReason SkipWhile(params char[] skippableCharacters)
 		{
+			if (skippableCharacters == null)
+				throw new ArgumentNullException("skippableCharacters");
+			if (skippableCharacters.Length == 0)
+				throw new ArgumentException("No skippable characters specified", "skippableCharacters");
+
 			return SkipWhile(new HashSet<char>(skippableCharacters).Contains);
 		}
 
@@ -151,6 +221,9 @@ namespace Ikon
 		/// <returns>Descrtipion of the skipping process.</returns>
 		public ReaderDoneReason SkipWhile(ISet<char> skippableCharacters)
 		{
+			if (skippableCharacters == null)
+				throw new ArgumentNullException("skippableCharacters");
+
 			return SkipWhile(skippableCharacters.Contains);
 		}
 
@@ -162,15 +235,19 @@ namespace Ikon
 		/// <returns>Descrtipion of the skipping process.</returns>
 		public ReaderDoneReason SkipWhile(Predicate<char> skipCondition)
 		{
+			if (skipCondition == null)
+				throw new ArgumentNullException("skipCondition");
+
 			while (true) {
 				int currentChar = reader.Peek();
 
-				if (currentChar == EndOfStreamResult) return ReaderDoneReason.EndOfStream;
+				if (currentChar == EndOfStreamResult) 
+					return ReaderDoneReason.EndOfStream;
 
 				if (skipCondition((char)currentChar))
-					reader.Read();
+					Read();
 				else
-					return ReaderDoneReason.UnmatchedChar;
+					return ReaderDoneReason.Successful;
 
 			}
 		}

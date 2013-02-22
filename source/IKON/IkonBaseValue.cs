@@ -8,7 +8,7 @@ namespace Ikon
 	/// <summary>
 	/// Base class for IKON values.
 	/// </summary>
-	public abstract class Value
+	public abstract class IkonBaseValue
 	{
 		/// <summary>
 		/// Type name of the IKON value instance.

@@ -22,7 +22,7 @@ namespace Ikon.Ston
 		/// <summary>
 		/// Collection of named objects.
 		/// </summary>
-		protected IDictionary<string, Value> NamedValues { get; private set; }
+		protected IDictionary<string, IkonBaseValue> NamedValues { get; private set; }
 
 		/// <summary>
 		/// Constructs IKSTON parser with default IKSTON value factories.
@@ -36,7 +36,7 @@ namespace Ikon.Ston
 			new ArrayFactory(),
 			new ReferencedFactory() })
 		{
-			this.NamedValues = new Dictionary<string, Value>();
+			this.NamedValues = new Dictionary<string, IkonBaseValue>();
 		}
 
 		/// <summary>
@@ -61,29 +61,19 @@ namespace Ikon.Ston
 		/// that can parse curren state of the input.
 		/// </summary>
 		/// <returns>Return an IKON value if there is one, null otherwise.</returns>
-		protected override Value TryParseNext()
+		protected override IkonBaseValue TryParseNext()
 		{
-			Value value = base.TryParseNext();
+			IkonBaseValue value = base.TryParseNext();
 			if (value == null)
 				return null;
 
 			if (value.TypeName == ReferenceValue.ValueTypeName)
-				value = NamedValues[value.To<string>()];
+				return GetNamedValue(value.To<string>());
 
-			while (true) {
-				ReaderDoneReason skipResult = this.Reader.SkipWhiteSpaces();
-
-				if (skipResult == ReaderDoneReason.EndOfStream)
-					break;
-
-				char sign = this.Reader.Peek();
-
-				if (sign == ReferenceSign) {
-					this.Reader.Read();
-					NamedValues.Add(ReadIdentifier(this.Reader), value);
-				}
-				else
-					break;
+			while (this.Reader.SkipWhiteSpaces() != ReaderDoneReason.EndOfStream &&
+					this.Reader.Peek() == ReferenceSign) {
+				this.Reader.Read();
+				NamedValues.Add(ReadIdentifier(this.Reader), value);
 			}
 
 			return value;
@@ -97,7 +87,7 @@ namespace Ikon.Ston
 		/// </summary>
 		/// <param name="name">Name of the value reference</param>
 		/// <returns>Desired IKON value.</returns>
-		public Value GetNamedValue(string name)
+		public IkonBaseValue GetNamedValue(string name)
 		{
 			if (NamedValues.ContainsKey(name))
 				return NamedValues[name];
@@ -105,7 +95,7 @@ namespace Ikon.Ston
 				throw new KeyNotFoundException("Value named '" + name + "' not found");
 		}
 
-		private static ICollection<char> IdentifierChars = DefineIdentifierChars();
+		private static ISet<char> IdentifierChars = DefineIdentifierChars();
 
 		/// <summary>
 		/// Reads the input stream for an IKON identifier. Throws System.FormatException if there is
@@ -118,11 +108,11 @@ namespace Ikon.Ston
 				throw new ArgumentNullException("reader");
 
 			if (reader.SkipWhiteSpaces() == ReaderDoneReason.EndOfStream)
-				throw new FormatException();
+				throw new EndOfStreamException("Unexpected end of stream at " + reader.PositionDescription + " while reading IKSTON identifier.");
 
-			string identifier = reader.ReadWhile(IdentifierChars.Contains, true);
+			string identifier = reader.ReadWhile(IdentifierChars);
 			if (identifier.Length == 0)
-				throw new FormatException();
+				throw new FormatException("Unexpected character at " + reader.PositionDescription + ", while reading IKSTON identifier");
 
 			return identifier;
 		}

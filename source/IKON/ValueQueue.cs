@@ -9,11 +9,11 @@ namespace Ikon
 	/// <summary>
 	/// Represents a first-in, first-out collection of IKON values.
 	/// </summary>
-	public class ValueQueue : IEnumerable<Value>
+	public class ValueQueue : IEnumerable<IkonBaseValue>
 	{
-		LinkedList<Value> values = new LinkedList<Value>();
-		Dictionary<string, Queue<Value>> typedQueue = new Dictionary<string, Queue<Value>>();
-		Dictionary<Value, LinkedListNode<Value>> indices = new Dictionary<Value, LinkedListNode<Value>>();
+		LinkedList<IkonBaseValue> values = new LinkedList<IkonBaseValue>();
+		Dictionary<string, Queue<IkonBaseValue>> typedQueue = new Dictionary<string, Queue<IkonBaseValue>>();
+		Dictionary<IkonBaseValue, LinkedListNode<IkonBaseValue>> indices = new Dictionary<IkonBaseValue, LinkedListNode<IkonBaseValue>>();
 
 		/// <summary>
 		/// Initializes a new empty instance of Ikon.ValueQueue.
@@ -25,12 +25,12 @@ namespace Ikon
 		/// Initializes an instance of Ikon.ValueQueue filled with given elements.
 		/// </summary>
 		/// <param name="values">IKON values for populating the Ikon.ValueQueue.</param>
-		public ValueQueue(IEnumerable<Value> values)
+		public ValueQueue(IEnumerable<IkonBaseValue> values)
 		{
 			if (values == null)
 				throw new ArgumentNullException("values");
 
-			foreach (Value value in values)
+			foreach (IkonBaseValue value in values)
 				Enqueue(value);
 		}
 
@@ -39,7 +39,7 @@ namespace Ikon
 		/// </summary>
 		/// <returns>A System.Collections.Generic.IEnumerator&lt;T&gt; that can be used to iterate through the collection.
 		/// </returns>
-		public IEnumerator<Value> GetEnumerator()
+		public IEnumerator<IkonBaseValue> GetEnumerator()
 		{
 			return values.GetEnumerator();
 		}
@@ -84,9 +84,9 @@ namespace Ikon
 		/// Removes and returns the object at the beginning of the Ikon.ValueQueue.
 		/// </summary>
 		/// <returns>The object that is removed from the beginning of the Ikon.ValueQueue.</returns>
-		public Value Dequeue()
+		public IkonBaseValue Dequeue()
 		{
-			Value value = values.First.Value;
+			IkonBaseValue value = values.First.Value;
 			
 			values.RemoveFirst();
 			indices.Remove(value);
@@ -99,9 +99,9 @@ namespace Ikon
 		/// </summary>
 		/// <param name="typeName">Type name of IKON value to dequeue.</param>
 		/// <returns>The IKON value.</returns>
-		public Value Dequeue(string typeName)
+		public IkonBaseValue Dequeue(string typeName)
 		{
-			Value value = typedQueue[typeName].Dequeue();
+			IkonBaseValue value = typedQueue[typeName].Dequeue();
 			
 			values.Remove(indices[value]);
 			indices.Remove(value);
@@ -114,13 +114,13 @@ namespace Ikon
 		/// </summary>
 		/// <param name="item">The object to add to the Ikon.ValueQueue. The value can be null for reference types.
 		/// </param>
-		public void Enqueue(Value item)
+		public void Enqueue(IkonBaseValue item)
 		{
 			if (item == null)
 				throw new ArgumentNullException("item");
 
 			if (!typedQueue.ContainsKey(item.TypeName))
-				typedQueue.Add(item.TypeName, new Queue<Value>());
+				typedQueue.Add(item.TypeName, new Queue<IkonBaseValue>());
 			
 			values.AddLast(item);
 			indices.Add(item, values.Last);

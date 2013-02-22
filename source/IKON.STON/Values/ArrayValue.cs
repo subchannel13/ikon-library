@@ -8,20 +8,20 @@ namespace Ikon.Ston.Values
 	/// <summary>
 	/// Array of IKON values.
 	/// </summary>
-	public class ArrayValue : IkstonBaseValue, IList<Value>
+	public class ArrayValue : IkstonBaseValue, IList<IkonBaseValue>
 	{
 		/// <summary>
 		/// Type name of IKSTON arrays.
 		/// </summary>
 		public const string ValueTypeName = "IKSTON.Array";
 
-		private IList<Value> elements;
+		private IList<IkonBaseValue> elements;
 
 		/// <summary>
 		/// Constructs IKSTON array of IKON values
 		/// </summary>
 		/// <param name="values">Initial array contents.</param>
-		public ArrayValue(IList<Value> values)
+		public ArrayValue(IList<IkonBaseValue> values)
 		{
 			this.elements = values;
 		}
@@ -31,7 +31,7 @@ namespace Ikon.Ston.Values
 		/// </summary>
 		public ArrayValue()
 		{
-			this.elements = new List<Value>();
+			this.elements = new List<IkonBaseValue>();
 		}
 
 		/// <summary>
@@ -54,7 +54,7 @@ namespace Ikon.Ston.Values
 		{
 			Type target = typeof(T);
 
-			if (target.IsAssignableFrom(typeof(IList<Value>)))
+			if (target.IsAssignableFrom(typeof(IList<IkonBaseValue>)))
 				return (T)elements;
 			else if (target.IsAssignableFrom(this.GetType()))
 				return (T)(object)this;
@@ -67,7 +67,7 @@ namespace Ikon.Ston.Values
 		/// </summary>
 		/// <param name="values">Elements to be added.</param>
 		/// <returns>Instance of the same IKSTON array method is called for.</returns>
-		public ArrayValue Add(params Value[] values)
+		public ArrayValue Add(params IkonBaseValue[] values)
 		{
 			if (values == null)
 				throw new System.ArgumentNullException("values");
@@ -90,7 +90,7 @@ namespace Ikon.Ston.Values
 			writer.WriteLine(ArrayFactory.OpeningSign.ToString());
 			writer.Indentation.Increase();
 
-			foreach (Value value in elements)
+			foreach (IkonBaseValue value in elements)
 				value.Compose(writer);
 
 			writer.Indentation.Decrease();
@@ -105,7 +105,7 @@ namespace Ikon.Ston.Values
 		/// </summary>
 		/// <param name="item">The object to locate in the System.Collections.Generic.IList&lt;T&gt;.</param>
 		/// <returns>The index of item if found in the list; otherwise, -1.</returns>
-		public int IndexOf(Value item)
+		public int IndexOf(IkonBaseValue item)
 		{
 			return this.elements.IndexOf(item);
 		}
@@ -115,7 +115,7 @@ namespace Ikon.Ston.Values
 		/// </summary>
 		/// <param name="index">The zero-based index at which item should be inserted.</param>
 		/// <param name="item">The object to insert into the System.Collections.Generic.IList&lt;T&gt;.</param>
-		public void Insert(int index, Value item)
+		public void Insert(int index, IkonBaseValue item)
 		{
 			this.elements.Insert(index, item);
 		}
@@ -134,7 +134,7 @@ namespace Ikon.Ston.Values
 		/// </summary>
 		/// <param name="index">The zero-based index of the element to get or set.</param>
 		/// <returns>The element at the specified index.</returns>
-		public Value this[int index]
+		public IkonBaseValue this[int index]
 		{
 			get
 			{
@@ -150,7 +150,7 @@ namespace Ikon.Ston.Values
 		/// Adds an item to the System.Collections.Generic.ICollection&lt;T&gt;.
 		/// </summary>
 		/// <param name="item">The object to add to the System.Collections.Generic.ICollection&lt;T&gt;.</param>
-		public void Add(Value item)
+		public void Add(IkonBaseValue item)
 		{
 			this.elements.Add(item);
 		}
@@ -168,7 +168,7 @@ namespace Ikon.Ston.Values
 		/// </summary>
 		/// <param name="item">The object to locate in the System.Collections.Generic.ICollection&lt;T&gt;.</param>
 		/// <returns>true if item is found in the System.Collections.Generic.ICollection&lt;T&gt;; otherwise, false.</returns>
-		public bool Contains(Value item)
+		public bool Contains(IkonBaseValue item)
 		{
 			return this.elements.Contains(item);
 		}
@@ -181,7 +181,7 @@ namespace Ikon.Ston.Values
 		/// from System.Collections.Generic.ICollection&lt;T&gt;. The System.Array must have zero-based indexing.
 		/// </param>
 		/// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
-		public void CopyTo(Value[] array, int arrayIndex)
+		public void CopyTo(IkonBaseValue[] array, int arrayIndex)
 		{
 			this.elements.CopyTo(array, arrayIndex);
 		}
@@ -210,7 +210,7 @@ namespace Ikon.Ston.Values
 		/// otherwise, false. This method also returns false if item is not found in the original 
 		/// System.Collections.Generic.ICollection&lt;T&gt;.
 		/// </returns>
-		public bool Remove(Value item)
+		public bool Remove(IkonBaseValue item)
 		{
 			return this.elements.Remove(item);
 		}
@@ -220,7 +220,7 @@ namespace Ikon.Ston.Values
 		/// </summary>
 		/// <returns>A System.Collections.Generic.IEnumerator&lt;T&gt; that can be used to iterate through the collection.
 		/// </returns>
-		public IEnumerator<Value> GetEnumerator()
+		public IEnumerator<IkonBaseValue> GetEnumerator()
 		{
 			return this.elements.GetEnumerator();
 		}

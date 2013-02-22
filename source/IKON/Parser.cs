@@ -10,7 +10,7 @@ namespace Ikon
 	/// </summary>
 	public class Parser : IDisposable
 	{
-		private Value lastTryValue = null;
+		private IkonBaseValue lastTryValue = null;
 		/// <summary>
 		/// Collection on value factories.
 		/// </summary>
@@ -98,12 +98,13 @@ namespace Ikon
 		/// the input stream is encountered while parsing.
 		/// </summary>
 		/// <returns>An IKON value</returns>
-		public Value ParseNext()
+		public IkonBaseValue ParseNext()
 		{
-			Value res = this.lastTryValue ?? this.TryParseNext();
+			IkonBaseValue res = this.lastTryValue ?? this.TryParseNext();
 			this.lastTryValue = null;
 
-			if (res == null) throw new EndOfStreamException();
+			if (res == null)
+				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + Reader.PositionDescription + ".");
 			
 			return res;
 		}
@@ -115,7 +116,7 @@ namespace Ikon
 		/// that can parse curren state of the input.
 		/// </summary>
 		/// <returns>Return an IKON value if there is one, null otherwise.</returns>
-		protected virtual Value TryParseNext()
+		protected virtual IkonBaseValue TryParseNext()
 		{
 			ReaderDoneReason skipResult = this.Reader.SkipWhiteSpaces();
 
@@ -123,7 +124,8 @@ namespace Ikon
 				return null;
 
 			char sign = Reader.Read();
-			if (!Factories.ContainsKey(sign)) throw new FormatException("No factory defined for a value starting with " + sign);
+			if (!Factories.ContainsKey(sign))
+				throw new FormatException("No factory defined for a value starting with " + sign + " at " + Reader.PositionDescription + ".");
 
 			return Factories[sign].Parse(this);
 		}

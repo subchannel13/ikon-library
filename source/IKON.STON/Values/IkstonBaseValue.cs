@@ -8,7 +8,7 @@ namespace Ikon.Ston.Values
 	/// <summary>
 	/// Base class for IKSTON values. Add reference names on top the IKON values.
 	/// </summary>
-	public abstract class IkstonBaseValue : Value
+	public abstract class IkstonBaseValue : IkonBaseValue
 	{
 		private HashSet<string> referenceNames = new HashSet<string>();
 
