@@ -28,7 +28,7 @@ namespace Ikon.Utilities
 		/// <summary>
 		/// Add specified character to th result instead of read character.
 		/// </summary>
-		Supstitute = 3,
+		Substitute = 3,
 
 		/// <summary>
 		/// Mask for input interpreting actions (accept, supstitute, skip).
@@ -39,5 +39,10 @@ namespace Ikon.Utilities
 		/// Reading is finished
 		/// </summary>
 		Stop = 4,
+
+		/// <summary>
+		/// Combination of skipping a character and stopping the reading.
+		/// </summary>
+		SkipStop = Stop | Skip,
 	}
 }

@@ -47,22 +47,23 @@ namespace Ikon.Ston.Factories
 				throw new System.ArgumentNullException("parser");
 
 			bool escaping = false;
-			string text = parser.Reader.ReadWhile(nextChar =>
+			string text = parser.Reader.ReadConditionally(nextChar =>
 			{
+				char c = (char)nextChar;
 				if (escaping) {
 					escaping = false;
-					if (!EscapeCodes.ContainsKey(nextChar)) 
+					if (!EscapeCodes.ContainsKey(c)) 
 						throw new FormatException("Unsupported string escape sequence: \\" + nextChar);
-					return new ReadingDecision(EscapeCodes[nextChar], CharacterAction.Supstitute);
+					return new ReadingDecision(EscapeCodes[c], CharacterAction.Substitute);
 				}
 				switch (nextChar) {
 					case EscapeChar:
 						escaping = true;
-						return new ReadingDecision(nextChar, CharacterAction.Skip);
+						return new ReadingDecision(c, CharacterAction.Skip);
 					case ClosingChar:
-						return new ReadingDecision(nextChar, CharacterAction.Stop);
+						return new ReadingDecision(c, CharacterAction.Stop);
 					default:
-						return new ReadingDecision(nextChar, CharacterAction.AcceptAsIs);
+						return new ReadingDecision(c, CharacterAction.AcceptAsIs);
 				}
 			});
 

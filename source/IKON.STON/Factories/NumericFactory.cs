@@ -23,7 +23,7 @@ namespace Ikon.Ston.Factories
 		/// <summary>
 		/// Number format used for IKSTON numeric values.
 		/// </summary>
-		public static readonly IFormatProvider NumberFormat = NumberFormatInfo.InvariantInfo;
+		public static IFormatProvider NumberFormat { get; private set; }
 
 		/// <summary>
 		/// Valid styles for IKSTON numeric values.
@@ -87,6 +87,11 @@ namespace Ikon.Ston.Factories
 			for (char c = 'a'; c <= 'z'; c++) yield return c;
 			for (char c = 'A'; c <= 'Z'; c++) yield return c;
 			for (char c = '0'; c <= '9'; c++) yield return c;
+		}
+
+		static NumericFactory()
+		{
+			NumberFormat = NumberFormatInfo.InvariantInfo;
 		}
 	}
 }

@@ -57,7 +57,7 @@ namespace Ikon
 		public string PositionDescription
 		{
 			get {
-				return "line " + Line + ", column " + Column + " (index: " + Index + ")";
+				return "line " + (Line + 1) + ", column " + (Column + 1) + " (index: " + Index + ")";
 			}
 		}
 
@@ -143,11 +143,36 @@ namespace Ikon
 			if (reader == null)
 				throw new ArgumentNullException("readCondition");
 
-			return ReadWhile(c => {
-				if (readCondition.Contains(c))
-					return new ReadingDecision(c, CharacterAction.AcceptAsIs);
+			return ReadConditionally(c => {
+				return new ReadingDecision((char)c, (readCondition.Contains((char)c)) ? 
+					CharacterAction.AcceptAsIs :
+					CharacterAction.Stop
+				);
+			});
+		}
+
+		/// <summary>
+		/// Reads characters from the input stream until one of terminating character
+		/// is found. 
+		/// </summary>
+		/// <param name="terminatingCharacters">Characters that ends reading.</param>
+		/// <returns>Successfully read part of the stream.</returns>
+		public string ReadUntil(params int[] terminatingCharacters)
+		{
+			if (terminatingCharacters == null)
+				throw new ArgumentNullException("terminatingCharacters");
+			if (terminatingCharacters.Length == 0)
+				throw new ArgumentException("No terminating characters specified", "terminatingCharacters");
+
+			var terminatingCharactersSet = new HashSet<int>(terminatingCharacters);
+			return ReadConditionally(c =>
+			{
+				if (terminatingCharactersSet.Contains(c))
+					return new ReadingDecision((char)c, CharacterAction.SkipStop);
+				else if (c == EndOfStreamResult)
+					throw new EndOfStreamException("Unexpected end of stream at " + PositionDescription);
 				else
-					return new ReadingDecision(c, CharacterAction.Stop);
+					return new ReadingDecision((char)c, CharacterAction.AcceptAsIs);
 			});
 		}
 
@@ -157,7 +182,7 @@ namespace Ikon
 		/// <param name="readingController">Returns whether character should be read
 		/// (if predicate is true). When predicate evaluates to flase, reading stops.</param>
 		/// <returns>Successfully read part of the stream.</returns>
-		public string ReadWhile(Func<char, ReadingDecision> readingController)
+		public string ReadConditionally(Func<int, ReadingDecision> readingController)
 		{
 			if (readingController == null)
 				throw new ArgumentNullException("readingController");
@@ -169,7 +194,7 @@ namespace Ikon
 				if (currentChar == EndOfStreamResult)
 					return readChars.ToString();
 
-				ReadingDecision action = readingController((char)currentChar);
+				ReadingDecision action = readingController(currentChar);
 				switch(action.Decision & CharacterAction.AllInputActions) {
 					case CharacterAction.AcceptAsIs:
 						readChars.Append(Read());
@@ -177,7 +202,7 @@ namespace Ikon
 					case CharacterAction.Skip:
 						Read();
 						break;
-					case CharacterAction.Supstitute:
+					case CharacterAction.Substitute:
 						readChars.Append(action.Character);
 						Read();
 						break;
@@ -223,6 +248,8 @@ namespace Ikon
 		{
 			if (skippableCharacters == null)
 				throw new ArgumentNullException("skippableCharacters");
+			if (skippableCharacters.Count == 0)
+				throw new ArgumentException("No skippable characters specified", "skippableCharacters");
 
 			return SkipWhile(skippableCharacters.Contains);
 		}
@@ -248,7 +275,56 @@ namespace Ikon
 					Read();
 				else
 					return ReaderDoneReason.Successful;
+			}
+		}
 
+		/// <summary>
+		/// Skips consequentive characters from the input stream.
+		/// </summary>
+		/// <param name="terminatingCharacters">Character that stop skipping process.</param>
+		public void SkipUntil(params int[] terminatingCharacters)
+		{
+			if (terminatingCharacters == null)
+				throw new ArgumentNullException("terminatingCharacters");
+			if (terminatingCharacters.Length == 0)
+				throw new ArgumentException("No terminating characters specified", "terminatingCharacters");
+
+			SkipUntil(new HashSet<int>(terminatingCharacters).Contains);
+		}
+
+		/// <summary>
+		/// Skips consequentive characters from the input stream.
+		/// </summary>
+		/// <param name="terminatingCharacters">Set of characters that stop skipping process.</param>
+		public void SkipUntil(ISet<int> terminatingCharacters)
+		{
+			if (terminatingCharacters == null)
+				throw new ArgumentNullException("terminatingCharacters");
+			if (terminatingCharacters.Count == 0)
+				throw new ArgumentException("No terminating characters specified", "terminatingCharacters");
+
+			SkipUntil(terminatingCharacters.Contains);
+		}
+
+		/// <summary>
+		/// Skips consequentive characters from the input stream.
+		/// </summary>
+		/// <param name="stopCondition">Returns whether the terminating condition
+		/// is met (if predicate is true).</param>
+		public void SkipUntil(Predicate<int> stopCondition)
+		{
+			if (stopCondition == null)
+				throw new ArgumentNullException("stopCondition");
+
+			while (true) {
+				int currentChar = reader.Peek();
+
+				if (!stopCondition(currentChar))
+					Read();
+				else if (currentChar == EndOfStreamResult)
+					throw new EndOfStreamException("Unexpected end of stream at " + PositionDescription);
+				else
+					return;
 			}
 		}
 		#endregion
