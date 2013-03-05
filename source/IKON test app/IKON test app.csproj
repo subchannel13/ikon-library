@@ -52,13 +52,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IKON.STON\Ikon.Ston.csproj">
+    <ProjectReference Include="..\IKADN.IKON\Ikadn.Ikon.csproj">
       <Project>{55998E01-1EE7-408D-9149-3A0DA2302381}</Project>
-      <Name>Ikon.Ston</Name>
+      <Name>Ikadn.Ikon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\IKON\Ikon.csproj">
+    <ProjectReference Include="..\IKADN\Ikadn.csproj">
       <Project>{6F9B8B29-4ACF-4C44-B6E2-1146912E94A0}</Project>
-      <Name>Ikon</Name>
+      <Name>Ikadn</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

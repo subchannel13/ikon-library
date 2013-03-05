@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using Ikon.Ston.Values;
-using Ikon;
+using Ikadn.Ikon.Values;
+using Ikadn;
 using System;
 
 namespace Ikston_Unit_Tests
@@ -17,7 +17,7 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 ]";
 
-			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
+			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext();
 
 			Assert.AreEqual(ArrayValue.ValueTypeName, value.TypeName);
@@ -28,7 +28,7 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[]";
 
-			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
+			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
 			Assert.AreEqual(0, value.Count);
@@ -39,7 +39,7 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 \"dfgfdg\" [] { nothing } ]";
 
-			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
+			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
 			Assert.AreEqual(4, value.Count);
@@ -50,7 +50,7 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 \"dfgfdg\" [] { nothing } ]";
 
-			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
+			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
 			Assert.AreEqual(typeof(NumericValue), value[0].GetType());
@@ -61,7 +61,7 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 \"dfgfdg\" [] { nothing } ]";
 
-			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
+			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
 			Assert.AreEqual(typeof(TextValue), value[1].GetType());
@@ -72,7 +72,7 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 \"dfgfdg\" [] { nothing } ]";
 
-			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
+			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
 			Assert.AreEqual(typeof(ArrayValue), value[2].GetType());
@@ -83,7 +83,7 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 \"asdfasdf\" [] { nothing } ]";
 
-			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
+			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
 			Assert.AreEqual(typeof(ObjectValue), value[3].GetType());
@@ -93,7 +93,7 @@ namespace Ikston_Unit_Tests
 		public void ArrayWriteEmpty()
 		{
 			StringBuilder output = new StringBuilder();
-			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
 			var value = new ArrayValue();
 			value.Compose(writer);
@@ -111,7 +111,7 @@ namespace Ikston_Unit_Tests
 				"]";
 
 			StringBuilder output = new StringBuilder();
-			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
 			var value = new ArrayValue();
 			value.Add(new NumericValue(2));
@@ -131,7 +131,7 @@ namespace Ikston_Unit_Tests
 				"]";
 
 			StringBuilder output = new StringBuilder();
-			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
 			var value = new ArrayValue();
 			value.Add(new TextValue("abc"));
@@ -150,7 +150,7 @@ namespace Ikston_Unit_Tests
 				"]";
 
 			StringBuilder output = new StringBuilder();
-			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
 			var value = new ArrayValue();
 			value.Add(new ArrayValue());
@@ -176,7 +176,7 @@ namespace Ikston_Unit_Tests
 				"]";
 
 			StringBuilder output = new StringBuilder();
-			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
 			var doubleNestedValue = new ArrayValue();
 			doubleNestedValue.Add(new NumericValue(-0.4));

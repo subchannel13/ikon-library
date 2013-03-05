@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using Ikon.Ston.Values;
-using Ikon;
+using Ikadn.Ikon.Values;
+using Ikadn;
 
 namespace Ikston_Unit_Tests
 {
@@ -19,7 +19,7 @@ namespace Ikston_Unit_Tests
 		{
 			string input = Q + "some text" + Q;
 
-			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
+			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext();
 
 			Assert.AreEqual(value.TypeName, TextValue.ValueTypeName);
@@ -31,7 +31,7 @@ namespace Ikston_Unit_Tests
 			string inputValue = "some text";
 			string input = Q + inputValue + Q;
 
-			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
+			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext() as TextValue;
 
 			Assert.AreEqual(value.To<string>(), inputValue);
@@ -44,7 +44,7 @@ namespace Ikston_Unit_Tests
 			string expectedValue = "some text\nnew line\ttab\n\ranother line and \" qoute";
 			string input = Q + inputValue + Q;
 
-			Parser parser = new Ikon.Ston.Parser(new StringReader(input));
+			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext() as TextValue;
 
 			Assert.AreEqual(value.To<string>(), expectedValue);
@@ -57,7 +57,7 @@ namespace Ikston_Unit_Tests
 			string ikonData = Q + inputValue + Q;
 			StringBuilder output = new StringBuilder();
 
-			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 			var value = new TextValue(inputValue);
 			value.Compose(writer);
 
@@ -72,7 +72,7 @@ namespace Ikston_Unit_Tests
 			string ikonData = Q + rawIkonData + Q;
 			StringBuilder output = new StringBuilder();
 
-			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 			var value = new TextValue(inputValue);
 			value.Compose(writer);
 

@@ -3,13 +3,13 @@ syntax: glob
 *.suo
 source/IKON test app/bin/*
 source/IKON test app/obj/*
-source/IKON.STON/bin/*
-source/IKON.STON/obj/*
-source/IKON/bin/*
-source/IKON/obj/*
 source/Ikston Unit Tests/bin/*
 source/Ikston Unit Tests/obj/*
 source/IKON.vsmdi
 source/Local.testsettings
 source/TraceAndTestImpact.testsettings
 source/testimpactdata.sdf
+source/IKADN.IKON/bin/*
+source/IKADN.IKON/obj/*
+source/IKADN/bin/*
+source/IKADN/obj/*

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
-using Ikon.Ston;
-using Ikon.Ston.Values;
+using Ikadn.Ikon;
+using Ikadn.Ikon.Values;
 
 namespace IKON_test_app
 {
@@ -26,7 +26,7 @@ namespace IKON_test_app
 			reader.Close();
 
 			StringWriter writer = new StringWriter();
-			var ikonWriter = new Ikon.IkonWriter(writer);
+			var ikonWriter = new Ikadn.IkadnWriter(writer);
 
 			value2.Compose(ikonWriter);
 			value3.Compose(ikonWriter);

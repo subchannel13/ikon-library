@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using Ikon.Ston.Values;
-using Ikon;
+using Ikadn.Ikon.Values;
+using Ikadn;
 
 namespace Ikston_Unit_Tests
 {
@@ -35,7 +35,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingText()
 		{
-			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual(TextValue.ValueTypeName, parser.GetNamedValue("text").TypeName);
@@ -44,7 +44,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingNumber()
 		{
-			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual(NumericValue.ValueTypeName, parser.GetNamedValue("number").TypeName);
@@ -53,7 +53,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingInfinity()
 		{
-			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual(NumericValue.ValueTypeName, parser.GetNamedValue("notNumber").TypeName);
@@ -62,7 +62,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingArray()
 		{
-			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual(ArrayValue.ValueTypeName, parser.GetNamedValue("array").TypeName);
@@ -71,7 +71,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingComposite()
 		{
-			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual("NestedStuff", parser.GetNamedValue("composite").TypeName);
@@ -80,7 +80,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingNestedNumber()
 		{
-			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual(NumericValue.ValueTypeName, parser.GetNamedValue("nestedNumber").TypeName);
@@ -89,7 +89,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingNestedText()
 		{
-			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual(TextValue.ValueTypeName, parser.GetNamedValue("nestedText").TypeName);
@@ -98,7 +98,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingSecondName()
 		{
-			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual("NestedStuff", parser.GetNamedValue("otherName").TypeName);
@@ -107,7 +107,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingNoSpace()
 		{
-			var parser = new Ikon.Ston.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
 			Assert.AreEqual("NestedStuff", parser.GetNamedValue("noSpace").TypeName);
@@ -116,7 +116,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferencingRootType()
 		{
-			var parser = new Ikon.Ston.Parser(new StringReader(ReferencingTestInput));
+			var parser = new Ikadn.Ikon.Parser(new StringReader(ReferencingTestInput));
 			var probe = parser.ParseNext();
 			var rootValue = parser.ParseNext();
 
@@ -126,7 +126,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferencingRootValue()
 		{
-			Parser parser = new Ikon.Ston.Parser(new StringReader(ReferencingTestInput));
+			Parser parser = new Ikadn.Ikon.Parser(new StringReader(ReferencingTestInput));
 			var probe = parser.ParseNext();
 			var rootValue = parser.ParseNext() as TextValue;
 
@@ -136,7 +136,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferencingArrayElement()
 		{
-			Parser parser = new Ikon.Ston.Parser(new StringReader(ReferencingTestInput));
+			Parser parser = new Ikadn.Ikon.Parser(new StringReader(ReferencingTestInput));
 			var probe = parser.ParseNext();
 			var rootValue = parser.ParseNext();
 			var array = parser.ParseNext() as ArrayValue;
@@ -147,7 +147,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferencingCompositionChild()
 		{
-			Parser parser = new Ikon.Ston.Parser(new StringReader(ReferencingTestInput));
+			Parser parser = new Ikadn.Ikon.Parser(new StringReader(ReferencingTestInput));
 			var probe = parser.ParseNext();
 			var rootValue = parser.ParseNext();
 			var array = parser.ParseNext() as ArrayValue;
@@ -163,7 +163,7 @@ namespace Ikston_Unit_Tests
 			string expected = "\"something\" @name";
 
 			StringBuilder output = new StringBuilder();
-			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
 			var value = new TextValue("something");
 			value.ReferenceNames.Add("name");
@@ -180,7 +180,7 @@ namespace Ikston_Unit_Tests
 				"]";
 
 			StringBuilder output = new StringBuilder();
-			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
 			var namedValue = new TextValue("something");
 			namedValue.ReferenceNames.Add("name");
@@ -200,7 +200,7 @@ namespace Ikston_Unit_Tests
 				"}";
 
 			StringBuilder output = new StringBuilder();
-			IkonWriter writer = new IkonWriter(new StringWriter(output));
+			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
 			var namedValue = new TextValue("something");
 			namedValue.ReferenceNames.Add("name");
