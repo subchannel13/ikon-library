@@ -21,7 +21,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext();
 
-			Assert.AreEqual(NumericValue.ValueTypeName, value.TypeName);
+			Assert.AreEqual(NumericValue.ValueTypeName, value.Tag);
 		}
 
 		[TestMethod]

@@ -30,7 +30,7 @@ namespace Ikadn.Ikon.Values
 		/// <summary>
 		/// Type name of the IKADN value instance.
 		/// </summary>
-		public override string TypeName
+		public override object Tag
 		{
 			get { return ValueTypeName; }
 		}
@@ -52,7 +52,7 @@ namespace Ikadn.Ikon.Values
 			else if (target.IsAssignableFrom(this.GetType()))
 				return (T)(object)this;
 			else
-				throw new InvalidOperationException("Cast to " + target.Name + " is not supported for " + TypeName);
+				throw new InvalidOperationException("Cast to " + target.Name + " is not supported for " + Tag);
 		}
 
 		/// <summary>

@@ -2,6 +2,7 @@
 using Ikadn.Ikon.Factories;
 using Ikadn.Utilities;
 using System;
+using System.Reflection;
 
 namespace Ikadn.Ikon.Values
 {
@@ -14,6 +15,8 @@ namespace Ikadn.Ikon.Values
 		/// Type name of IKON arrays.
 		/// </summary>
 		public const string ValueTypeName = "IKON.Array";
+
+		private static MethodInfo baseConverterMethod = null;
 
 		private IList<IkadnBaseValue> elements;
 
@@ -37,7 +40,7 @@ namespace Ikadn.Ikon.Values
 		/// <summary>
 		/// Type name of the IKADN value instance.
 		/// </summary>
-		public override string TypeName
+		public override object Tag
 		{
 			get { return ValueTypeName; }
 		}
@@ -56,10 +59,22 @@ namespace Ikadn.Ikon.Values
 
 			if (target.IsAssignableFrom(typeof(IList<IkadnBaseValue>)))
 				return (T)elements;
+			else if (target.IsArray) {
+				if (baseConverterMethod == null)
+					baseConverterMethod = typeof(IkadnBaseValue).GetMethod("To", new Type[] { });
+
+				MethodInfo converterMethod = baseConverterMethod.MakeGenericMethod(target.GetElementType());
+				Array array = Array.CreateInstance(target.GetElementType(), this.elements.Count);
+
+				for (int i = 0; i < this.elements.Count; i++)
+					array.SetValue(converterMethod.Invoke(this.elements[i], null), i);
+
+				return (T)(object)array;
+			}
 			else if (target.IsAssignableFrom(this.GetType()))
 				return (T)(object)this;
 			else
-				throw new InvalidOperationException("Cast to " + target.Name + " is not supported for " + TypeName);
+				throw new InvalidOperationException("Cast to " + target.Name + " is not supported for " + Tag);
 		}
 
 		/// <summary>

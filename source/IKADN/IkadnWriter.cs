@@ -25,7 +25,7 @@ namespace Ikadn
 		/// <summary>
 		/// Temporary line contents.
 		/// </summary>
-		protected StringBuilder Line { get; private set; }
+		private StringBuilder Line { get; set; }
 
 		/// <summary>
 		/// Constructs basic IKADN composer.

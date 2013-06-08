@@ -10,7 +10,8 @@ namespace Ikadn
 	/// </summary>
 	public class Parser : IDisposable
 	{
-		private IkadnBaseValue lastTryValue = null;
+		private TaggableQueue<object, IkadnBaseValue> bufferedObjects = new TaggableQueue<object,IkadnBaseValue>();
+
 		/// <summary>
 		/// Collection on value factories.
 		/// </summary>
@@ -70,14 +71,16 @@ namespace Ikadn
 		/// Parses whole input stream.
 		/// </summary>
 		/// <returns>Queue of parsed IKADN values.</returns>
-		public ValueQueue ParseAll()
+		public TaggableQueue<object, IkadnBaseValue> ParseAll()
 		{
-			ValueQueue values = new ValueQueue();
+			var queue = new TaggableQueue<object, IkadnBaseValue>(bufferedObjects);
 
-			while (HasNext())
-				values.Enqueue(ParseNext());
+			while (HasNext()) {
+				var dataObj = ParseNext();
+				queue.Enqueue(dataObj.Tag, dataObj);
+			}
 
-			return values;
+			return queue;
 		}
 
 		/// <summary>
@@ -86,9 +89,13 @@ namespace Ikadn
 		/// <returns>True if it is possible.</returns>
 		public bool HasNext()
 		{
-			this.lastTryValue = this.lastTryValue ?? this.TryParseNext();
+			if (this.bufferedObjects.Count == 0) {
+				var dataObj = this.TryParseNext();
+				if (dataObj != null)
+					this.bufferedObjects.Enqueue(dataObj.Tag, dataObj);
+			}
 
-			return (this.lastTryValue != null);
+			return (this.bufferedObjects.Count != 0);
 		}
 
 		/// <summary>
@@ -100,13 +107,37 @@ namespace Ikadn
 		/// <returns>An IKADN value</returns>
 		public IkadnBaseValue ParseNext()
 		{
-			IkadnBaseValue res = this.lastTryValue ?? this.TryParseNext();
-			this.lastTryValue = null;
+			if (this.bufferedObjects.Count > 0)
+				return this.bufferedObjects.Dequeue();
+
+			IkadnBaseValue res = this.TryParseNext();
 
 			if (res == null)
 				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + Reader.PositionDescription + ".");
 			
 			return res;
+		}
+
+		/// <summary>
+		/// Parses and returns next IKADN value from the input stream. 
+		/// 
+		/// Throws System.IO.EndOfStreamException if end of
+		/// the input stream is encountered while parsing.
+		/// </summary>
+		/// <param name="tag">Desired object tag</param>
+		/// <returns>An IKADN value</returns>
+		public IkadnBaseValue ParseNext(object tag)
+		{
+			while (this.bufferedObjects.CountOf(tag) == 0) {
+				IkadnBaseValue dataObj = this.TryParseNext();
+				
+				if (dataObj == null)
+					throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + Reader.PositionDescription + ".");
+
+				bufferedObjects.Enqueue(dataObj.Tag, dataObj);
+			}
+				
+			return this.bufferedObjects.Dequeue(tag);
 		}
 
 		/// <summary>

@@ -38,7 +38,7 @@ namespace Ikston_Unit_Tests
 			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual(TextValue.ValueTypeName, parser.GetNamedValue("text").TypeName);
+			Assert.AreEqual(TextValue.ValueTypeName, parser.GetNamedValue("text").Tag);
 		}
 
 		[TestMethod]
@@ -47,7 +47,7 @@ namespace Ikston_Unit_Tests
 			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual(NumericValue.ValueTypeName, parser.GetNamedValue("number").TypeName);
+			Assert.AreEqual(NumericValue.ValueTypeName, parser.GetNamedValue("number").Tag);
 		}
 
 		[TestMethod]
@@ -56,7 +56,7 @@ namespace Ikston_Unit_Tests
 			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual(NumericValue.ValueTypeName, parser.GetNamedValue("notNumber").TypeName);
+			Assert.AreEqual(NumericValue.ValueTypeName, parser.GetNamedValue("notNumber").Tag);
 		}
 
 		[TestMethod]
@@ -65,7 +65,7 @@ namespace Ikston_Unit_Tests
 			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual(ArrayValue.ValueTypeName, parser.GetNamedValue("array").TypeName);
+			Assert.AreEqual(ArrayValue.ValueTypeName, parser.GetNamedValue("array").Tag);
 		}
 
 		[TestMethod]
@@ -74,7 +74,7 @@ namespace Ikston_Unit_Tests
 			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual("NestedStuff", parser.GetNamedValue("composite").TypeName);
+			Assert.AreEqual("NestedStuff", parser.GetNamedValue("composite").Tag);
 		}
 
 		[TestMethod]
@@ -83,7 +83,7 @@ namespace Ikston_Unit_Tests
 			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual(NumericValue.ValueTypeName, parser.GetNamedValue("nestedNumber").TypeName);
+			Assert.AreEqual(NumericValue.ValueTypeName, parser.GetNamedValue("nestedNumber").Tag);
 		}
 
 		[TestMethod]
@@ -92,7 +92,7 @@ namespace Ikston_Unit_Tests
 			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual(TextValue.ValueTypeName, parser.GetNamedValue("nestedText").TypeName);
+			Assert.AreEqual(TextValue.ValueTypeName, parser.GetNamedValue("nestedText").Tag);
 		}
 
 		[TestMethod]
@@ -101,7 +101,7 @@ namespace Ikston_Unit_Tests
 			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual("NestedStuff", parser.GetNamedValue("otherName").TypeName);
+			Assert.AreEqual("NestedStuff", parser.GetNamedValue("otherName").Tag);
 		}
 
 		[TestMethod]
@@ -110,7 +110,7 @@ namespace Ikston_Unit_Tests
 			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual("NestedStuff", parser.GetNamedValue("noSpace").TypeName);
+			Assert.AreEqual("NestedStuff", parser.GetNamedValue("noSpace").Tag);
 		}
 
 		[TestMethod]
@@ -120,7 +120,7 @@ namespace Ikston_Unit_Tests
 			var probe = parser.ParseNext();
 			var rootValue = parser.ParseNext();
 
-			Assert.AreEqual(TextValue.ValueTypeName, rootValue.TypeName);
+			Assert.AreEqual(TextValue.ValueTypeName, rootValue.Tag);
 		}
 
 		[TestMethod]

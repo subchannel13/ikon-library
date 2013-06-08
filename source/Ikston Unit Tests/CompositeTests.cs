@@ -32,7 +32,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
 			var value = parser.ParseNext();
 
-			Assert.AreEqual("Model", value.TypeName);
+			Assert.AreEqual("Model", value.Tag);
 		}
 
 		[TestMethod]
@@ -141,7 +141,7 @@ namespace Ikston_Unit_Tests
 
 			var subvalue = value["material0"] as ObjectValue;
 
-			Assert.AreEqual("Material", subvalue.TypeName);
+			Assert.AreEqual("Material", subvalue.Tag);
 		}
 
 		[TestMethod]

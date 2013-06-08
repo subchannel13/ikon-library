@@ -1,4 +1,6 @@
-﻿{ Zvijezda
+﻿[=4 =7 =11]
+
+{ Zvijezda
 	velicina = 2 @temp
 	x = 9
 	y = 4

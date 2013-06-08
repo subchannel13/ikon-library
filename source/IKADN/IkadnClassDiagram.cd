@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="Ikadn.IkadnBaseValue">
+    <Position X="0.5" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAggAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IkadnBaseValue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ikadn.IkadnReader" BaseTypeListCollapsed="true">
+    <Position X="3.5" Y="0.5" Width="4.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAEIQAAAABAEAAiBAAQIDACAAEAgAARAAA=</HashCode>
+      <FileName>IkadnReader.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ikadn.IkadnWriter">
+    <Position X="0.5" Y="2.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAIAAAAAAAAAAAAIAAAAAAAAAEBAAA=</HashCode>
+      <FileName>IkadnWriter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ikadn.Parser" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="7.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAACAAAAAAEAAhAAAAAAAQAAAAIRAAAAAAAAA=</HashCode>
+      <FileName>Parser.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Ikadn.Utilities.Indentation">
+    <Position X="7" Y="10" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAFAAAEAAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utilities\Indentation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Ikadn.Utilities.TaggableQueue&lt;K, V&gt;" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="11.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>ACBAwAAAAAAAABAAAAAAAAQAABAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Utilities\TaggableQueue.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Struct Name="Ikadn.Utilities.ReadingDecision">
+    <Position X="5" Y="7.25" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAYAAAAAAAAAACiA=</HashCode>
+      <FileName>Utilities\ReadingDecision.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="Ikadn.IValueFactory">
+    <Position X="0.5" Y="5.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IValueFactory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Ikadn.Utilities.CharacterAction">
+    <Position X="5" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACEAAAAgAAAAAAAAAAAIAAAAAAIAAAAAAAUAA=</HashCode>
+      <FileName>Utilities\CharacterAction.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Ikadn.Utilities.ReaderDoneReason">
+    <Position X="5" Y="10" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Utilities\ReaderDoneReason.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

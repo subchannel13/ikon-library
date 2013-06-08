@@ -20,7 +20,7 @@ namespace Ikston_Unit_Tests
 			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext();
 
-			Assert.AreEqual(ArrayValue.ValueTypeName, value.TypeName);
+			Assert.AreEqual(ArrayValue.ValueTypeName, value.Tag);
 		}
 
 		[TestMethod]

@@ -4,34 +4,34 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 
-namespace Ikadn
+namespace Ikadn.Utilities
 {
 	/// <summary>
 	/// Represents a first-in, first-out collection of IKADN values.
 	/// </summary>
-	public class ValueQueue : IEnumerable<IkadnBaseValue>
+	public class TaggableQueue<K, V> : IEnumerable<KeyValuePair<K, V>>
 	{
-		LinkedList<IkadnBaseValue> values = new LinkedList<IkadnBaseValue>();
-		Dictionary<string, Queue<IkadnBaseValue>> typedQueue = new Dictionary<string, Queue<IkadnBaseValue>>();
-		Dictionary<IkadnBaseValue, LinkedListNode<IkadnBaseValue>> indices = new Dictionary<IkadnBaseValue, LinkedListNode<IkadnBaseValue>>();
+		LinkedList<KeyValuePair<K, V>> elements = new LinkedList<KeyValuePair<K, V>>();
+		Dictionary<K, Queue<V>> tagGroups = new Dictionary<K, Queue<V>>();
+		Dictionary<V, LinkedListNode<KeyValuePair<K, V>>> indices = new Dictionary<V, LinkedListNode<KeyValuePair<K, V>>>();
 
 		/// <summary>
 		/// Initializes a new empty instance of Ikadn.ValueQueue.
 		/// </summary>
-		public ValueQueue()
+		public TaggableQueue()
 		{ }
-
+		
 		/// <summary>
 		/// Initializes an instance of Ikadn.ValueQueue filled with given elements.
 		/// </summary>
-		/// <param name="values">IKADN values for populating the Ikadn.ValueQueue.</param>
-		public ValueQueue(IEnumerable<IkadnBaseValue> values)
+		/// <param name="range">IKADN values for populating the Ikadn.ValueQueue.</param>
+		public TaggableQueue(IEnumerable<KeyValuePair<K, V>> range)
 		{
-			if (values == null)
-				throw new ArgumentNullException("values");
+			if (range == null)
+				throw new ArgumentNullException("range");
 
-			foreach (IkadnBaseValue value in values)
-				Enqueue(value);
+			foreach (var element in range)
+				Enqueue(element.Key, element.Value);
 		}
 
 		/// <summary>
@@ -39,9 +39,9 @@ namespace Ikadn
 		/// </summary>
 		/// <returns>A System.Collections.Generic.IEnumerator&lt;T&gt; that can be used to iterate through the collection.
 		/// </returns>
-		public IEnumerator<IkadnBaseValue> GetEnumerator()
+		public IEnumerator<KeyValuePair<K, V>> GetEnumerator()
 		{
-			return values.GetEnumerator();
+			return elements.GetEnumerator();
 		}
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace Ikadn
 		/// </returns>
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return values.GetEnumerator();
+			return elements.GetEnumerator();
 		}
 
 		/// <summary>
@@ -59,7 +59,7 @@ namespace Ikadn
 		/// </summary>
 		public int Count
 		{
-			get { return values.Count; }
+			get { return elements.Count; }
 		}
 
 		/// <summary>
@@ -67,43 +67,49 @@ namespace Ikadn
 		/// </summary>
 		public bool IsEmpty
 		{
-			get { return values.Count == 0; }
+			get { return elements.Count == 0; }
 		}
 
 		/// <summary>
 		/// Gets the number of elements on given type contained in the Ikadn.ValueQueue.
 		/// </summary>
-		/// <param name="typeName">Type name of IKADN values to count.</param>
+		/// <param name="tag">Type name of IKADN values to count.</param>
 		/// <returns>Number of elements in question.</returns>
-		public int CountOf(string typeName)
+		public int CountOf(K tag)
 		{
-			return (typedQueue.ContainsKey(typeName)) ? typedQueue[typeName].Count : 0;
+			return (tagGroups.ContainsKey(tag)) ? tagGroups[tag].Count : 0;
 		}
 
 		/// <summary>
 		/// Removes and returns the object at the beginning of the Ikadn.ValueQueue.
 		/// </summary>
 		/// <returns>The object that is removed from the beginning of the Ikadn.ValueQueue.</returns>
-		public IkadnBaseValue Dequeue()
+		public V Dequeue()
 		{
-			IkadnBaseValue value = values.First.Value;
+			var value = elements.First.Value;
 			
-			values.RemoveFirst();
-			indices.Remove(value);
-			
-			return typedQueue[value.TypeName].Dequeue();
+			elements.RemoveFirst();
+			if (value.Key != null) {
+				indices.Remove(value.Value);
+				tagGroups[value.Key].Dequeue();
+			}
+
+			return value.Value;
 		}
 
 		/// <summary>
 		/// Removes and returns the first element of the Ikadn.ValueQueue with specified type name.
 		/// </summary>
-		/// <param name="typeName">Type name of IKADN value to dequeue.</param>
+		/// <param name="tag">Type name of IKADN value to dequeue.</param>
 		/// <returns>The IKADN value.</returns>
-		public IkadnBaseValue Dequeue(string typeName)
+		public V Dequeue(K tag)
 		{
-			IkadnBaseValue value = typedQueue[typeName].Dequeue();
+			if (tag == null)
+				return Dequeue();
+
+			V value = tagGroups[tag].Dequeue();
 			
-			values.Remove(indices[value]);
+			elements.Remove(indices[value]);
 			indices.Remove(value);
 
 			return value;
@@ -113,18 +119,21 @@ namespace Ikadn
 		/// Adds an object to the end of the Ikadn.ValueQueue.
 		/// </summary>
 		/// <param name="item">The object to add to the Ikadn.ValueQueue. The value can be null for reference types.
+		/// <param name="tag">Tag of the object</param>
 		/// </param>
-		public void Enqueue(IkadnBaseValue item)
+		public void Enqueue(K tag, V item)
 		{
 			if (item == null)
 				throw new ArgumentNullException("item");
 
-			if (!typedQueue.ContainsKey(item.TypeName))
-				typedQueue.Add(item.TypeName, new Queue<IkadnBaseValue>());
+			elements.AddLast(new KeyValuePair<K, V>(tag, item));
 			
-			values.AddLast(item);
-			indices.Add(item, values.Last);
-			typedQueue[item.TypeName].Enqueue(item);
+			if (tag != null) {
+				if (!tagGroups.ContainsKey(tag))
+					tagGroups.Add(tag, new Queue<V>());
+				indices.Add(item, elements.Last);
+				tagGroups[tag].Enqueue(item);
+			}
 		}
 	}
 }

@@ -67,7 +67,7 @@ namespace Ikadn.Ikon
 			if (value == null)
 				return null;
 
-			if (value.TypeName == ReferenceValue.ValueTypeName)
+			if (ReferenceValue.ValueTypeName.Equals(value.Tag))
 				return GetNamedValue(value.To<string>());
 
 			while (this.Reader.SkipWhiteSpaces() != ReaderDoneReason.EndOfStream &&

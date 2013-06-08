@@ -13,7 +13,7 @@ namespace Ikadn
 		/// <summary>
 		/// Type name of the IKADN value instance.
 		/// </summary>
-		public abstract string TypeName
+		public abstract object Tag
 		{
 			get;
 		}

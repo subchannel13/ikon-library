@@ -15,6 +15,8 @@ namespace IKON_test_app
 			StreamReader reader = new StreamReader(args[0]);
 
 			Parser parser = new Parser(reader);
+			var array = parser.ParseNext().To<int[]>();
+
 			var value = parser.ParseNext().To<ObjectValue>();
 
 			printStar(value);

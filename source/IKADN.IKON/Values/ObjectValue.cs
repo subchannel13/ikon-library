@@ -43,7 +43,7 @@ namespace Ikadn.Ikon.Values
 			if (target.IsAssignableFrom(this.GetType()))
 				return (T)(object)this;
 			else
-				throw new InvalidOperationException("Cast to " + target.Name + " is not supported for " + TypeName);
+				throw new InvalidOperationException("Cast to " + target.Name + " is not supported for " + Tag);
 		}
 
 		/// <summary>
@@ -86,7 +86,7 @@ namespace Ikadn.Ikon.Values
 		/// <summary>
 		/// Gets the name of the data class contained in this instance.
 		/// </summary>
-		public override string TypeName
+		public override object Tag
 		{
 			get { return className; }
 		}
