@@ -17,7 +17,7 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 ]";
 
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext();
 
 			Assert.AreEqual(ArrayValue.ValueTypeName, value.Tag);
@@ -28,7 +28,7 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[]";
 
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
 			Assert.AreEqual(0, value.Count);
@@ -39,7 +39,7 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 \"dfgfdg\" [] { nothing } ]";
 
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
 			Assert.AreEqual(4, value.Count);
@@ -50,7 +50,7 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 \"dfgfdg\" [] { nothing } ]";
 
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
 			Assert.AreEqual(typeof(NumericValue), value[0].GetType());
@@ -61,7 +61,7 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 \"dfgfdg\" [] { nothing } ]";
 
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
 			Assert.AreEqual(typeof(TextValue), value[1].GetType());
@@ -72,7 +72,7 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 \"dfgfdg\" [] { nothing } ]";
 
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
 			Assert.AreEqual(typeof(ArrayValue), value[2].GetType());
@@ -83,7 +83,7 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 \"asdfasdf\" [] { nothing } ]";
 
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext() as ArrayValue;
 
 			Assert.AreEqual(typeof(ObjectValue), value[3].GetType());

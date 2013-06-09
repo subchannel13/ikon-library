@@ -7,30 +7,32 @@ using System.Collections;
 namespace Ikadn.Utilities
 {
 	/// <summary>
-	/// Represents a first-in, first-out collection of IKADN values.
+	/// Represents a first-in, first-out collection of taggable objects.
 	/// </summary>
-	public class TaggableQueue<K, V> : IEnumerable<KeyValuePair<K, V>>
+	/// <typeparam name="TTag">Tag type</typeparam>
+	/// <typeparam name="TValue">Element type</typeparam>
+	public class TaggableQueue<TTag, TValue> : IEnumerable<KeyValuePair<TTag, TValue>>
 	{
-		LinkedList<KeyValuePair<K, V>> elements = new LinkedList<KeyValuePair<K, V>>();
-		Dictionary<K, Queue<V>> tagGroups = new Dictionary<K, Queue<V>>();
-		Dictionary<V, LinkedListNode<KeyValuePair<K, V>>> indices = new Dictionary<V, LinkedListNode<KeyValuePair<K, V>>>();
+		LinkedList<KeyValuePair<TTag, TValue>> elements = new LinkedList<KeyValuePair<TTag, TValue>>();
+		Dictionary<TTag, Queue<TValue>> tagGroups = new Dictionary<TTag, Queue<TValue>>();
+		Dictionary<TValue, LinkedListNode<KeyValuePair<TTag, TValue>>> indices = new Dictionary<TValue, LinkedListNode<KeyValuePair<TTag, TValue>>>();
 
 		/// <summary>
-		/// Initializes a new empty instance of Ikadn.ValueQueue.
+		/// Initializes a new empty instance of Ikadn.Utilities.TaggableQueue.
 		/// </summary>
 		public TaggableQueue()
 		{ }
 		
 		/// <summary>
-		/// Initializes an instance of Ikadn.ValueQueue filled with given elements.
+		/// Initializes an instance of Ikadn.Utilities.TaggableQueue filled with given elements.
 		/// </summary>
-		/// <param name="range">IKADN values for populating the Ikadn.ValueQueue.</param>
-		public TaggableQueue(IEnumerable<KeyValuePair<K, V>> range)
+		/// <param name="elements">Objects and corresponding tags for populating the Ikadn.Utilities.TaggableQueue.</param>
+		public TaggableQueue(IEnumerable<KeyValuePair<TTag, TValue>> elements)
 		{
-			if (range == null)
-				throw new ArgumentNullException("range");
+			if (elements == null)
+				throw new ArgumentNullException("elements");
 
-			foreach (var element in range)
+			foreach (var element in elements)
 				Enqueue(element.Key, element.Value);
 		}
 
@@ -39,7 +41,7 @@ namespace Ikadn.Utilities
 		/// </summary>
 		/// <returns>A System.Collections.Generic.IEnumerator&lt;T&gt; that can be used to iterate through the collection.
 		/// </returns>
-		public IEnumerator<KeyValuePair<K, V>> GetEnumerator()
+		public IEnumerator<KeyValuePair<TTag, TValue>> GetEnumerator()
 		{
 			return elements.GetEnumerator();
 		}
@@ -55,7 +57,7 @@ namespace Ikadn.Utilities
 		}
 
 		/// <summary>
-		/// Gets the number of elements contained in the Ikadn.ValueQueue.
+		/// Gets the number of elements contained in the Ikadn.Utilities.TaggableQueue.
 		/// </summary>
 		public int Count
 		{
@@ -63,7 +65,7 @@ namespace Ikadn.Utilities
 		}
 
 		/// <summary>
-		/// Tests whether there are any elements in Ikadn.ValueQueue.
+		/// Checks whether there are any elements in Ikadn.Utilities.TaggableQueue.
 		/// </summary>
 		public bool IsEmpty
 		{
@@ -71,66 +73,67 @@ namespace Ikadn.Utilities
 		}
 
 		/// <summary>
-		/// Gets the number of elements on given type contained in the Ikadn.ValueQueue.
+		/// Gets the number of elements with a given tag contained in the Ikadn.Utilities.TaggableQueue.
 		/// </summary>
-		/// <param name="tag">Type name of IKADN values to count.</param>
+		/// <param name="tag">Object tag.</param>
 		/// <returns>Number of elements in question.</returns>
-		public int CountOf(K tag)
+		public int CountOf(TTag tag)
 		{
 			return (tagGroups.ContainsKey(tag)) ? tagGroups[tag].Count : 0;
 		}
 
 		/// <summary>
-		/// Removes and returns the object at the beginning of the Ikadn.ValueQueue.
+		/// Removes and returns the object at the beginning of the Ikadn.Utilities.TaggableQueue.
 		/// </summary>
-		/// <returns>The object that is removed from the beginning of the Ikadn.ValueQueue.</returns>
-		public V Dequeue()
+		/// <returns>The object that is removed from the beginning of the Ikadn.Utilities.TaggableQueue.</returns>
+		public TValue Dequeue()
 		{
-			var value = elements.First.Value;
+			var element = elements.First.Value;
 			
 			elements.RemoveFirst();
-			if (value.Key != null) {
-				indices.Remove(value.Value);
-				tagGroups[value.Key].Dequeue();
+			if (element.Key != null) {
+				indices.Remove(element.Value);
+				tagGroups[element.Key].Dequeue();
 			}
 
-			return value.Value;
+			return element.Value;
 		}
 
 		/// <summary>
-		/// Removes and returns the first element of the Ikadn.ValueQueue with specified type name.
+		/// Removes and returns the first element of the Ikadn.Utilities.TaggableQueue
+		/// with specified tag.
 		/// </summary>
-		/// <param name="tag">Type name of IKADN value to dequeue.</param>
-		/// <returns>The IKADN value.</returns>
-		public V Dequeue(K tag)
+		/// <param name="tag">Tag of an object to dequeue.</param>
+		/// <returns>The object.</returns>
+		public TValue Dequeue(TTag tag)
 		{
 			if (tag == null)
 				return Dequeue();
 
-			V value = tagGroups[tag].Dequeue();
+			TValue element = tagGroups[tag].Dequeue();
 			
-			elements.Remove(indices[value]);
-			indices.Remove(value);
+			elements.Remove(indices[element]);
+			indices.Remove(element);
 
-			return value;
+			return element;
 		}
 
 		/// <summary>
-		/// Adds an object to the end of the Ikadn.ValueQueue.
+		/// Adds an object to the end of the Ikadn.Utilities.TaggableQueue.
 		/// </summary>
-		/// <param name="item">The object to add to the Ikadn.ValueQueue. The value can be null for reference types.
+		/// <param name="item">The object to add to the end of Ikadn.Utilities.TaggableQueue. Can be null for reference types.
 		/// <param name="tag">Tag of the object</param>
 		/// </param>
-		public void Enqueue(K tag, V item)
+		public void Enqueue(TTag tag, TValue item)
 		{
 			if (item == null)
 				throw new ArgumentNullException("item");
 
-			elements.AddLast(new KeyValuePair<K, V>(tag, item));
+			elements.AddLast(new KeyValuePair<TTag, TValue>(tag, item));
 			
 			if (tag != null) {
 				if (!tagGroups.ContainsKey(tag))
-					tagGroups.Add(tag, new Queue<V>());
+					tagGroups.Add(tag, new Queue<TValue>());
 				indices.Add(item, elements.Last);
 				tagGroups[tag].Enqueue(item);
 			}

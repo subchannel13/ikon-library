@@ -9,7 +9,7 @@ namespace Ikadn.Ikon.Values
 	/// <summary>
 	/// Array of IKADN values.
 	/// </summary>
-	public class ArrayValue : IkonBaseValue, IList<IkadnBaseValue>
+	public class ArrayValue : IkonBaseValue, IList<IkadnBaseObject>
 	{
 		/// <summary>
 		/// Type name of IKON arrays.
@@ -18,13 +18,13 @@ namespace Ikadn.Ikon.Values
 
 		private static MethodInfo baseConverterMethod = null;
 
-		private IList<IkadnBaseValue> elements;
+		private IList<IkadnBaseObject> elements;
 
 		/// <summary>
 		/// Constructs IKON array of IKADN values
 		/// </summary>
 		/// <param name="values">Initial array contents.</param>
-		public ArrayValue(IList<IkadnBaseValue> values)
+		public ArrayValue(IList<IkadnBaseObject> values)
 		{
 			this.elements = values;
 		}
@@ -34,7 +34,7 @@ namespace Ikadn.Ikon.Values
 		/// </summary>
 		public ArrayValue()
 		{
-			this.elements = new List<IkadnBaseValue>();
+			this.elements = new List<IkadnBaseObject>();
 		}
 
 		/// <summary>
@@ -57,11 +57,11 @@ namespace Ikadn.Ikon.Values
 		{
 			Type target = typeof(T);
 
-			if (target.IsAssignableFrom(typeof(IList<IkadnBaseValue>)))
+			if (target.IsAssignableFrom(typeof(IList<IkadnBaseObject>)))
 				return (T)elements;
 			else if (target.IsArray) {
 				if (baseConverterMethod == null)
-					baseConverterMethod = typeof(IkadnBaseValue).GetMethod("To", new Type[] { });
+					baseConverterMethod = typeof(IkadnBaseObject).GetMethod("To", new Type[] { });
 
 				MethodInfo converterMethod = baseConverterMethod.MakeGenericMethod(target.GetElementType());
 				Array array = Array.CreateInstance(target.GetElementType(), this.elements.Count);
@@ -82,7 +82,7 @@ namespace Ikadn.Ikon.Values
 		/// </summary>
 		/// <param name="values">Elements to be added.</param>
 		/// <returns>Instance of the same IKON array method is called for.</returns>
-		public ArrayValue Add(params IkadnBaseValue[] values)
+		public ArrayValue Add(params IkadnBaseObject[] values)
 		{
 			if (values == null)
 				throw new System.ArgumentNullException("values");
@@ -105,7 +105,7 @@ namespace Ikadn.Ikon.Values
 			writer.WriteLine(ArrayFactory.OpeningSign.ToString());
 			writer.Indentation.Increase();
 
-			foreach (IkadnBaseValue value in elements)
+			foreach (IkadnBaseObject value in elements)
 				value.Compose(writer);
 
 			writer.Indentation.Decrease();
@@ -120,7 +120,7 @@ namespace Ikadn.Ikon.Values
 		/// </summary>
 		/// <param name="item">The object to locate in the System.Collections.Generic.IList&lt;T&gt;.</param>
 		/// <returns>The index of item if found in the list; otherwise, -1.</returns>
-		public int IndexOf(IkadnBaseValue item)
+		public int IndexOf(IkadnBaseObject item)
 		{
 			return this.elements.IndexOf(item);
 		}
@@ -130,7 +130,7 @@ namespace Ikadn.Ikon.Values
 		/// </summary>
 		/// <param name="index">The zero-based index at which item should be inserted.</param>
 		/// <param name="item">The object to insert into the System.Collections.Generic.IList&lt;T&gt;.</param>
-		public void Insert(int index, IkadnBaseValue item)
+		public void Insert(int index, IkadnBaseObject item)
 		{
 			this.elements.Insert(index, item);
 		}
@@ -149,7 +149,7 @@ namespace Ikadn.Ikon.Values
 		/// </summary>
 		/// <param name="index">The zero-based index of the element to get or set.</param>
 		/// <returns>The element at the specified index.</returns>
-		public IkadnBaseValue this[int index]
+		public IkadnBaseObject this[int index]
 		{
 			get
 			{
@@ -165,7 +165,7 @@ namespace Ikadn.Ikon.Values
 		/// Adds an item to the System.Collections.Generic.ICollection&lt;T&gt;.
 		/// </summary>
 		/// <param name="item">The object to add to the System.Collections.Generic.ICollection&lt;T&gt;.</param>
-		public void Add(IkadnBaseValue item)
+		public void Add(IkadnBaseObject item)
 		{
 			this.elements.Add(item);
 		}
@@ -183,7 +183,7 @@ namespace Ikadn.Ikon.Values
 		/// </summary>
 		/// <param name="item">The object to locate in the System.Collections.Generic.ICollection&lt;T&gt;.</param>
 		/// <returns>true if item is found in the System.Collections.Generic.ICollection&lt;T&gt;; otherwise, false.</returns>
-		public bool Contains(IkadnBaseValue item)
+		public bool Contains(IkadnBaseObject item)
 		{
 			return this.elements.Contains(item);
 		}
@@ -196,7 +196,7 @@ namespace Ikadn.Ikon.Values
 		/// from System.Collections.Generic.ICollection&lt;T&gt;. The System.Array must have zero-based indexing.
 		/// </param>
 		/// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
-		public void CopyTo(IkadnBaseValue[] array, int arrayIndex)
+		public void CopyTo(IkadnBaseObject[] array, int arrayIndex)
 		{
 			this.elements.CopyTo(array, arrayIndex);
 		}
@@ -225,7 +225,7 @@ namespace Ikadn.Ikon.Values
 		/// otherwise, false. This method also returns false if item is not found in the original 
 		/// System.Collections.Generic.ICollection&lt;T&gt;.
 		/// </returns>
-		public bool Remove(IkadnBaseValue item)
+		public bool Remove(IkadnBaseObject item)
 		{
 			return this.elements.Remove(item);
 		}
@@ -235,7 +235,7 @@ namespace Ikadn.Ikon.Values
 		/// </summary>
 		/// <returns>A System.Collections.Generic.IEnumerator&lt;T&gt; that can be used to iterate through the collection.
 		/// </returns>
-		public IEnumerator<IkadnBaseValue> GetEnumerator()
+		public IEnumerator<IkadnBaseObject> GetEnumerator()
 		{
 			return this.elements.GetEnumerator();
 		}

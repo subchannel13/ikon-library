@@ -6,12 +6,12 @@ using Ikadn.Utilities;
 namespace Ikadn
 {
 	/// <summary>
-	/// Base class for IKADN values.
+	/// Base class for IKADN objects.
 	/// </summary>
-	public abstract class IkadnBaseValue
+	public abstract class IkadnBaseObject
 	{
 		/// <summary>
-		/// Type name of the IKADN value instance.
+		/// Tag of the IKADN object.
 		/// </summary>
 		public abstract object Tag
 		{
@@ -19,22 +19,22 @@ namespace Ikadn
 		}
 
 		/// <summary>
-		/// Converts IKADN value to specified type.
+		/// Converts IKADN object to specified type.
 		/// </summary>
 		/// <typeparam name="T">Target type</typeparam>
 		/// <returns>Converted value</returns>
 		public abstract T To<T>();
 
 		/// <summary>
-		/// Writes value's content to the output stream.
+		/// Writes objects's content to the output stream.
 		/// </summary>
-		/// <param name="writer">Wrapped around target output stream.</param>
+		/// <param name="writer">Wrapper around target output stream.</param>
 		protected abstract void DoCompose(IkadnWriter writer);
 
 		/// <summary>
-		/// Writes an IKADN value to the output stream.
+		/// Writes an IKADN object to the output stream.
 		/// </summary>
-		/// <param name="writer">Wrapped around target output stream.</param>
+		/// <param name="writer">Wrapper around target output stream.</param>
 		public void Compose(IkadnWriter writer)
 		{
 			if (writer == null)

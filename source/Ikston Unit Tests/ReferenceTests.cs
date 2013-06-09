@@ -126,7 +126,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferencingRootValue()
 		{
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(ReferencingTestInput));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(ReferencingTestInput));
 			var probe = parser.ParseNext();
 			var rootValue = parser.ParseNext() as TextValue;
 
@@ -136,7 +136,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferencingArrayElement()
 		{
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(ReferencingTestInput));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(ReferencingTestInput));
 			var probe = parser.ParseNext();
 			var rootValue = parser.ParseNext();
 			var array = parser.ParseNext() as ArrayValue;
@@ -147,7 +147,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferencingCompositionChild()
 		{
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(ReferencingTestInput));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(ReferencingTestInput));
 			var probe = parser.ParseNext();
 			var rootValue = parser.ParseNext();
 			var array = parser.ParseNext() as ArrayValue;

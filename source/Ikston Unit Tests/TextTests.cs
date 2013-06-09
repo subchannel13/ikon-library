@@ -19,7 +19,7 @@ namespace Ikston_Unit_Tests
 		{
 			string input = Q + "some text" + Q;
 
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext();
 
 			Assert.AreEqual(value.Tag, TextValue.ValueTypeName);
@@ -31,7 +31,7 @@ namespace Ikston_Unit_Tests
 			string inputValue = "some text";
 			string input = Q + inputValue + Q;
 
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext() as TextValue;
 
 			Assert.AreEqual(value.To<string>(), inputValue);
@@ -44,7 +44,7 @@ namespace Ikston_Unit_Tests
 			string expectedValue = "some text\nnew line\ttab\n\ranother line and \" qoute";
 			string input = Q + inputValue + Q;
 
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(input));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
 			var value = parser.ParseNext() as TextValue;
 
 			Assert.AreEqual(value.To<string>(), expectedValue);

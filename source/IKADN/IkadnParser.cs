@@ -8,14 +8,14 @@ namespace Ikadn
 	/// <summary>
 	/// Basic parser for texts streams with IKADN syntax.
 	/// </summary>
-	public class Parser : IDisposable
+	public class IkadnParser : IDisposable
 	{
-		private TaggableQueue<object, IkadnBaseValue> bufferedObjects = new TaggableQueue<object,IkadnBaseValue>();
+		private TaggableQueue<object, IkadnBaseObject> bufferedObjects = new TaggableQueue<object,IkadnBaseObject>();
 
 		/// <summary>
-		/// Collection on value factories.
+		/// Collection on object factories.
 		/// </summary>
-		protected IDictionary<char, IValueFactory> Factories { get; private set; }
+		protected IDictionary<char, IIkadnObjectFactory> Factories { get; private set; }
 
 		/// <summary>
 		/// Input stream that is being parsed.
@@ -23,25 +23,25 @@ namespace Ikadn
 		public IkadnReader Reader { get; private set; }
 
 		/// <summary>
-		/// Constructs parser without registerd value factories.
+		/// Constructs parser without registerd object factories.
 		/// </summary>
 		/// <param name="reader">Input stream with IKADN syntax</param>
-		public Parser(TextReader reader)
+		public IkadnParser(TextReader reader)
 		{
 			if (reader == null)
 				throw new ArgumentNullException("reader");
 
 			this.Reader = new IkadnReader(reader);
 
-			this.Factories = new Dictionary<char, IValueFactory>();
+			this.Factories = new Dictionary<char, IIkadnObjectFactory>();
 		}
 
 		/// <summary>
-		/// Constructs parser and registers value factories to it.
+		/// Constructs parser and registers object factories to it.
 		/// </summary>
 		/// <param name="reader">Input stream with IKADN syntax.</param>
-		/// <param name="factories">Collection of value factories.</param>
-		public Parser(TextReader reader, IEnumerable<IValueFactory> factories)
+		/// <param name="factories">Collection of object factories.</param>
+		public IkadnParser(TextReader reader, IEnumerable<IIkadnObjectFactory> factories)
 			: this(reader)
 		{
 			if (factories == null)
@@ -52,11 +52,11 @@ namespace Ikadn
 		}
 
 		/// <summary>
-		/// Registers a value factory to the parser. If parser already
+		/// Registers an object factory to the parser. If parser already
 		/// has a factory with the same sign, it will be replaced.
 		/// </summary>
-		/// <param name="factory">A value factory.</param>
-		public void RegisterFactory(IValueFactory factory)
+		/// <param name="factory">An object factory.</param>
+		public void RegisterFactory(IIkadnObjectFactory factory)
 		{
 			if (factory == null)
 				throw new ArgumentNullException("factory");
@@ -70,10 +70,10 @@ namespace Ikadn
 		/// <summary>
 		/// Parses whole input stream.
 		/// </summary>
-		/// <returns>Queue of parsed IKADN values.</returns>
-		public TaggableQueue<object, IkadnBaseValue> ParseAll()
+		/// <returns>Queue of parsed IKADN objects.</returns>
+		public TaggableQueue<object, IkadnBaseObject> ParseAll()
 		{
-			var queue = new TaggableQueue<object, IkadnBaseValue>(bufferedObjects);
+			var queue = new TaggableQueue<object, IkadnBaseObject>(bufferedObjects);
 
 			while (HasNext()) {
 				var dataObj = ParseNext();
@@ -84,7 +84,7 @@ namespace Ikadn
 		}
 
 		/// <summary>
-		/// Checks whether parser can read more IKADN values from the input stream.
+		/// Checks whether parser can read more IKADN objects from the input stream.
 		/// </summary>
 		/// <returns>True if it is possible.</returns>
 		public bool HasNext()
@@ -99,18 +99,18 @@ namespace Ikadn
 		}
 
 		/// <summary>
-		/// Parses and returns next IKADN value from the input stream. 
+		/// Parses and returns next IKADN object from the input stream. 
 		/// 
 		/// Throws System.IO.EndOfStreamException if end of
 		/// the input stream is encountered while parsing.
 		/// </summary>
-		/// <returns>An IKADN value</returns>
-		public IkadnBaseValue ParseNext()
+		/// <returns>An IKADN object</returns>
+		public IkadnBaseObject ParseNext()
 		{
 			if (this.bufferedObjects.Count > 0)
 				return this.bufferedObjects.Dequeue();
 
-			IkadnBaseValue res = this.TryParseNext();
+			IkadnBaseObject res = this.TryParseNext();
 
 			if (res == null)
 				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + Reader.PositionDescription + ".");
@@ -119,17 +119,17 @@ namespace Ikadn
 		}
 
 		/// <summary>
-		/// Parses and returns next IKADN value from the input stream. 
+		/// Parses and returns next IKADN object from the input stream. 
 		/// 
 		/// Throws System.IO.EndOfStreamException if end of
 		/// the input stream is encountered while parsing.
 		/// </summary>
 		/// <param name="tag">Desired object tag</param>
-		/// <returns>An IKADN value</returns>
-		public IkadnBaseValue ParseNext(object tag)
+		/// <returns>An IKADN object</returns>
+		public IkadnBaseObject ParseNext(object tag)
 		{
 			while (this.bufferedObjects.CountOf(tag) == 0) {
-				IkadnBaseValue dataObj = this.TryParseNext();
+				IkadnBaseObject dataObj = this.TryParseNext();
 				
 				if (dataObj == null)
 					throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + Reader.PositionDescription + ".");
@@ -141,13 +141,14 @@ namespace Ikadn
 		}
 
 		/// <summary>
-		/// Trys to parse next IKADN value from the input stream. 
+		/// Trys to parse next IKADN object from the input stream. Returns null 
+		/// if there is none (end of input stream reached).
 		/// 
-		/// Throws System.FormatException if there is no value factory
-		/// that can parse curren state of the input.
+		/// Throws System.FormatException if there is no object factory
+		/// that can parse current state of the input.
 		/// </summary>
-		/// <returns>Return an IKADN value if there is one, null otherwise.</returns>
-		protected virtual IkadnBaseValue TryParseNext()
+		/// <returns>An IKADN object if there is one, null otherwise.</returns>
+		protected virtual IkadnBaseObject TryParseNext()
 		{
 			ReaderDoneReason skipResult = this.Reader.SkipWhiteSpaces();
 
@@ -156,7 +157,7 @@ namespace Ikadn
 
 			char sign = Reader.Read();
 			if (!Factories.ContainsKey(sign))
-				throw new FormatException("No factory defined for a value starting with " + sign + " at " + Reader.PositionDescription + ".");
+				throw new FormatException("No factory defined for an object starting with " + sign + " at " + Reader.PositionDescription + ".");
 
 			return Factories[sign].Parse(this);
 		}

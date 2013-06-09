@@ -18,7 +18,7 @@ namespace Ikadn.Ikon.Values
 		/// <summary>
 		/// Collection of the nested IKADN values.
 		/// </summary>
-		private IDictionary<string, IkadnBaseValue> members = new Dictionary<string, IkadnBaseValue>();
+		private IDictionary<string, IkadnBaseObject> members = new Dictionary<string, IkadnBaseObject>();
 
 		/// <summary>
 		/// Constructs IKON composite value marked as specified class of data.
@@ -51,7 +51,7 @@ namespace Ikadn.Ikon.Values
 		/// </summary>
 		/// <param name="memberName">Key of the value</param>
 		/// <returns>Nested IKADN value</returns>
-		public IkadnBaseValue this[string memberName]
+		public IkadnBaseObject this[string memberName]
 		{
 			get { return members[memberName]; }
 			set
@@ -69,7 +69,7 @@ namespace Ikadn.Ikon.Values
 		/// <param name="key">Key of the value.</param>
 		/// <param name="value">Element's value.</param>
 		/// <returns>Instance of the same IKON object method is called for.</returns>
-		public ObjectValue Add(string key, IkadnBaseValue value)
+		public ObjectValue Add(string key, IkadnBaseObject value)
 		{
 			members.Add(key, value);
 			return this;

@@ -7,13 +7,13 @@ using Ikadn.Utilities;
 namespace Ikadn
 {
 	/// <summary>
-	/// Base class for IKADN composers. Composers transform IKADN values to
-	/// a text.
+	/// Base class for IKADN composers. Composers transform IKADN object to
+	/// a plain text.
 	/// </summary>
 	public class IkadnWriter
 	{
 		/// <summary>
-		/// Output stream where IKADN values are being written.
+		/// Output stream where IKADN objects are being written.
 		/// </summary>
 		protected TextWriter Writer { get; private set; }
 

@@ -7,7 +7,7 @@ namespace Ikadn.Ikon.Factories
 	/// <summary>
 	/// IKADN value factory for named value references.
 	/// </summary>
-	public class ReferencedFactory : IValueFactory
+	public class ReferencedFactory : IIkadnObjectFactory
 	{
 		/// <summary>
 		/// Sign for IKADN value reference.
@@ -27,7 +27,7 @@ namespace Ikadn.Ikon.Factories
 		/// </summary>
 		/// <param name="parser">IKADN parser instance.</param>
 		/// <returns>Referenced IKADN value.</returns>
-		public IkadnBaseValue Parse(Ikadn.Parser parser)
+		public IkadnBaseObject Parse(Ikadn.IkadnParser parser)
 		{
 			if (parser == null)
 				throw new System.ArgumentNullException("parser");

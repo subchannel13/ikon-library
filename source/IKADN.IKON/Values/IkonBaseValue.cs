@@ -8,7 +8,7 @@ namespace Ikadn.Ikon.Values
 	/// <summary>
 	/// Base class for IKON values. Add reference names on top the IKADN values.
 	/// </summary>
-	public abstract class IkonBaseValue : IkadnBaseValue
+	public abstract class IkonBaseValue : IkadnBaseObject
 	{
 		private HashSet<string> referenceNames = new HashSet<string>();
 

@@ -84,7 +84,7 @@ namespace Ikadn
 		/// <summary>
 		/// Skips white space characters in the input stream and peeks the next character. 
 		/// Throws System.FormatException if end of stream is reached before a non-white 
-		/// character i found.
+		/// character is found.
 		/// </summary>
 		/// <returns>A non-white character</returns>
 		public char PeekNextNonwhite()
@@ -120,32 +120,32 @@ namespace Ikadn
 		/// <summary>
 		/// Reads characters from the input stream until the stopping condition is met. 
 		/// </summary>
-		/// <param name="readCondition">Characters that can be read.</param>
+		/// <param name="acceptableCharacters">Characters that can be read.</param>
 		/// <returns>Successfully read part of the stream.</returns>
-		public string ReadWhile(params char[] readCondition)
+		public string ReadWhile(params char[] acceptableCharacters)
 		{
-			if (readCondition == null)
-				throw new ArgumentNullException("readCondition");
+			if (acceptableCharacters == null)
+				throw new ArgumentNullException("acceptableCharacters");
 
-			if (readCondition.Length == 0)
-				throw new ArgumentException("No readable characters specified", "readCondition");
+			if (acceptableCharacters.Length == 0)
+				throw new ArgumentException("No readable characters specified", "acceptableCharacters");
 
-			return ReadWhile(new HashSet<char>(readCondition).Contains);
+			return ReadWhile(new HashSet<char>(acceptableCharacters).Contains);
 		}
 
 		/// <summary>
 		/// Reads characters from the input stream until the stopping condition is met.
 		/// </summary>
-		/// <param name="readCondition">Set of characters that can be read.</param>
+		/// <param name="acceptableCharacters">Set of characters that can be read.</param>
 		/// <returns>Successfully read part of the stream.</returns>
-		public string ReadWhile(ISet<char> readCondition)
+		public string ReadWhile(ISet<char> acceptableCharacters)
 		{
-			if (readCondition == null)
-				throw new ArgumentNullException("readCondition");
-			if (readCondition.Count == 0)
-				throw new ArgumentException("No readable characters specified", "readCondition");
+			if (acceptableCharacters == null)
+				throw new ArgumentNullException("acceptableCharacters");
+			if (acceptableCharacters.Count == 0)
+				throw new ArgumentException("No readable characters specified", "acceptableCharacters");
 
-			return ReadWhile(readCondition.Contains);
+			return ReadWhile(acceptableCharacters.Contains);
 		}
 
 		/// <summary>

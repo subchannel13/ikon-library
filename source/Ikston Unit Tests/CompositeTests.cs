@@ -29,7 +29,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void CompositeReadSampleType()
 		{
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
 			var value = parser.ParseNext();
 
 			Assert.AreEqual("Model", value.Tag);
@@ -38,7 +38,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void CompositeReadSampleSubvaluesCount()
 		{
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
 			var value = parser.ParseNext() as ObjectValue;
 
 			Assert.AreEqual(5, value.Keys.Count);
@@ -47,7 +47,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void CompositeReadSampleContainsName()
 		{
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
 			var value = parser.ParseNext() as ObjectValue;
 
 			Assert.IsTrue(value.Keys.Contains("name"));
@@ -56,7 +56,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void CompositeReadSampleContainsX()
 		{
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
 			var value = parser.ParseNext() as ObjectValue;
 
 			Assert.IsTrue(value.Keys.Contains("x"));
@@ -65,7 +65,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void CompositeReadSampleContainsY()
 		{
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
 			var value = parser.ParseNext() as ObjectValue;
 
 			Assert.IsTrue(value.Keys.Contains("y"));
@@ -74,7 +74,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void CompositeReadSampleContainsMaterials()
 		{
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
 			var value = parser.ParseNext() as ObjectValue;
 
 			Assert.IsTrue(value.Keys.Contains("materials"));
@@ -83,7 +83,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void CompositeReadSampleContainsMaterial0()
 		{
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
 			var value = parser.ParseNext() as ObjectValue;
 
 			Assert.IsTrue(value.Keys.Contains("material0"));
@@ -92,7 +92,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void CompositeReadSampleValueName()
 		{
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
 			var value = parser.ParseNext() as ObjectValue;
 
 			var subvalue = value["name"] as TextValue;
@@ -103,7 +103,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void CompositeReadSampleValueX()
 		{
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
 			var value = parser.ParseNext() as ObjectValue;
 
 			var subvalue = value["x"] as NumericValue;
@@ -114,7 +114,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void CompositeReadSampleValueY()
 		{
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
 			var value = parser.ParseNext() as ObjectValue;
 
 			var subvalue = value["y"] as NumericValue;
@@ -125,7 +125,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void CompositeReadSampleSubarrayCardinality()
 		{
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
 			var value = parser.ParseNext() as ObjectValue;
 
 			var subvalue = value["materials"] as ArrayValue;
@@ -136,7 +136,7 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void CompositeReadSampleSubvalueType()
 		{
-			Parser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
+			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(SampleSerializedObject));
 			var value = parser.ParseNext() as ObjectValue;
 
 			var subvalue = value["material0"] as ObjectValue;

@@ -12,7 +12,7 @@ namespace Ikadn.Ikon
 	/// <summary>
 	/// Parser that can parse input with IKON syntax.
 	/// </summary>
-	public class Parser : Ikadn.Parser
+	public class Parser : Ikadn.IkadnParser
 	{
 		/// <summary>
 		/// Character that marks the beginning of the reference name.
@@ -22,21 +22,21 @@ namespace Ikadn.Ikon
 		/// <summary>
 		/// Collection of named objects.
 		/// </summary>
-		protected IDictionary<string, IkadnBaseValue> NamedValues { get; private set; }
+		protected IDictionary<string, IkadnBaseObject> NamedValues { get; private set; }
 
 		/// <summary>
 		/// Constructs IKON parser with default IKON value factories.
 		/// </summary>
 		/// <param name="reader"></param>
 		public Parser(TextReader reader)
-			: base(reader, new IValueFactory[] {
+			: base(reader, new IIkadnObjectFactory[] {
  			new ObjectFactory(),
 			new TextFactory(), 
 			new NumericFactory(),
 			new ArrayFactory(),
 			new ReferencedFactory() })
 		{
-			this.NamedValues = new Dictionary<string, IkadnBaseValue>();
+			this.NamedValues = new Dictionary<string, IkadnBaseObject>();
 		}
 
 		/// <summary>
@@ -44,7 +44,7 @@ namespace Ikadn.Ikon
 		/// </summary>
 		/// <param name="reader">Input stream with IKADN syntax.</param>
 		/// <param name="factories">Collection of value factories.</param>
-		public Parser(TextReader reader, IEnumerable<IValueFactory> factories)
+		public Parser(TextReader reader, IEnumerable<IIkadnObjectFactory> factories)
 			: this(reader)
 		{
 			if (factories == null)
@@ -61,9 +61,9 @@ namespace Ikadn.Ikon
 		/// that can parse curren state of the input.
 		/// </summary>
 		/// <returns>Return an IKADN value if there is one, null otherwise.</returns>
-		protected override IkadnBaseValue TryParseNext()
+		protected override IkadnBaseObject TryParseNext()
 		{
-			IkadnBaseValue value = base.TryParseNext();
+			IkadnBaseObject value = base.TryParseNext();
 			if (value == null)
 				return null;
 
@@ -87,7 +87,7 @@ namespace Ikadn.Ikon
 		/// </summary>
 		/// <param name="name">Name of the value reference</param>
 		/// <returns>Desired IKADN value.</returns>
-		public IkadnBaseValue GetNamedValue(string name)
+		public IkadnBaseObject GetNamedValue(string name)
 		{
 			if (NamedValues.ContainsKey(name))
 				return NamedValues[name];

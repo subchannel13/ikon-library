@@ -56,16 +56,13 @@
     <Compile Include="Utilities\CharacterAction.cs" />
     <Compile Include="Utilities\ReadingDecision.cs" />
     <Compile Include="Utilities\Indentation.cs" />
-    <Compile Include="IValueFactory.cs" />
-    <Compile Include="Parser.cs" />
+    <Compile Include="IIkadnObjectFactory.cs" />
+    <Compile Include="IkadnParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IkadnBaseValue.cs" />
+    <Compile Include="IkadnBaseObject.cs" />
     <Compile Include="Utilities\ReaderDoneReason.cs" />
     <Compile Include="IkadnWriter.cs" />
     <Compile Include="Utilities\TaggableQueue.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="IkadnClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
