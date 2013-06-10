@@ -4,42 +4,45 @@ using System.Linq;
 using System.Text;
 using Ikadn.Ikon.Factories;
 
-namespace Ikadn.Ikon.Values
+namespace Ikadn.Ikon.Types
 {
 	/// <summary>
-	/// IKON reference value.
+	/// IKON reference object.
 	/// </summary>
-	public class ReferenceValue : IkonBaseValue
+	public class IkonReference : IkonBaseObject
 	{
 		/// <summary>
-		/// Type name of IKON text values.
+		/// Tag for IKON referecne objects.
 		/// </summary>
-		public const string ValueTypeName = "IKON.Reference";
+		public const string TypeTag = "IKON.Reference";
 
+		/// <summary>
+		/// Name of the object reference.
+		/// </summary>
 		private string name;
 
 		/// <summary>
-		/// Constructs IKON reference value with specified name.
+		/// Constructs IKON reference object with specified name.
 		/// </summary>
 		/// <param name="name">Name of the referenced object.</param>
-		public ReferenceValue(string name)
+		public IkonReference(string name)
 		{
 			this.name = name;
 		}
 
 		/// <summary>
-		/// Type name of the IKADN value instance.
+		/// Tag of the IKADN object instance.
 		/// </summary>
 		public override object Tag
 		{
-			get { return ValueTypeName; }
+			get { return TypeTag; }
 		}
 
 		/// <summary>
-		/// Converts IKON reference value to specified type. Supported target types:
+		/// Converts IKON reference object to specified type. Supported target types:
 		/// 
 		/// System.string
-		/// Ikadn.Ikon.Values.TextValue
+		/// Ikadn.Ikon.Types.IkonText
 		/// </summary>
 		/// <typeparam name="T">Target type</typeparam>
 		/// <returns>Converted value</returns>
@@ -56,7 +59,7 @@ namespace Ikadn.Ikon.Values
 		}
 
 		/// <summary>
-		/// Writes an IKON reference value to the composer.
+		/// Writes an IKON reference object to the composer.
 		/// </summary>
 		/// <param name="writer">Target composer.</param>
 		protected override void DoCompose(IkadnWriter writer)

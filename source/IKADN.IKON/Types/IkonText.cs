@@ -3,42 +3,42 @@ using Ikadn.Ikon.Factories;
 using Ikadn.Utilities;
 using System;
 
-namespace Ikadn.Ikon.Values
+namespace Ikadn.Ikon.Types
 {
 	/// <summary>
-	/// IKON textual value.
+	/// IKON textual object.
 	/// </summary>
-	public class TextValue : IkonBaseValue
+	public class IkonText : IkonBaseObject
 	{
 		/// <summary>
-		/// Type name of IKON text values.
+		/// Tag for IKON text objects.
 		/// </summary>
-		public const string ValueTypeName = "IKON.Text";
+		public const string TypeTag = "IKON.Text";
 
 		private string text;
 
 		/// <summary>
-		/// Constructs IKON textual value with specified contents.
+		/// Constructs IKON textual object with specified contents.
 		/// </summary>
-		/// <param name="value">Contents</param>
-		public TextValue(string value)
+		/// <param name="text">Contents</param>
+		public IkonText(string text)
 		{
-			this.text = value;
+			this.text = text;
 		}
 
 		/// <summary>
-		/// Type name of the IKADN value instance.
+		/// Tag of the IKADN object instance.
 		/// </summary>
 		public override object Tag
 		{
-			get { return ValueTypeName; }
+			get { return TypeTag; }
 		}
 
 		/// <summary>
-		/// Converts IKON text value to specified type. Supported target types:
+		/// Converts IKON text object to specified type. Supported target types:
 		/// 
 		/// System.string
-		/// Ikadn.Ikon.Values.TextValue
+		/// Ikadn.Ikon.Types.IkonText
 		/// </summary>
 		/// <typeparam name="T">Target type</typeparam>
 		/// <returns>Converted value</returns>
@@ -55,18 +55,18 @@ namespace Ikadn.Ikon.Values
 		}
 
 		/// <summary>
-		/// Implicit conversion from IKADN textual value to System.String value.
+		/// Implicit conversion from IKADN textual object to System.String.
 		/// </summary>
-		public static implicit operator string(TextValue textValue)
+		public static implicit operator string(IkonText ikonText)
 		{
-			if (textValue == null)
+			if (ikonText == null)
 				return null;
 
-			return textValue.text;
+			return ikonText.text;
 		}
 
 		/// <summary>
-		/// Writes an IKON text value to the composer.
+		/// Writes an IKON text object to the composer.
 		/// </summary>
 		/// <param name="writer">Target composer.</param>
 		protected override void DoCompose(IkadnWriter writer)

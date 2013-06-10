@@ -3,17 +3,17 @@ using Ikadn.Utilities;
 using System;
 using System.Collections.Generic;
 
-namespace Ikadn.Ikon.Values
+namespace Ikadn.Ikon.Types
 {
 	/// <summary>
-	/// IKON numeric value.
+	/// IKON numeric object.
 	/// </summary>
-	public class NumericValue : IkonBaseValue
+	public class IkonNumeric : IkonBaseObject
 	{
 		/// <summary>
-		/// Type name of IKON numeric values.
+		/// Tag for IKON numeric objects.
 		/// </summary>
-		public const string ValueTypeName = "IKON.Numeric";
+		public const string TypeTag = "IKON.Numeric";
 
 		/// <summary>
 		/// Textual representation of IKON numeric for positive infinity.
@@ -33,78 +33,78 @@ namespace Ikadn.Ikon.Values
 		private string textualRepresentation;
 
 		/// <summary>
-		/// Constructs IKON numeric value.
+		/// Constructs IKON numeric object.
 		/// </summary>
-		/// <param name="textualRepresentation">Textual representation of the value</param>
-		protected internal NumericValue(string textualRepresentation)
+		/// <param name="textualRepresentation">Textual representation of the object</param>
+		protected internal IkonNumeric(string textualRepresentation)
 		{
 			this.textualRepresentation = textualRepresentation;
 		}
 
 		/// <summary>
-		/// Constructs IKON numeric value.
+		/// Constructs IKON numeric object.
 		/// </summary>
 		/// <param name="value">The value</param>
-		public NumericValue(decimal value)
+		public IkonNumeric(decimal value)
 		{
 			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
 
 		/// <summary>
-		/// Constructs IKON numeric value.
+		/// Constructs IKON numeric object.
 		/// </summary>
 		/// <param name="value">The value</param>
-		public NumericValue(double value)
+		public IkonNumeric(double value)
 		{
 			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
 
 		/// <summary>
-		/// Constructs IKON numeric value.
+		/// Constructs IKON numeric object.
 		/// </summary>
 		/// <param name="value">The value</param>
-		public NumericValue(float value)
+		public IkonNumeric(float value)
 		{
 			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
 
 		/// <summary>
-		/// Constructs IKON numeric value.
+		/// Constructs IKON numeric object.
 		/// </summary>
 		/// <param name="value">The value</param>
-		public NumericValue(long value)
+		public IkonNumeric(long value)
 		{
 			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
 
 		/// <summary>
-		/// Constructs IKON numeric value.
+		/// Constructs IKON numeric object.
 		/// </summary>
 		/// <param name="value">The value</param>
-		public NumericValue(int value)
+		public IkonNumeric(int value)
 		{
 			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
 
 		/// <summary>
-		/// Constructs IKON numeric value.
+		/// Constructs IKON numeric object.
 		/// </summary>
 		/// <param name="value">The value</param>
-		public NumericValue(short value)
+		public IkonNumeric(short value)
 		{
 			this.textualRepresentation = value.ToString(NumericFactory.NumberFormat);
 		}
 
 		/// <summary>
-		/// Type name of the IKON numeric value instance.
+		/// Tag of the IKADN object instance.
 		/// </summary>
 		public override object Tag
 		{
-			get { return ValueTypeName; }
+			get { return TypeTag; }
 		}
 
 		/// <summary>
-		/// Converts IKON numeric value to specified type. Supported target types:
+		/// Converts IKON numeric object to specified type. Supported target types:
 		/// 
 		/// System.decimal
 		/// System.double
@@ -112,7 +112,7 @@ namespace Ikadn.Ikon.Values
 		/// System.int
 		/// System.long
 		/// System.short
-		/// Ikadn.Ikon.Values.NumericValue
+		/// Ikadn.Ikon.Types.IkonNumeric
 		/// </summary>
 		/// <typeparam name="T">Target type</typeparam>
 		/// <returns>Converted value</returns>
@@ -129,7 +129,7 @@ namespace Ikadn.Ikon.Values
 		}
 
 		/// <summary>
-		/// Gets System.Decimal value from IKADN numeric value.
+		/// Gets System.Decimal value from IKADN numeric object.
 		/// </summary>
 		private static decimal GetDecimal(string textualRepresentation)
 		{
@@ -137,7 +137,7 @@ namespace Ikadn.Ikon.Values
 		}
 
 		/// <summary>
-		/// Gets System.Double value from IKADN numeric value.
+		/// Gets System.Double value from IKADN numeric object.
 		/// </summary>
 		private static double GetDouble(string textualRepresentation)
 		{
@@ -154,7 +154,7 @@ namespace Ikadn.Ikon.Values
 		}
 
 		/// <summary>
-		/// Gets System.Single value from IKADN numeric value.
+		/// Gets System.Single value from IKADN numeric object.
 		/// </summary>
 		private static float GetFloat(string textualRepresentation)
 		{
@@ -171,7 +171,7 @@ namespace Ikadn.Ikon.Values
 		}
 
 		/// <summary>
-		/// Gets System.Int32 value from IKADN numeric value.
+		/// Gets System.Int32 value from IKADN numeric object.
 		/// </summary>
 		private static int GetInt(string textualRepresentation)
 		{
@@ -179,7 +179,7 @@ namespace Ikadn.Ikon.Values
 		}
 
 		/// <summary>
-		/// Gets System.Int64 value from IKADN numeric value.
+		/// Gets System.Int64 value from IKADN numeric object.
 		/// </summary>
 		private static long GetLong(string textualRepresentation)
 		{
@@ -187,7 +187,7 @@ namespace Ikadn.Ikon.Values
 		}
 		
 		/// <summary>
-		/// Gets System.Int16 value from IKADN numeric value.
+		/// Gets System.Int16 value from IKADN numeric object.
 		/// </summary>
 		private static short GetShort(string textualRepresentation)
 		{
@@ -195,7 +195,7 @@ namespace Ikadn.Ikon.Values
 		}
 
 		/// <summary>
-		/// Writes an IKON numeric value to the composer.
+		/// Writes an IKON numeric object to the composer.
 		/// </summary>
 		/// <param name="writer">Target composer.</param>
 		protected override void DoCompose(IkadnWriter writer)

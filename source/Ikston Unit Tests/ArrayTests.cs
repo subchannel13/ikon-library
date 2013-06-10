@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using Ikadn.Ikon.Values;
+using Ikadn.Ikon.Types;
 using Ikadn;
 using System;
 
@@ -17,10 +17,10 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 ]";
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
 			var value = parser.ParseNext();
 
-			Assert.AreEqual(ArrayValue.ValueTypeName, value.Tag);
+			Assert.AreEqual(IkonArray.TypeTag, value.Tag);
 		}
 
 		[TestMethod]
@@ -28,8 +28,8 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[]";
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as ArrayValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonArray;
 
 			Assert.AreEqual(0, value.Count);
 		}
@@ -39,8 +39,8 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 \"dfgfdg\" [] { nothing } ]";
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as ArrayValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonArray;
 
 			Assert.AreEqual(4, value.Count);
 		}
@@ -50,10 +50,10 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 \"dfgfdg\" [] { nothing } ]";
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as ArrayValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonArray;
 
-			Assert.AreEqual(typeof(NumericValue), value[0].GetType());
+			Assert.AreEqual(typeof(IkonNumeric), value[0].GetType());
 		}
 
 		[TestMethod]
@@ -61,10 +61,10 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 \"dfgfdg\" [] { nothing } ]";
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as ArrayValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonArray;
 
-			Assert.AreEqual(typeof(TextValue), value[1].GetType());
+			Assert.AreEqual(typeof(IkonText), value[1].GetType());
 		}
 
 		[TestMethod]
@@ -72,10 +72,10 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 \"dfgfdg\" [] { nothing } ]";
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as ArrayValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonArray;
 
-			Assert.AreEqual(typeof(ArrayValue), value[2].GetType());
+			Assert.AreEqual(typeof(IkonArray), value[2].GetType());
 		}
 
 		[TestMethod]
@@ -83,10 +83,10 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "[ =2 \"asdfasdf\" [] { nothing } ]";
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as ArrayValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonArray;
 
-			Assert.AreEqual(typeof(ObjectValue), value[3].GetType());
+			Assert.AreEqual(typeof(IkonComposite), value[3].GetType());
 		}
 
 		[TestMethod]
@@ -95,7 +95,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
-			var value = new ArrayValue();
+			var value = new IkonArray();
 			value.Compose(writer);
 
 			Assert.AreEqual("[" + Environment.NewLine + "]", output.ToString().Trim());
@@ -113,10 +113,10 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
-			var value = new ArrayValue();
-			value.Add(new NumericValue(2));
-			value.Add(new NumericValue(5));
-			value.Add(new NumericValue(0.5));
+			var value = new IkonArray();
+			value.Add(new IkonNumeric(2));
+			value.Add(new IkonNumeric(5));
+			value.Add(new IkonNumeric(0.5));
 			value.Compose(writer);
 
 			Assert.AreEqual(expected, output.ToString().Trim());
@@ -133,9 +133,9 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
-			var value = new ArrayValue();
-			value.Add(new TextValue("abc"));
-			value.Add(new TextValue("asdf"));
+			var value = new IkonArray();
+			value.Add(new IkonText("abc"));
+			value.Add(new IkonText("asdf"));
 			value.Compose(writer);
 
 			Assert.AreEqual(expected, output.ToString().Trim());
@@ -152,8 +152,8 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
-			var value = new ArrayValue();
-			value.Add(new ArrayValue());
+			var value = new IkonArray();
+			value.Add(new IkonArray());
 			value.Compose(writer);
 
 			Assert.AreEqual(expected, output.ToString().Trim());
@@ -178,18 +178,18 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
-			var doubleNestedValue = new ArrayValue();
-			doubleNestedValue.Add(new NumericValue(-0.4));
+			var doubleNestedValue = new IkonArray();
+			doubleNestedValue.Add(new IkonNumeric(-0.4));
 
-			var nestedValue = new ArrayValue();
-			nestedValue.Add(new NumericValue(2.5));
+			var nestedValue = new IkonArray();
+			nestedValue.Add(new IkonNumeric(2.5));
 			nestedValue.Add(doubleNestedValue);
-			nestedValue.Add(new ArrayValue());
-			nestedValue.Add(new TextValue("foo"));
+			nestedValue.Add(new IkonArray());
+			nestedValue.Add(new IkonText("foo"));
 			
-			var value = new ArrayValue();
+			var value = new IkonArray();
 			value.Add(nestedValue);
-			value.Add(new TextValue("bar"));
+			value.Add(new IkonText("bar"));
 			
 			value.Compose(writer);
 

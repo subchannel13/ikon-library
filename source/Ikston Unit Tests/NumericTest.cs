@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ikadn;
 using System.IO;
-using Ikadn.Ikon.Values;
+using Ikadn.Ikon.Types;
 using System.Globalization;
 
 namespace Ikston_Unit_Tests
@@ -18,10 +18,10 @@ namespace Ikston_Unit_Tests
 		{
 			string input = "=2";
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
 			var value = parser.ParseNext();
 
-			Assert.AreEqual(NumericValue.ValueTypeName, value.Tag);
+			Assert.AreEqual(IkonNumeric.TypeTag, value.Tag);
 		}
 
 		[TestMethod]
@@ -30,8 +30,8 @@ namespace Ikston_Unit_Tests
 			short expectedValue = 2;
 			string input = "=" + expectedValue;
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as NumericValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonNumeric;
 
 			Assert.AreEqual(expectedValue, value.To<short>());
 		}
@@ -42,8 +42,8 @@ namespace Ikston_Unit_Tests
 			int expectedValue = 1234567;
 			string input = "=" + expectedValue;
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as NumericValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonNumeric;
 
 			Assert.AreEqual(expectedValue, value.To<int>());
 		}
@@ -54,8 +54,8 @@ namespace Ikston_Unit_Tests
 			int expectedValue = -1234567;
 			string input = "=" + expectedValue;
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as NumericValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonNumeric;
 
 			Assert.AreEqual(expectedValue, value.To<int>());
 		}
@@ -66,8 +66,8 @@ namespace Ikston_Unit_Tests
 			long expectedValue = 123456789012L;
 			string input = "=" + expectedValue;
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as NumericValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonNumeric;
 
 			Assert.AreEqual(expectedValue, value.To<long>());
 		}
@@ -78,8 +78,8 @@ namespace Ikston_Unit_Tests
 			decimal expectedValue = 1.23456789012m;
 			string input = "=" + expectedValue.ToString(NumberFormatInfo.InvariantInfo);
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as NumericValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonNumeric;
 
 			Assert.AreEqual(expectedValue, value.To<decimal>());
 		}
@@ -90,8 +90,8 @@ namespace Ikston_Unit_Tests
 			float expectedValue = 1.2345f;
 			string input = "=" + expectedValue.ToString(NumberFormatInfo.InvariantInfo);
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as NumericValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonNumeric;
 
 			Assert.AreEqual(expectedValue, value.To<float>());
 		}
@@ -102,8 +102,8 @@ namespace Ikston_Unit_Tests
 			double expectedValue = 1.23456789;
 			string input = "=" + expectedValue.ToString(NumberFormatInfo.InvariantInfo);
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as NumericValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonNumeric;
 
 			Assert.AreEqual(expectedValue, value.To<double>());
 		}
@@ -114,8 +114,8 @@ namespace Ikston_Unit_Tests
 			double expectedValue = -1.23456789;
 			string input = "=" + expectedValue.ToString(NumberFormatInfo.InvariantInfo);
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as NumericValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonNumeric;
 
 			Assert.AreEqual(expectedValue, value.To<double>());
 		}
@@ -124,10 +124,10 @@ namespace Ikston_Unit_Tests
 		public void NumericReadValueDoubleInfinity()
 		{
 			double expectedValue = double.PositiveInfinity;
-			string input = "=" + NumericValue.PositiveInfinity;
+			string input = "=" + IkonNumeric.PositiveInfinity;
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as NumericValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonNumeric;
 
 			Assert.AreEqual(expectedValue, value.To<double>());
 		}
@@ -136,10 +136,10 @@ namespace Ikston_Unit_Tests
 		public void NumericReadValueDoubleNegativeInfinity()
 		{
 			double expectedValue = double.NegativeInfinity;
-			string input = "=" + NumericValue.NegativeInfinity;
+			string input = "=" + IkonNumeric.NegativeInfinity;
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as NumericValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonNumeric;
 
 			Assert.AreEqual(expectedValue, value.To<double>());
 		}
@@ -150,8 +150,8 @@ namespace Ikston_Unit_Tests
 			double expectedValue = double.NaN;
 			string input = "=" + expectedValue.ToString(NumberFormatInfo.InvariantInfo);
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as NumericValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonNumeric;
 
 			Assert.AreEqual(expectedValue, value.To<double>());
 		}
@@ -164,7 +164,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
-			var value = new NumericValue(rawValue);
+			var value = new IkonNumeric(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -178,7 +178,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
-			var value = new NumericValue(rawValue);
+			var value = new IkonNumeric(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -192,7 +192,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
-			var value = new NumericValue(rawValue);
+			var value = new IkonNumeric(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -206,7 +206,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
-			var value = new NumericValue(rawValue);
+			var value = new IkonNumeric(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -220,7 +220,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
-			var value = new NumericValue(rawValue);
+			var value = new IkonNumeric(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -234,7 +234,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
-			var value = new NumericValue(rawValue);
+			var value = new IkonNumeric(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -248,7 +248,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
-			var value = new NumericValue(rawValue);
+			var value = new IkonNumeric(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -262,7 +262,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
-			var value = new NumericValue(rawValue);
+			var value = new IkonNumeric(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -276,7 +276,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
-			var value = new NumericValue(rawValue);
+			var value = new IkonNumeric(rawValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using Ikadn.Ikon.Values;
+using Ikadn.Ikon.Types;
 using Ikadn;
 
 namespace Ikston_Unit_Tests
@@ -19,10 +19,10 @@ namespace Ikston_Unit_Tests
 		{
 			string input = Q + "some text" + Q;
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
 			var value = parser.ParseNext();
 
-			Assert.AreEqual(value.Tag, TextValue.ValueTypeName);
+			Assert.AreEqual(value.Tag, IkonText.TypeTag);
 		}
 
 		[TestMethod]
@@ -31,8 +31,8 @@ namespace Ikston_Unit_Tests
 			string inputValue = "some text";
 			string input = Q + inputValue + Q;
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as TextValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonText;
 
 			Assert.AreEqual(value.To<string>(), inputValue);
 		}
@@ -44,8 +44,8 @@ namespace Ikston_Unit_Tests
 			string expectedValue = "some text\nnew line\ttab\n\ranother line and \" qoute";
 			string input = Q + inputValue + Q;
 
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(input));
-			var value = parser.ParseNext() as TextValue;
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonText;
 
 			Assert.AreEqual(value.To<string>(), expectedValue);
 		}
@@ -58,7 +58,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
-			var value = new TextValue(inputValue);
+			var value = new IkonText(inputValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -73,7 +73,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
-			var value = new TextValue(inputValue);
+			var value = new IkonText(inputValue);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());

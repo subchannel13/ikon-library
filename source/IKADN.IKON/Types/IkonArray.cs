@@ -4,27 +4,27 @@ using Ikadn.Utilities;
 using System;
 using System.Reflection;
 
-namespace Ikadn.Ikon.Values
+namespace Ikadn.Ikon.Types
 {
 	/// <summary>
-	/// Array of IKADN values.
+	/// Array of IKADN objects.
 	/// </summary>
-	public class ArrayValue : IkonBaseValue, IList<IkadnBaseObject>
+	public class IkonArray : IkonBaseObject, IList<IkadnBaseObject>
 	{
 		/// <summary>
-		/// Type name of IKON arrays.
+		/// Tag for IKON arrays.
 		/// </summary>
-		public const string ValueTypeName = "IKON.Array";
+		public const string TypeTag = "IKON.Array";
 
 		private static MethodInfo baseConverterMethod = null;
 
 		private IList<IkadnBaseObject> elements;
 
 		/// <summary>
-		/// Constructs IKON array of IKADN values
+		/// Constructs IKON array of IKADN object
 		/// </summary>
 		/// <param name="values">Initial array contents.</param>
-		public ArrayValue(IList<IkadnBaseObject> values)
+		public IkonArray(IList<IkadnBaseObject> values)
 		{
 			this.elements = values;
 		}
@@ -32,24 +32,25 @@ namespace Ikadn.Ikon.Values
 		/// <summary>
 		/// Constructs IKON array
 		/// </summary>
-		public ArrayValue()
+		public IkonArray()
 		{
 			this.elements = new List<IkadnBaseObject>();
 		}
 
 		/// <summary>
-		/// Type name of the IKADN value instance.
+		/// Tag of the IKADN object instance.
 		/// </summary>
 		public override object Tag
 		{
-			get { return ValueTypeName; }
+			get { return TypeTag; }
 		}
 
 		/// <summary>
-		/// Converts IKON array value to specified type. Supported target types:
+		/// Converts IKON array object to specified type. Supported target types:
 		/// 
-		/// System.Collections.Generic.IList&lt;Value&gt;
-		/// Ikadn.Ikon.Values.ArrayValue
+		/// System.Collections.Generic.IList&lt;T&gt;
+		/// T[]
+		/// Ikadn.Ikon.Types.IkonArray
 		/// </summary>
 		/// <typeparam name="T">Target type</typeparam>
 		/// <returns>Converted value</returns>
@@ -82,7 +83,7 @@ namespace Ikadn.Ikon.Values
 		/// </summary>
 		/// <param name="values">Elements to be added.</param>
 		/// <returns>Instance of the same IKON array method is called for.</returns>
-		public ArrayValue Add(params IkadnBaseObject[] values)
+		public IkonArray Add(params IkadnBaseObject[] values)
 		{
 			if (values == null)
 				throw new System.ArgumentNullException("values");

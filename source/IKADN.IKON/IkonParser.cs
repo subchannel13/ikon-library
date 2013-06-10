@@ -5,14 +5,14 @@ using Ikadn;
 using Ikadn.Ikon.Factories;
 using Ikadn.Utilities;
 using System.Text;
-using Ikadn.Ikon.Values;
+using Ikadn.Ikon.Types;
 
 namespace Ikadn.Ikon
 {
 	/// <summary>
 	/// Parser that can parse input with IKON syntax.
 	/// </summary>
-	public class Parser : Ikadn.IkadnParser
+	public class IkonParser : Ikadn.IkadnParser
 	{
 		/// <summary>
 		/// Character that marks the beginning of the reference name.
@@ -22,13 +22,13 @@ namespace Ikadn.Ikon
 		/// <summary>
 		/// Collection of named objects.
 		/// </summary>
-		protected IDictionary<string, IkadnBaseObject> NamedValues { get; private set; }
+		protected IDictionary<string, IkadnBaseObject> NamedObjects { get; private set; }
 
 		/// <summary>
-		/// Constructs IKON parser with default IKON value factories.
+		/// Constructs IKON parser with default IKON object factories.
 		/// </summary>
 		/// <param name="reader"></param>
-		public Parser(TextReader reader)
+		public IkonParser(TextReader reader)
 			: base(reader, new IIkadnObjectFactory[] {
  			new ObjectFactory(),
 			new TextFactory(), 
@@ -36,15 +36,15 @@ namespace Ikadn.Ikon
 			new ArrayFactory(),
 			new ReferencedFactory() })
 		{
-			this.NamedValues = new Dictionary<string, IkadnBaseObject>();
+			this.NamedObjects = new Dictionary<string, IkadnBaseObject>();
 		}
 
 		/// <summary>
-		/// Constructs IKON parser and registers addoditonal value factories to it.
+		/// Constructs IKON parser and registers additional object factories to it.
 		/// </summary>
 		/// <param name="reader">Input stream with IKADN syntax.</param>
-		/// <param name="factories">Collection of value factories.</param>
-		public Parser(TextReader reader, IEnumerable<IIkadnObjectFactory> factories)
+		/// <param name="factories">Collection of object factories.</param>
+		public IkonParser(TextReader reader, IEnumerable<IIkadnObjectFactory> factories)
 			: this(reader)
 		{
 			if (factories == null)
@@ -55,44 +55,44 @@ namespace Ikadn.Ikon
 		}
 
 		/// <summary>
-		/// Trys to parse next IKADN value from the input stream. 
+		/// Trys to parse next IKADN object from the input stream. 
 		/// 
-		/// Throws System.FormatException if there is no value factory
-		/// that can parse curren state of the input.
+		/// Throws System.FormatException if there is no object factory
+		/// that can parse current state of the input.
 		/// </summary>
-		/// <returns>Return an IKADN value if there is one, null otherwise.</returns>
+		/// <returns>Return an IKADN object if there is one, null otherwise.</returns>
 		protected override IkadnBaseObject TryParseNext()
 		{
-			IkadnBaseObject value = base.TryParseNext();
-			if (value == null)
+			IkadnBaseObject dataObj = base.TryParseNext();
+			if (dataObj == null)
 				return null;
 
-			if (ReferenceValue.ValueTypeName.Equals(value.Tag))
-				return GetNamedValue(value.To<string>());
+			if (IkonReference.TypeTag.Equals(dataObj.Tag))
+				return GetNamedObject(dataObj.To<string>());
 
 			while (this.Reader.SkipWhiteSpaces() != ReaderDoneReason.EndOfStream &&
 					this.Reader.Peek() == ReferenceSign) {
 				this.Reader.Read();
-				NamedValues.Add(ReadIdentifier(this.Reader), value);
+				NamedObjects.Add(ReadIdentifier(this.Reader), dataObj);
 			}
 
-			return value;
+			return dataObj;
 		}
 
 		/// <summary>
-		/// Returns the IKADN value with specified reference name. 
+		/// Returns the IKADN object with specified reference name. 
 		/// 
 		/// Throws System.Collections.Generic.KeyNotFoundException 
-		/// if such value doesn't exist.
+		/// if such object doesn't exist.
 		/// </summary>
-		/// <param name="name">Name of the value reference</param>
-		/// <returns>Desired IKADN value.</returns>
-		public IkadnBaseObject GetNamedValue(string name)
+		/// <param name="name">Name of the object reference</param>
+		/// <returns>Desired IKADN object.</returns>
+		public IkadnBaseObject GetNamedObject(string name)
 		{
-			if (NamedValues.ContainsKey(name))
-				return NamedValues[name];
+			if (NamedObjects.ContainsKey(name))
+				return NamedObjects[name];
 			else
-				throw new KeyNotFoundException("Value named '" + name + "' not found");
+				throw new KeyNotFoundException("Object named '" + name + "' not found");
 		}
 
 		private static ISet<char> IdentifierChars = DefineIdentifierChars();

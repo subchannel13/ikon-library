@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Ikadn.Ikon.Values
+namespace Ikadn.Ikon.Types
 {
 	/// <summary>
-	/// Base class for IKON values. Add reference names on top the IKADN values.
+	/// Base class for IKON objects. Adds reference names on top the IKADN objects.
 	/// </summary>
-	public abstract class IkonBaseValue : IkadnBaseObject
+	public abstract class IkonBaseObject : IkadnBaseObject
 	{
 		private HashSet<string> referenceNames = new HashSet<string>();
 
 		/// <summary>
-		/// Set of objects that can be used as reference to the value.
+		/// Set of names that can be used as reference to the object.
 		/// </summary>
 		public ISet<string> ReferenceNames
 		{
@@ -21,9 +21,9 @@ namespace Ikadn.Ikon.Values
 		}
 
 		/// <summary>
-		/// Writes value's reference names (if any) to the output stream.
+		/// Writes object's reference names (if any) to the output stream.
 		/// </summary>
-		/// <param name="writer">Wrapped around target output stream.</param>
+		/// <param name="writer">Wrapper around the target output stream.</param>
 		protected void WriteReferences(IkadnWriter writer)
 		{
 			if (writer == null)
@@ -31,7 +31,7 @@ namespace Ikadn.Ikon.Values
 
 			if (referenceNames != null && referenceNames.Count > 0)
 				foreach (string name in referenceNames)
-					writer.Write(" " + Parser.ReferenceSign + name);
+					writer.Write(" " + IkonParser.ReferenceSign + name);
 		}
 	}
 }

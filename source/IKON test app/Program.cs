@@ -4,7 +4,7 @@ using System.Linq;
 using System.IO;
 using System.Text;
 using Ikadn.Ikon;
-using Ikadn.Ikon.Values;
+using Ikadn.Ikon.Types;
 
 namespace IKON_test_app
 {
@@ -14,10 +14,10 @@ namespace IKON_test_app
 		{
 			StreamReader reader = new StreamReader(args[0]);
 
-			Parser parser = new Parser(reader);
+			IkonParser parser = new IkonParser(reader);
 			var array = parser.ParseNext().To<int[]>();
 
-			var value = parser.ParseNext().To<ObjectValue>();
+			var value = parser.ParseNext().To<IkonComposite>();
 
 			printStar(value);
 			Console.WriteLine();
@@ -36,25 +36,25 @@ namespace IKON_test_app
 			Console.Write(writer.ToString());
 
 			reader = new StreamReader(args[0]);
-			parser = new Parser(reader);
+			parser = new IkonParser(reader);
 			var values = parser.ParseAll();
 
-			Console.WriteLine("Random string: " + values.Dequeue(TextValue.ValueTypeName).To<string>());
+			Console.WriteLine("Random string: " + values.Dequeue(IkonText.TypeTag).To<string>());
 			reader.Close();
 			Console.ReadKey();
 		}
 
-		static void printStar(ObjectValue starData) {
+		static void printStar(IkonComposite starData) {
 			Console.WriteLine("size: " + starData["velicina"].To<int>());
 			Console.WriteLine("position: " + starData["x"].To<int>() + ", " + starData["y"].To<int>());
 			Console.WriteLine("name: " + starData["ime"].To<string>());
 			Console.WriteLine();
 			Console.WriteLine("List of planets: ");
-			foreach (var planetData in starData["planeti"].To<ArrayValue>())
-				printPlanet(planetData.To<ObjectValue>());
+			foreach (var planetData in starData["planeti"].To<IkonArray>())
+				printPlanet(planetData.To<IkonComposite>());
 		}
 
-		static void printPlanet(ObjectValue planetData)
+		static void printPlanet(IkonComposite planetData)
 		{
 			Console.WriteLine("size: " + planetData["velicina"].To<int>());
 		}

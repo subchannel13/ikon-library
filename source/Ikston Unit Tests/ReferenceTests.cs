@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using Ikadn.Ikon.Values;
+using Ikadn.Ikon.Types;
 using Ikadn;
 
 namespace Ikston_Unit_Tests
@@ -35,100 +35,100 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferenceNamingText()
 		{
-			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.IkonParser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual(TextValue.ValueTypeName, parser.GetNamedValue("text").Tag);
+			Assert.AreEqual(IkonText.TypeTag, parser.GetNamedObject("text").Tag);
 		}
 
 		[TestMethod]
 		public void ReferenceNamingNumber()
 		{
-			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.IkonParser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual(NumericValue.ValueTypeName, parser.GetNamedValue("number").Tag);
+			Assert.AreEqual(IkonNumeric.TypeTag, parser.GetNamedObject("number").Tag);
 		}
 
 		[TestMethod]
 		public void ReferenceNamingInfinity()
 		{
-			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.IkonParser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual(NumericValue.ValueTypeName, parser.GetNamedValue("notNumber").Tag);
+			Assert.AreEqual(IkonNumeric.TypeTag, parser.GetNamedObject("notNumber").Tag);
 		}
 
 		[TestMethod]
 		public void ReferenceNamingArray()
 		{
-			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.IkonParser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual(ArrayValue.ValueTypeName, parser.GetNamedValue("array").Tag);
+			Assert.AreEqual(IkonArray.TypeTag, parser.GetNamedObject("array").Tag);
 		}
 
 		[TestMethod]
 		public void ReferenceNamingComposite()
 		{
-			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.IkonParser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual("NestedStuff", parser.GetNamedValue("composite").Tag);
+			Assert.AreEqual("NestedStuff", parser.GetNamedObject("composite").Tag);
 		}
 
 		[TestMethod]
 		public void ReferenceNamingNestedNumber()
 		{
-			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.IkonParser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual(NumericValue.ValueTypeName, parser.GetNamedValue("nestedNumber").Tag);
+			Assert.AreEqual(IkonNumeric.TypeTag, parser.GetNamedObject("nestedNumber").Tag);
 		}
 
 		[TestMethod]
 		public void ReferenceNamingNestedText()
 		{
-			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.IkonParser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual(TextValue.ValueTypeName, parser.GetNamedValue("nestedText").Tag);
+			Assert.AreEqual(IkonText.TypeTag, parser.GetNamedObject("nestedText").Tag);
 		}
 
 		[TestMethod]
 		public void ReferenceNamingSecondName()
 		{
-			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.IkonParser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual("NestedStuff", parser.GetNamedValue("otherName").Tag);
+			Assert.AreEqual("NestedStuff", parser.GetNamedObject("otherName").Tag);
 		}
 
 		[TestMethod]
 		public void ReferenceNamingNoSpace()
 		{
-			var parser = new Ikadn.Ikon.Parser(new StringReader(NamingTestInput));
+			var parser = new Ikadn.Ikon.IkonParser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual("NestedStuff", parser.GetNamedValue("noSpace").Tag);
+			Assert.AreEqual("NestedStuff", parser.GetNamedObject("noSpace").Tag);
 		}
 
 		[TestMethod]
 		public void ReferencingRootType()
 		{
-			var parser = new Ikadn.Ikon.Parser(new StringReader(ReferencingTestInput));
+			var parser = new Ikadn.Ikon.IkonParser(new StringReader(ReferencingTestInput));
 			var probe = parser.ParseNext();
 			var rootValue = parser.ParseNext();
 
-			Assert.AreEqual(TextValue.ValueTypeName, rootValue.Tag);
+			Assert.AreEqual(IkonText.TypeTag, rootValue.Tag);
 		}
 
 		[TestMethod]
 		public void ReferencingRootValue()
 		{
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(ReferencingTestInput));
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(ReferencingTestInput));
 			var probe = parser.ParseNext();
-			var rootValue = parser.ParseNext() as TextValue;
+			var rootValue = parser.ParseNext() as IkonText;
 
 			Assert.AreEqual("the probe", rootValue.To<string>());
 		}
@@ -136,24 +136,24 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void ReferencingArrayElement()
 		{
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(ReferencingTestInput));
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(ReferencingTestInput));
 			var probe = parser.ParseNext();
 			var rootValue = parser.ParseNext();
-			var array = parser.ParseNext() as ArrayValue;
+			var array = parser.ParseNext() as IkonArray;
 
-			Assert.AreEqual("the probe", (array[0] as TextValue).To<string>());
+			Assert.AreEqual("the probe", (array[0] as IkonText).To<string>());
 		}
 
 		[TestMethod]
 		public void ReferencingCompositionChild()
 		{
-			IkadnParser parser = new Ikadn.Ikon.Parser(new StringReader(ReferencingTestInput));
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(ReferencingTestInput));
 			var probe = parser.ParseNext();
 			var rootValue = parser.ParseNext();
-			var array = parser.ParseNext() as ArrayValue;
-			var composite = parser.ParseNext() as ObjectValue;
+			var array = parser.ParseNext() as IkonArray;
+			var composite = parser.ParseNext() as IkonComposite;
 
-			Assert.AreEqual("the probe", (composite["child"] as TextValue).To<string>());
+			Assert.AreEqual("the probe", (composite["child"] as IkonText).To<string>());
 		}
 
 
@@ -165,7 +165,7 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
-			var value = new TextValue("something");
+			var value = new IkonText("something");
 			value.ReferenceNames.Add("name");
 			value.Compose(writer);
 
@@ -182,10 +182,10 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
-			var namedValue = new TextValue("something");
+			var namedValue = new IkonText("something");
 			namedValue.ReferenceNames.Add("name");
 
-			var array = new ArrayValue();
+			var array = new IkonArray();
 			array.Add(namedValue);
 			array.Compose(writer);
 
@@ -202,10 +202,10 @@ namespace Ikston_Unit_Tests
 			StringBuilder output = new StringBuilder();
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
-			var namedValue = new TextValue("something");
+			var namedValue = new IkonText("something");
 			namedValue.ReferenceNames.Add("name");
 
-			var composite = new ObjectValue("Composite");
+			var composite = new IkonComposite("Composite");
 			composite["child"] = namedValue;
 			composite.Compose(writer);
 

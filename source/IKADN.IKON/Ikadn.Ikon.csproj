@@ -50,23 +50,20 @@
     <Compile Include="Factories\ReferencedFactory.cs" />
     <Compile Include="Factories\TextFactory.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Parser.cs" />
+    <Compile Include="IkonParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Values\ArrayValue.cs" />
-    <Compile Include="Values\IkonBaseValue.cs" />
-    <Compile Include="Values\NumericValue.cs" />
-    <Compile Include="Values\ObjectValue.cs" />
-    <Compile Include="Values\ReferenceValue.cs" />
-    <Compile Include="Values\TextValue.cs" />
+    <Compile Include="Types\IkonArray.cs" />
+    <Compile Include="Types\IkonBaseObject.cs" />
+    <Compile Include="Types\IkonNumeric.cs" />
+    <Compile Include="Types\IkonComposite.cs" />
+    <Compile Include="Types\IkonReference.cs" />
+    <Compile Include="Types\IkonText.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IKADN\Ikadn.csproj">
       <Project>{6F9B8B29-4ACF-4C44-B6E2-1146912E94A0}</Project>
       <Name>Ikadn</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="IkonClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
