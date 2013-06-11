@@ -25,6 +25,8 @@ namespace Ikadn.Ikon.Factories
 		public const char ClosingChar = '"';
 
 		private const char EscapeChar = '\\';
+		private const char Unicode16Char = 'u';
+		private const char Unicode32Char = 'U';
 		
 		static Dictionary<char, char> EscapeCodes = DefineEscapeCodes();
 
@@ -47,14 +49,52 @@ namespace Ikadn.Ikon.Factories
 				throw new System.ArgumentNullException("parser");
 
 			bool escaping = false;
+			int unicodeDigits = 0;
+			long unicodeChar = 0;
 			string text = parser.Reader.ReadConditionally(nextChar =>
 			{
 				char c = (char)nextChar;
+
+				if (unicodeDigits > 0) {
+					unicodeChar *= 16;
+					try {
+						unicodeChar += Convert.ToInt32(c.ToString(), 16);
+					}
+					catch (FormatException) {
+						throw new FormatException("Unexpected character after " + parser.Reader.PositionDescription + " while reading unicode character number for IKON textual data.");
+					}
+					unicodeDigits--;
+					
+					ReadingDecision decision;
+					if (unicodeDigits % 4 == 0) {
+						decision = new ReadingDecision((char)unicodeChar, CharacterAction.Substitute);
+						unicodeChar = 0;
+					}
+					else
+						decision = new ReadingDecision(c, CharacterAction.Skip);
+
+					escaping = unicodeDigits > 0;
+					return decision;
+				}
+
 				if (escaping) {
-					escaping = false;
-					if (!EscapeCodes.ContainsKey(c)) 
+					if (EscapeCodes.ContainsKey(c)) {
+						escaping = false;
+						return new ReadingDecision(EscapeCodes[c], CharacterAction.Substitute);
+					}
+					else if (c == Unicode16Char) {
+						unicodeDigits = 4;
+						unicodeChar = 0;
+						return new ReadingDecision(c, CharacterAction.Skip);
+					}
+					else if (c == Unicode32Char) {
+						unicodeDigits = 8;
+						unicodeChar = 0;
+						return new ReadingDecision(c, CharacterAction.Skip);
+					}
+					else
 						throw new FormatException("Unsupported string escape sequence: \\" + nextChar);
-					return new ReadingDecision(EscapeCodes[c], CharacterAction.Substitute);
+					
 				}
 				switch (nextChar) {
 					case EscapeChar:
@@ -68,7 +108,7 @@ namespace Ikadn.Ikon.Factories
 			});
 
 			if (parser.Reader.Peek() != ClosingChar)
-				throw new EndOfStreamException("Unexpected end of stream at " + parser.Reader.PositionDescription + " while reading IKON identifier.");
+				throw new EndOfStreamException("Unexpected end of stream at " + parser.Reader.PositionDescription + " while reading IKON textual data.");
 			parser.Reader.Read();
 
 			return new IkonText(text);

@@ -51,6 +51,32 @@ namespace Ikston_Unit_Tests
 		}
 
 		[TestMethod]
+		public void TextReadValueEscapedUnicode16()
+		{
+			string inputValue = "some text \\u2026 \\uffff \\uAAAA more text";
+			string expectedValue = "some text … \uffff \uAAAA more text";
+			string input = Q + inputValue + Q;
+
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonText;
+
+			Assert.AreEqual(value.To<string>(), expectedValue);
+		}
+
+		[TestMethod]
+		public void TextReadValueEscapedUnicode32()
+		{
+			string inputValue = "some text \\U00000043 \\U0002336A \\UFFFFFFff more text";
+			string expectedValue = "some text \u0000C \u0002\u336A \uFFFF\uFFFF more text";
+			string input = Q + inputValue + Q;
+
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
+			var value = parser.ParseNext() as IkonText;
+
+			Assert.AreEqual(value.To<string>(), expectedValue);
+		}
+
+		[TestMethod]
 		public void TextWriteValueSimple()
 		{
 			string inputValue = "some text";

@@ -15,7 +15,7 @@ namespace IKON_test_app
 			StreamReader reader = new StreamReader(args[0]);
 
 			IkonParser parser = new IkonParser(reader);
-			var array = parser.ParseNext().To<int[]>();
+			var testObj = parser.ParseNext().To<string>();
 
 			var value = parser.ParseNext().To<IkonComposite>();
 

@@ -1,4 +1,4 @@
-﻿[=4 =7 =11]
+﻿"a\u004\ttab"
 
 { Zvijezda
 	velicina = 2 @temp
