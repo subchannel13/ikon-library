@@ -30,7 +30,7 @@ namespace Ikadn.Ikon
 		/// <param name="reader"></param>
 		public IkonParser(TextReader reader)
 			: base(reader, new IIkadnObjectFactory[] {
- 			new ObjectFactory(),
+ 			new CompositeFactory(),
 			new TextFactory(), 
 			new NumericFactory(),
 			new ArrayFactory(),

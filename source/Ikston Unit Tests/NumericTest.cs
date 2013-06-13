@@ -52,7 +52,7 @@ namespace Ikston_Unit_Tests
 		public void NumericReadValueIntNegative()
 		{
 			int expectedValue = -1234567;
-			string input = "=" + expectedValue;
+			string input = "=-1234567";
 
 			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
 			var value = parser.ParseNext() as IkonNumeric;
@@ -174,7 +174,7 @@ namespace Ikston_Unit_Tests
 		public void NumericWriteValueLongNegative()
 		{
 			long rawValue = -1234567890L;
-			string ikonData = "=" + rawValue;
+			string ikonData = "=-1234567890";
 			StringBuilder output = new StringBuilder();
 
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));

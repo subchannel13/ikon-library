@@ -8,7 +8,7 @@ namespace Ikadn.Ikon.Factories
 	/// <summary>
 	/// IKADN object factory for composite IKON objects.
 	/// </summary>
-	public class ObjectFactory : IIkadnObjectFactory
+	public class CompositeFactory : IIkadnObjectFactory
 	{
 		/// <summary>
 		/// Sign for IKADN composite object.

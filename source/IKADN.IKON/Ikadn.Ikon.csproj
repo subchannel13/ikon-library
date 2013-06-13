@@ -46,7 +46,7 @@
   <ItemGroup>
     <Compile Include="Factories\ArrayFactory.cs" />
     <Compile Include="Factories\NumericFactory.cs" />
-    <Compile Include="Factories\ObjectFactory.cs" />
+    <Compile Include="Factories\CompositeFactory.cs" />
     <Compile Include="Factories\ReferencedFactory.cs" />
     <Compile Include="Factories\TextFactory.cs" />
     <Compile Include="GlobalSuppressions.cs" />
