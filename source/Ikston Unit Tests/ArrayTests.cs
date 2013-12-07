@@ -24,6 +24,45 @@ namespace Ikston_Unit_Tests
 		}
 
 		[TestMethod]
+		public void ArrayConvertIkadnBaseArray()
+		{
+			IkonArray array = new IkonArray();
+			array.Add(new IkonNumeric(1));
+			array.Add(new IkonNumeric(2));
+			array.Add(new IkonNumeric(3));
+			array.Add(new IkonNumeric(4));
+
+			var converted = array.To<IkadnBaseObject[]>();
+			Assert.AreEqual<int>(converted[0].To<int>(), 1);
+		}
+
+		[TestMethod]
+		public void ArrayConvertTargetArray()
+		{
+			IkonArray array = new IkonArray();
+			array.Add(new IkonNumeric(1));
+			array.Add(new IkonNumeric(2));
+			array.Add(new IkonNumeric(3));
+			array.Add(new IkonNumeric(4));
+
+			var converted = array.To<int[]>();
+			Assert.AreEqual<int>(converted[0], 1);
+		}
+
+		[TestMethod]
+		public void ArrayConvertTargetIList()
+		{
+			IkonArray array = new IkonArray();
+			array.Add(new IkonNumeric(1));
+			array.Add(new IkonNumeric(2));
+			array.Add(new IkonNumeric(3));
+			array.Add(new IkonNumeric(4));
+
+			var converted = array.To<IList<int>>();
+			Assert.AreEqual<int>(converted[0], 1);
+		}
+
+		[TestMethod]
 		public void ArrayCountEmpty()
 		{
 			string input = "[]";

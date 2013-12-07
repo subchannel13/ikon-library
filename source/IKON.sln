@@ -6,20 +6,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ikston Unit Tests", "Ikston Unit Tests\Ikston Unit Tests.csproj", "{28DF8B06-A426-4407-997B-E4D8684BFEF7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C88B1AB0-9C80-4820-B1D3-580F10D7D759}"
-	ProjectSection(SolutionItems) = preProject
-		IKON.vsmdi = IKON.vsmdi
-		Local.testsettings = Local.testsettings
-		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ikadn", "IKADN\Ikadn.csproj", "{6F9B8B29-4ACF-4C44-B6E2-1146912E94A0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ikadn.Ikon", "IKADN.IKON\Ikadn.Ikon.csproj", "{55998E01-1EE7-408D-9149-3A0DA2302381}"
 EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = IKON.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms

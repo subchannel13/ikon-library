@@ -17,6 +17,7 @@ namespace Ikadn.Ikon.Types
 		public const string TypeTag = "IKON.Array";
 
 		private static MethodInfo baseConverterMethod = null;
+		private static MethodInfo iListConverterMethod = null;
 
 		private IList<IkadnBaseObject> elements;
 
@@ -24,9 +25,9 @@ namespace Ikadn.Ikon.Types
 		/// Constructs IKON array of IKADN object
 		/// </summary>
 		/// <param name="values">Initial array contents.</param>
-		public IkonArray(IList<IkadnBaseObject> values)
+		public IkonArray(IEnumerable<IkadnBaseObject> values)
 		{
-			this.elements = values;
+			this.elements = new List<IkadnBaseObject>(values);
 		}
 
 		/// <summary>
@@ -74,8 +75,35 @@ namespace Ikadn.Ikon.Types
 			}
 			else if (target.IsAssignableFrom(this.GetType()))
 				return (T)(object)this;
-			else
+			else {
+				foreach (var type in target.GetInterfaces())
+					if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>) &&
+						target.IsAssignableFrom(typeof(List<>).MakeGenericType(type.GetGenericArguments()))) {
+						
+						if (iListConverterMethod == null)
+							iListConverterMethod = typeof(IkonArray).GetMethod("convertToIList", BindingFlags.NonPublic | BindingFlags.Instance/*, new Type[] { }*/);
+
+						MethodInfo converterMethod = iListConverterMethod.MakeGenericMethod(type.GetGenericArguments()[0]);
+						return (T)converterMethod.Invoke(this, null);
+					}
 				throw new InvalidOperationException("Cast to " + target.Name + " is not supported for " + Tag);
+			}
+		}
+
+		private List<T> convertToIList<T>()
+		{
+			if (baseConverterMethod == null)
+				baseConverterMethod = typeof(IkadnBaseObject).GetMethod("To", new Type[] { });
+
+			Type target = typeof(T);
+			MethodInfo converterMethod = baseConverterMethod.MakeGenericMethod(target);
+
+			List<T> list = new List<T>();
+			foreach (var item in this) {
+				list.Add((T)converterMethod.Invoke(item, null));
+			}
+
+			return list;
 		}
 
 		/// <summary>
