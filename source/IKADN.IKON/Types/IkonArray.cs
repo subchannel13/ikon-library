@@ -22,7 +22,7 @@ namespace Ikadn.Ikon.Types
 		private IList<IkadnBaseObject> elements;
 
 		/// <summary>
-		/// Constructs IKON array of IKADN object
+		/// Constructs IKON array of IKADN objects
 		/// </summary>
 		/// <param name="values">Initial array contents.</param>
 		public IkonArray(IEnumerable<IkadnBaseObject> values)
@@ -51,6 +51,10 @@ namespace Ikadn.Ikon.Types
 		/// 
 		/// System.Collections.Generic.IList&lt;T&gt;
 		/// T[]
+		/// IEnumerable<T>
+		/// ICollection<T>
+		/// IList<T>
+		/// List<T>
 		/// Ikadn.Ikon.Types.IkonArray
 		/// </summary>
 		/// <typeparam name="T">Target type</typeparam>
