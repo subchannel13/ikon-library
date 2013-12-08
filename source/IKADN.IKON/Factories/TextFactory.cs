@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using Ikadn;
+
 using Ikadn.Ikon.Types;
 using Ikadn.Utilities;
 

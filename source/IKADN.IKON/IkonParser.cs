@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Ikadn;
+
 using Ikadn.Ikon.Factories;
-using Ikadn.Utilities;
-using System.Text;
 using Ikadn.Ikon.Types;
+using Ikadn.Utilities;
 
 namespace Ikadn.Ikon
 {

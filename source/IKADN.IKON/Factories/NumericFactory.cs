@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using Ikadn;
-using Ikadn.Ikon.Types;
 using System.Globalization;
-using Ikadn.Utilities;
+using System.IO;
 using System.Text.RegularExpressions;
+
+using Ikadn.Ikon.Types;
 
 namespace Ikadn.Ikon.Factories
 {

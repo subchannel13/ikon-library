@@ -1,7 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using Ikadn.Ikon.Factories;
-using Ikadn.Utilities;
-using System;
 
 namespace Ikadn.Ikon.Types
 {

@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using Ikadn;
+﻿using System;
+using System.Collections.Generic;
 using Ikadn.Ikon.Types;
-using Ikadn.Utilities;
-using System;
 
 namespace Ikadn.Ikon.Factories
 {

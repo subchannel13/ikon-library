@@ -1,6 +1,4 @@
-﻿using Ikadn;
-using Ikadn.Utilities;
-using Ikadn.Ikon.Types;
+﻿using Ikadn.Ikon.Types;
 
 namespace Ikadn.Ikon.Factories
 {
