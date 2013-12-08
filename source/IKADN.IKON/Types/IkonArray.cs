@@ -51,10 +51,10 @@ namespace Ikadn.Ikon.Types
 		/// 
 		/// System.Collections.Generic.IList&lt;T&gt;
 		/// T[]
-		/// IEnumerable<T>
-		/// ICollection<T>
-		/// IList<T>
-		/// List<T>
+		/// IEnumerable&lt;T&gt;
+		/// ICollection&lt;T&gt;
+		/// IList&lt;T&gt;
+		/// List&lt;T&gt;
 		/// Ikadn.Ikon.Types.IkonArray
 		/// </summary>
 		/// <typeparam name="T">Target type</typeparam>
