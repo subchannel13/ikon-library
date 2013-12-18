@@ -50,6 +50,19 @@ namespace Ikston_Unit_Tests
 		}
 
 		[TestMethod]
+		public void ArrayConvertTargetIEnumerable()
+		{
+			IkonArray array = new IkonArray();
+			array.Add(new IkonText("a"));
+			array.Add(new IkonText("b"));
+			array.Add(new IkonText("c"));
+			array.Add(new IkonText("d"));
+
+			var converted = array.To<IEnumerable<string>>();
+			Assert.AreEqual<string>(converted.First(), "a");
+		}
+
+		[TestMethod]
 		public void ArrayConvertTargetIList()
 		{
 			IkonArray array = new IkonArray();

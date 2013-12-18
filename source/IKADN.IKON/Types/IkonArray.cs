@@ -80,7 +80,11 @@ namespace Ikadn.Ikon.Types
 			else if (target.IsAssignableFrom(this.GetType()))
 				return (T)(object)this;
 			else {
-				foreach (var type in target.GetInterfaces())
+				List<Type> subTypes = new List<Type>();
+				subTypes.Add(target);
+				subTypes.AddRange(target.GetInterfaces());
+
+				foreach (var type in subTypes)
 					if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>) &&
 						target.IsAssignableFrom(typeof(List<>).MakeGenericType(type.GetGenericArguments()))) {
 						
@@ -90,6 +94,7 @@ namespace Ikadn.Ikon.Types
 						MethodInfo converterMethod = iListConverterMethod.MakeGenericMethod(type.GetGenericArguments()[0]);
 						return (T)converterMethod.Invoke(this, null);
 					}
+
 				throw new InvalidOperationException("Cast to " + target.Name + " is not supported for " + Tag);
 			}
 		}
