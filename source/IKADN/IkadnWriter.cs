@@ -77,7 +77,7 @@ namespace Ikadn
 			{
 				Writer.Write(Indentation);
 				Writer.WriteLine(Line);
-				Line.Clear();
+				Line.Length = 0;
 			}
 		}
 	}

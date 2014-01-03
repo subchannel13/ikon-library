@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Ikadn.Ikon.Factories;
 
 namespace Ikadn.Ikon.Types

@@ -29,7 +29,7 @@ namespace Ikadn.Ikon
 		/// <param name="reader"></param>
 		public IkonParser(TextReader reader)
 			: base(reader, new IIkadnObjectFactory[] {
- 			new CompositeFactory(),
+			new CompositeFactory(),
 			new TextFactory(), 
 			new NumericFactory(),
 			new ArrayFactory(),
@@ -94,7 +94,7 @@ namespace Ikadn.Ikon
 				throw new KeyNotFoundException("Object named '" + name + "' not found");
 		}
 
-		private static ISet<char> IdentifierChars = DefineIdentifierChars();
+		private static ICollection<char> IdentifierChars = DefineIdentifierChars();
 
 		/// <summary>
 		/// Reads the input stream for an IKON identifier. Throws System.FormatException if there is

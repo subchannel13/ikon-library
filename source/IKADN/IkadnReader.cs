@@ -139,7 +139,7 @@ namespace Ikadn
 		/// </summary>
 		/// <param name="acceptableCharacters">Set of characters that can be read.</param>
 		/// <returns>Successfully read part of the stream.</returns>
-		public string ReadWhile(ISet<char> acceptableCharacters)
+		public string ReadWhile(ICollection<char> acceptableCharacters)
 		{
 			if (acceptableCharacters == null)
 				throw new ArgumentNullException("acceptableCharacters");
@@ -239,7 +239,7 @@ namespace Ikadn
 						break;
 				}
 
-				if (action.Decision.HasFlag(CharacterAction.Stop))
+				if ((action.Decision & CharacterAction.Stop) != 0)
 					return readChars.ToString();
 			}
 		}
@@ -275,7 +275,7 @@ namespace Ikadn
 		/// </summary>
 		/// <param name="skippableCharacters">Set of characters that should be skipped.</param>
 		/// <returns>Descrtipion of the skipping process.</returns>
-		public ReaderDoneReason SkipWhile(ISet<char> skippableCharacters)
+		public ReaderDoneReason SkipWhile(ICollection<char> skippableCharacters)
 		{
 			if (skippableCharacters == null)
 				throw new ArgumentNullException("skippableCharacters");
@@ -327,7 +327,7 @@ namespace Ikadn
 		/// Skips consequentive characters from the input stream.
 		/// </summary>
 		/// <param name="terminatingCharacters">Set of characters that stop skipping process.</param>
-		public void SkipUntil(ISet<int> terminatingCharacters)
+		public void SkipUntil(ICollection<int> terminatingCharacters)
 		{
 			if (terminatingCharacters == null)
 				throw new ArgumentNullException("terminatingCharacters");

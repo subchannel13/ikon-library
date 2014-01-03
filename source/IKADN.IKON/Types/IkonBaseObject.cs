@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Ikadn.Ikon.Types
 {
@@ -14,7 +13,7 @@ namespace Ikadn.Ikon.Types
 		/// <summary>
 		/// Set of names that can be used as reference to the object.
 		/// </summary>
-		public ISet<string> ReferenceNames
+		public ICollection<string> ReferenceNames
 		{
 			get { return referenceNames; }
 		}

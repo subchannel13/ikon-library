@@ -70,7 +70,7 @@ namespace Ikadn.Ikon.Factories
 			return new IkonNumeric(numberText);
 		}
 
-		static ISet<char> ValidChars = new HashSet<char>(DefineValidChars());
+		static ICollection<char> ValidChars = new HashSet<char>(DefineValidChars());
 		static ICollection<string> SpecialValues = new HashSet<string>(new string[]{
 			IkonNumeric.PositiveInfinity,
 			IkonNumeric.NegativeInfinity,
