@@ -151,9 +151,9 @@ namespace Ikadn
 		/// <returns>An IKADN object if there is one, null otherwise.</returns>
 		protected virtual IkadnBaseObject TryParseNext()
 		{
-			ReaderDoneReason skipResult = this.Reader.SkipWhiteSpaces();
+			var skipResult = this.Reader.SkipWhiteSpaces();
 
-			if (skipResult == ReaderDoneReason.EndOfStream)
+			if (skipResult.EndOfStream)
 				return null;
 
 			char sign = Reader.Read();

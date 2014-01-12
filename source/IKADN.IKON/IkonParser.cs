@@ -69,7 +69,7 @@ namespace Ikadn.Ikon
 			if (IkonReference.TypeTag.Equals(dataObj.Tag))
 				return GetNamedObject(dataObj.To<string>());
 
-			while (this.Reader.SkipWhiteSpaces() != ReaderDoneReason.EndOfStream &&
+			while (!this.Reader.SkipWhiteSpaces().EndOfStream &&
 					this.Reader.Peek() == ReferenceSign) {
 				this.Reader.Read();
 				NamedObjects.Add(ReadIdentifier(this.Reader), dataObj);
@@ -106,7 +106,7 @@ namespace Ikadn.Ikon
 			if (reader == null)
 				throw new ArgumentNullException("reader");
 
-			if (reader.SkipWhiteSpaces() == ReaderDoneReason.EndOfStream)
+			if (reader.SkipWhiteSpaces().EndOfStream)
 				throw new EndOfStreamException("Unexpected end of stream at " + reader.PositionDescription + " while reading IKON identifier.");
 
 			string identifier = reader.ReadWhile(IdentifierChars);

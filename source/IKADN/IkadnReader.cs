@@ -21,6 +21,9 @@ namespace Ikadn
 		private TextReader reader;
 		private int lastCharacter = EndOfStreamResult;
 
+		private bool recordIndentation = true;
+		private StringBuilder indentation = new StringBuilder();
+
 		/// <summary>
 		/// Wraps TextReader with IkonReader
 		/// </summary>
@@ -50,6 +53,15 @@ namespace Ikadn
 		/// Column within the line of the last read character.
 		/// </summary>
 		public int Column { get; private set; }
+
+		
+		public string LineIndentation 
+		{
+			get
+			{
+				return indentation.ToString();
+			}
+		}
 
 		/// <summary>
 		/// Gets text that describes position (line, column and index) of the last
@@ -90,7 +102,8 @@ namespace Ikadn
 		/// <returns>A non-white character</returns>
 		public char PeekNextNonwhite()
 		{
-			if (SkipWhiteSpaces() == ReaderDoneReason.EndOfStream)
+			var skipResult = SkipWhiteSpaces();
+			if (skipResult.EndOfStream)
 				throw new FormatException();
 
 			return this.Peek();
@@ -110,9 +123,21 @@ namespace Ikadn
 			if (lastCharacter == '\n') {
 				Line++;
 				Column = 0;
+				indentation.Length = 0;
+				recordIndentation = true;
 			}
-			else if (lastCharacter != EndOfStreamResult && !char.IsControl((char)lastCharacter))
-				Column++;
+			else if (lastCharacter != EndOfStreamResult) {
+				char c = (char)lastCharacter;
+				
+				if (!char.IsControl(c))
+					Column++;
+
+				if (recordIndentation)
+					if (char.IsWhiteSpace(c))
+						indentation.Append(c);
+					else
+						recordIndentation = false;
+			}
 
 			lastCharacter = reader.Read();
 			return (char)lastCharacter;
@@ -250,7 +275,7 @@ namespace Ikadn
 		/// Skips consequentive whitespace characters from the input stream. 
 		/// </summary>
 		/// <returns>Descrtipion of the skipping process.</returns>
-		public ReaderDoneReason SkipWhiteSpaces()
+		public SkipResult SkipWhiteSpaces()
 		{
 			return SkipWhile(char.IsWhiteSpace);
 		}
@@ -260,7 +285,7 @@ namespace Ikadn
 		/// </summary>
 		/// <param name="skippableCharacters">Character(s) that should be skipped.</param>
 		/// <returns>Descrtipion of the skipping process.</returns>
-		public ReaderDoneReason SkipWhile(params char[] skippableCharacters)
+		public SkipResult SkipWhile(params char[] skippableCharacters)
 		{
 			if (skippableCharacters == null)
 				throw new ArgumentNullException("skippableCharacters");
@@ -275,7 +300,7 @@ namespace Ikadn
 		/// </summary>
 		/// <param name="skippableCharacters">Set of characters that should be skipped.</param>
 		/// <returns>Descrtipion of the skipping process.</returns>
-		public ReaderDoneReason SkipWhile(ICollection<char> skippableCharacters)
+		public SkipResult SkipWhile(ICollection<char> skippableCharacters)
 		{
 			if (skippableCharacters == null)
 				throw new ArgumentNullException("skippableCharacters");
@@ -291,21 +316,22 @@ namespace Ikadn
 		/// <param name="skipCondition">Returns whether character should be skipped
 		/// (if predicate is true). When predicate evaluates to flase, process stops.</param>
 		/// <returns>Descrtipion of the skipping process.</returns>
-		public ReaderDoneReason SkipWhile(Predicate<char> skipCondition)
+		public SkipResult SkipWhile(Predicate<char> skipCondition)
 		{
 			if (skipCondition == null)
 				throw new ArgumentNullException("skipCondition");
 
+			StringBuilder skipped = new StringBuilder();
 			while (true) {
 				int currentChar = reader.Peek();
 
-				if (currentChar == EndOfStreamResult) 
-					return ReaderDoneReason.EndOfStream;
+				if (currentChar == EndOfStreamResult)
+					return new SkipResult(skipped.ToString(), true);
 
 				if (skipCondition((char)currentChar))
-					Read();
+					skipped.Append(Read());
 				else
-					return ReaderDoneReason.Successful;
+					return new SkipResult(skipped.ToString(), false);
 			}
 		}
 
@@ -313,28 +339,28 @@ namespace Ikadn
 		/// Skips consequentive characters from the input stream.
 		/// </summary>
 		/// <param name="terminatingCharacters">Character that stop skipping process.</param>
-		public void SkipUntil(params int[] terminatingCharacters)
+		public SkipResult SkipUntil(params int[] terminatingCharacters)
 		{
 			if (terminatingCharacters == null)
 				throw new ArgumentNullException("terminatingCharacters");
 			if (terminatingCharacters.Length == 0)
 				throw new ArgumentException("No terminating characters specified", "terminatingCharacters");
 
-			SkipUntil(new HashSet<int>(terminatingCharacters).Contains);
+			return SkipUntil(new HashSet<int>(terminatingCharacters).Contains);
 		}
 
 		/// <summary>
 		/// Skips consequentive characters from the input stream.
 		/// </summary>
 		/// <param name="terminatingCharacters">Set of characters that stop skipping process.</param>
-		public void SkipUntil(ICollection<int> terminatingCharacters)
+		public SkipResult SkipUntil(ICollection<int> terminatingCharacters)
 		{
 			if (terminatingCharacters == null)
 				throw new ArgumentNullException("terminatingCharacters");
 			if (terminatingCharacters.Count == 0)
 				throw new ArgumentException("No terminating characters specified", "terminatingCharacters");
 
-			SkipUntil(terminatingCharacters.Contains);
+			return SkipUntil(terminatingCharacters.Contains);
 		}
 
 		/// <summary>
@@ -342,20 +368,21 @@ namespace Ikadn
 		/// </summary>
 		/// <param name="stopCondition">Returns whether the terminating condition
 		/// is met (if predicate is true).</param>
-		public void SkipUntil(Predicate<int> stopCondition)
+		public SkipResult SkipUntil(Predicate<int> stopCondition)
 		{
 			if (stopCondition == null)
 				throw new ArgumentNullException("stopCondition");
 
+			StringBuilder skipped = new StringBuilder();
 			while (true) {
 				int currentChar = reader.Peek();
 
 				if (!stopCondition(currentChar))
-					Read();
+					skipped.Append(Read());
 				else if (currentChar == EndOfStreamResult)
-					throw new EndOfStreamException("Unexpected end of stream at " + PositionDescription);
+					return new SkipResult(skipped.ToString(), true);
 				else
-					return;
+					return new SkipResult(skipped.ToString(), false);
 			}
 		}
 		#endregion

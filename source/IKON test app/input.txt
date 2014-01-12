@@ -5,6 +5,9 @@
 	x = 9
 	y = 4
 	ime "Alfa Kentaura"
+	opis §
+		Alfa Kentaura je binarna
+		zvijezda.
 	planeti [
 		{ Planet velicina = 100 }
 		{ Planet velicina = 120 }
