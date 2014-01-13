@@ -56,7 +56,6 @@
     <Compile Include="IkadnParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IkadnBaseObject.cs" />
-    <Compile Include="Utilities\ReaderDoneReason.cs" />
     <Compile Include="IkadnWriter.cs" />
     <Compile Include="Utilities\SkipResult.cs" />
     <Compile Include="Utilities\TaggableQueue.cs" />

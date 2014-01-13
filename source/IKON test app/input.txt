@@ -1,22 +1,22 @@
-﻿"a\u004\ttab"
+﻿"a\u0040\ttab"
 
-{ Zvijezda
-	velicina = 2 @temp
+{ Star
+	size = 2 @temp
 	x = 9
 	y = 4
-	ime "Alfa Kentaura"
-	opis §
-		Alfa Kentaura je binarna
-		zvijezda.
-	planeti [
-		{ Planet velicina = 100 }
-		{ Planet velicina = 120 }
-		{ Planet velicina = 0 }
+	name "Alfa Centauri"
+	desc §
+		Alfa Centauri is a binary
+		star.
+	planets [
+		{ Planet size = 100 }
+		{ Planet size = 120 }
+		{ Planet size = 0 }
 	]
-	uprava { Uprava
-		igracID = 3
+	government { Gov
+		playerId = 3
 	}
 }
 
-"neki glupi string"
+"some string"
 #temp

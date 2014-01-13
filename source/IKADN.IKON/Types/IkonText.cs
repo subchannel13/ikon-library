@@ -73,6 +73,16 @@ namespace Ikadn.Ikon.Types
 			if (writer == null)
 				throw new System.ArgumentNullException("writer");
 
+			if (this.text.Contains("\n"))
+				composeBlock(writer);
+			else
+				composeLine(writer);
+			
+			WriteReferences(writer);
+		}
+		
+		private void composeLine(IkadnWriter writer)
+		{
 			StringBuilder sb = new StringBuilder(text);
 			sb.Replace(@"\", @"\\");
 			sb.Replace(@"""", @"\""");
@@ -83,8 +93,17 @@ namespace Ikadn.Ikon.Types
 			writer.Write(TextFactory.OpeningSign.ToString());
 			writer.Write(sb.ToString());
 			writer.Write(TextFactory.ClosingChar.ToString());
+		}
+		
+		void composeBlock(IkadnWriter writer)
+		{
+			StringBuilder sb = new StringBuilder(Environment.NewLine + text);
+			sb.Replace(
+				Environment.NewLine,
+				Environment.NewLine + writer.Indentation.ToString() + "\t");
 
-			WriteReferences(writer);
+			writer.Write(TextBlockFactory.OpeningSign.ToString());
+			writer.Write(sb.ToString());
 		}
 	}
 }

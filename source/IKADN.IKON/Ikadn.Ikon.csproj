@@ -44,6 +44,7 @@
     <Compile Include="Factories\NumericFactory.cs" />
     <Compile Include="Factories\CompositeFactory.cs" />
     <Compile Include="Factories\ReferencedFactory.cs" />
+    <Compile Include="Factories\TextBlockFactory.cs" />
     <Compile Include="Factories\TextFactory.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IkonParser.cs" />

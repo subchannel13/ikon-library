@@ -17,9 +17,9 @@ namespace IKON_test_app
 			IkonParser parser = new IkonParser(reader);
 			var testObj = parser.ParseNext().To<string>();
 
-			var value = parser.ParseNext().To<IkonComposite>();
+			var compositeData = parser.ParseNext().To<IkonComposite>();
 
-			printStar(value);
+			printStar(compositeData);
 			Console.WriteLine();
 
 			var value2 = parser.ParseNext();
@@ -30,9 +30,9 @@ namespace IKON_test_app
 			StringWriter writer = new StringWriter();
 			var ikonWriter = new Ikadn.IkadnWriter(writer);
 
-			value2.Compose(ikonWriter);
-			value3.Compose(ikonWriter);
-			value.Compose(ikonWriter);
+			//value2.Compose(ikonWriter);
+			//value3.Compose(ikonWriter);
+			compositeData.Compose(ikonWriter);
 			Console.Write(writer.ToString());
 
 			reader = new StreamReader(args[0]);
@@ -45,18 +45,19 @@ namespace IKON_test_app
 		}
 
 		static void printStar(IkonComposite starData) {
-			Console.WriteLine("size: " + starData["velicina"].To<int>());
+			Console.WriteLine("size: " + starData["size"].To<int>());
 			Console.WriteLine("position: " + starData["x"].To<int>() + ", " + starData["y"].To<int>());
-			Console.WriteLine("name: " + starData["ime"].To<string>());
+			Console.WriteLine("name: " + starData["name"].To<string>());
+			Console.WriteLine("desc: " + starData["desc"].To<string>());
 			Console.WriteLine();
 			Console.WriteLine("List of planets: ");
-			foreach (var planetData in starData["planeti"].To<IkonArray>())
+			foreach (var planetData in starData["planets"].To<IkonArray>())
 				printPlanet(planetData.To<IkonComposite>());
 		}
 
 		static void printPlanet(IkonComposite planetData)
 		{
-			Console.WriteLine("size: " + planetData["velicina"].To<int>());
+			Console.WriteLine("size: " + planetData["size"].To<int>());
 		}
 	}
 }
