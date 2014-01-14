@@ -104,6 +104,7 @@ namespace Ikadn.Ikon.Types
 
 			writer.Write(TextBlockFactory.OpeningSign.ToString());
 			writer.Write(sb.ToString());
+			writer.Write(writer.Indentation.ToString() + TextBlockFactory.ClosingChar);
 		}
 	}
 }

@@ -51,6 +51,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\IkonArray.cs" />
     <Compile Include="Types\IkonBaseObject.cs" />
+    <Compile Include="Types\IkonDecimal.cs" />
+    <Compile Include="Types\IkonFloat.cs" />
+    <Compile Include="Types\IkonInteger.cs" />
     <Compile Include="Types\IkonNumeric.cs" />
     <Compile Include="Types\IkonComposite.cs" />
     <Compile Include="Types\IkonReference.cs" />

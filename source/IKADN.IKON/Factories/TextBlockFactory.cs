@@ -7,6 +7,7 @@ namespace Ikadn.Ikon.Factories
 	public class TextBlockFactory : IIkadnObjectFactory
 	{
 		public const char OpeningSign = '§';
+		public const char ClosingChar = '\\';
 		
 		public char Sign {
 			get {
@@ -28,6 +29,9 @@ namespace Ikadn.Ikon.Factories
 				skipEndOfLine(parser.Reader);
 			}
 			
+			if (text.Length >= Environment.NewLine.Length)
+				text.Length -= Environment.NewLine.Length;
+			
 			return new IkonText(text.ToString());
 		}
 		
@@ -37,7 +41,12 @@ namespace Ikadn.Ikon.Factories
 				if (reader.Peek() == expectedSpace)
 					reader.Read();
 				else
-					return false;
+					if (reader.Peek() == ClosingChar) {
+						reader.Read();
+						return false;
+					}
+					else
+						throw new FormatException(); //FIXME: exceptiom message
 			
 			return true;
 		}

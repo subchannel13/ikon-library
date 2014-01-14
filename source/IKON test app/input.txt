@@ -8,6 +8,7 @@
 	desc §
 		Alfa Centauri is a binary
 		star.
+	\
 	planets [
 		{ Planet size = 100 }
 		{ Planet size = 120 }

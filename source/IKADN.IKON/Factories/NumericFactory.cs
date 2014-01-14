@@ -27,6 +27,8 @@ namespace Ikadn.Ikon.Factories
 		/// Valid styles for IKON numeric objects.
 		/// </summary>
 		public static readonly NumberStyles NumberStyle = NumberStyles.Float;
+		
+		public static HashSet<Type> NumberTypes { get; private set; }
 
 		/// <summary>
 		/// Sign for IKADN numeric object.
@@ -55,26 +57,34 @@ namespace Ikadn.Ikon.Factories
 			if (numberText.Length == 0)
 				throw new FormatException("Unexpected character at " + parser.Reader.PositionDescription + ", while reading IKON numeric value");
 
-			if (!SpecialValues.Contains(numberText)) {
-				decimal tempD;
-				double tempF;
-				long tempI;
-				if (!decimal.TryParse(numberText, NumberStyle, NumberFormat, out tempD) &&
-					!double.TryParse(numberText, NumberStyle, NumberFormat, out tempF) &&
-					long.TryParse(numberText, NumberStyle, NumberFormat, out tempI) ||
-					!NumberMatcher.IsMatch(numberText)) {
-						throw new FormatException("Characters from " + startPosition + " to " + parser.Reader.PositionDescription + " couldn't be parsed as IKON numeric value");
-				}
-			}
-
-			return new IkonNumeric(numberText);
+			if (numberText == IkonFloat.PositiveInfinity)
+				return new IkonFloat(double.PositiveInfinity);
+			
+			if (numberText == IkonFloat.NegativeInfinity)
+				return new IkonFloat(double.NegativeInfinity);
+			
+			if (numberText == IkonFloat.NotANumber)
+				return new IkonFloat(double.NaN);
+			
+			if (!NumberMatcher.IsMatch(numberText))
+				throw new FormatException("Characters from " + startPosition + " to " + parser.Reader.PositionDescription + " couldn't be parsed as IKON numeric value");
+			
+			long tempI;
+			if (long.TryParse(numberText, NumberStyle, NumberFormat, out tempI))
+				return new IkonInteger(tempI);
+			
+			decimal tempD;
+			if (decimal.TryParse(numberText, NumberStyle, NumberFormat, out tempD))
+				return new IkonDecimal(tempD);
+			
+			double tempF;
+			if (double.TryParse(numberText, NumberStyle, NumberFormat, out tempF))
+				return new IkonFloat(tempF);
+					
+			throw new FormatException("Characters from " + startPosition + " to " + parser.Reader.PositionDescription + " couldn't be parsed as IKON numeric value (possibly value too big)");
 		}
 
 		static ICollection<char> ValidChars = new HashSet<char>(DefineValidChars());
-		static ICollection<string> SpecialValues = new HashSet<string>(new string[]{
-			IkonNumeric.PositiveInfinity,
-			IkonNumeric.NegativeInfinity,
-			IkonNumeric.NotANumber});
 		static Regex NumberMatcher = new Regex("[\\+\\-]?[0-9\\.eE]+");
 
 		private static IEnumerable<char> DefineValidChars()
@@ -90,6 +100,20 @@ namespace Ikadn.Ikon.Factories
 		static NumericFactory()
 		{
 			NumberFormat = NumberFormatInfo.InvariantInfo;
+			NumberTypes = new HashSet<Type>(new Type[] {
+			                                	typeof(byte),
+			                                	typeof(sbyte),
+			                                	typeof(char),
+			                                	typeof(decimal),
+			                                	typeof(double),
+			                                	typeof(float),
+			                                	typeof(int),
+			                                	typeof(uint),
+			                                	typeof(long),
+			                                	typeof(ulong),
+			                                	typeof(short),
+			                                	typeof(ushort),
+			                                });
 		}
 	}
 }
