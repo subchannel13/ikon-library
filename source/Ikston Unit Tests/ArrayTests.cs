@@ -27,10 +27,10 @@ namespace Ikston_Unit_Tests
 		public void ArrayConvertIkadnBaseArray()
 		{
 			IkonArray array = new IkonArray();
-			array.Add(new IkonNumeric(1));
-			array.Add(new IkonNumeric(2));
-			array.Add(new IkonNumeric(3));
-			array.Add(new IkonNumeric(4));
+			array.Add(new IkonInteger(1));
+			array.Add(new IkonInteger(2));
+			array.Add(new IkonInteger(3));
+			array.Add(new IkonInteger(4));
 
 			var converted = array.To<IkadnBaseObject[]>();
 			Assert.AreEqual<int>(converted[0].To<int>(), 1);
@@ -40,10 +40,10 @@ namespace Ikston_Unit_Tests
 		public void ArrayConvertTargetArray()
 		{
 			IkonArray array = new IkonArray();
-			array.Add(new IkonNumeric(1));
-			array.Add(new IkonNumeric(2));
-			array.Add(new IkonNumeric(3));
-			array.Add(new IkonNumeric(4));
+			array.Add(new IkonInteger(1));
+			array.Add(new IkonInteger(2));
+			array.Add(new IkonInteger(3));
+			array.Add(new IkonInteger(4));
 
 			var converted = array.To<int[]>();
 			Assert.AreEqual<int>(converted[0], 1);
@@ -66,10 +66,10 @@ namespace Ikston_Unit_Tests
 		public void ArrayConvertTargetIList()
 		{
 			IkonArray array = new IkonArray();
-			array.Add(new IkonNumeric(1));
-			array.Add(new IkonNumeric(2));
-			array.Add(new IkonNumeric(3));
-			array.Add(new IkonNumeric(4));
+			array.Add(new IkonInteger(1));
+			array.Add(new IkonInteger(2));
+			array.Add(new IkonInteger(3));
+			array.Add(new IkonInteger(4));
 
 			var converted = array.To<IList<int>>();
 			Assert.AreEqual<int>(converted[0], 1);
@@ -105,7 +105,7 @@ namespace Ikston_Unit_Tests
 			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(input));
 			var value = parser.ParseNext() as IkonArray;
 
-			Assert.AreEqual(typeof(IkonNumeric), value[0].GetType());
+			Assert.AreEqual(typeof(IkonInteger), value[0].GetType());
 		}
 
 		[TestMethod]
@@ -166,9 +166,9 @@ namespace Ikston_Unit_Tests
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
 			var value = new IkonArray();
-			value.Add(new IkonNumeric(2));
-			value.Add(new IkonNumeric(5));
-			value.Add(new IkonNumeric(0.5));
+			value.Add(new IkonInteger(2));
+			value.Add(new IkonInteger(5));
+			value.Add(new IkonFloat(0.5));
 			value.Compose(writer);
 
 			Assert.AreEqual(expected, output.ToString().Trim());
@@ -231,10 +231,10 @@ namespace Ikston_Unit_Tests
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
 			var doubleNestedValue = new IkonArray();
-			doubleNestedValue.Add(new IkonNumeric(-0.4));
+			doubleNestedValue.Add(new IkonFloat(-0.4));
 
 			var nestedValue = new IkonArray();
-			nestedValue.Add(new IkonNumeric(2.5));
+			nestedValue.Add(new IkonFloat(2.5));
 			nestedValue.Add(doubleNestedValue);
 			nestedValue.Add(new IkonArray());
 			nestedValue.Add(new IkonText("foo"));

@@ -1,5 +1,6 @@
 ﻿using System;
 using Ikadn.Ikon.Factories;
+using System.Collections.Generic;
 
 namespace Ikadn.Ikon.Types
 {
@@ -46,8 +47,8 @@ namespace Ikadn.Ikon.Types
 		{
 			Type target = typeof(T);
 
-			if (NumericFactory.NumberTypes.Contains(target))
-				return (T)(object)value;
+			if (converters.ContainsKey(target))
+				return (T)converters[target](value);
 			else if (target.IsAssignableFrom(this.GetType()))
 				return (T)(object)this;
 			else
@@ -68,5 +69,20 @@ namespace Ikadn.Ikon.Types
 
 			WriteReferences(writer);
 		}
+
+		private static Dictionary<Type, Func<decimal, object>> converters = new Dictionary<Type, Func<decimal, object>>() {
+			{typeof(byte), x => (object)Convert.ToByte(x)},	
+			{typeof(sbyte), x => (object)Convert.ToSByte(x)},
+			{typeof(char), x => (object)Convert.ToChar(x)},
+			{typeof(decimal), x => (object)x},
+			{typeof(double), x => (object)Convert.ToDouble(x)},
+			{typeof(float), x => (object)Convert.ToSingle(x)},
+			{typeof(int), x => (object)Convert.ToInt32(x)},
+			{typeof(uint), x => (object)Convert.ToUInt32(x)},
+			{typeof(long), x => (object)Convert.ToInt64(x)},
+			{typeof(ulong), x => (object)Convert.ToUInt64(x)},
+			{typeof(short), x => (object)Convert.ToInt16(x)},
+			{typeof(ushort), x => (object)Convert.ToUInt16(x)},
+		};
 	}
 }

@@ -94,8 +94,8 @@ namespace Ikadn.Ikon.Types
 			writer.Write(sb.ToString());
 			writer.Write(TextFactory.ClosingChar.ToString());
 		}
-		
-		void composeBlock(IkadnWriter writer)
+
+		private void composeBlock(IkadnWriter writer)
 		{
 			StringBuilder sb = new StringBuilder(Environment.NewLine + text);
 			sb.Replace(
@@ -103,7 +103,7 @@ namespace Ikadn.Ikon.Types
 				Environment.NewLine + writer.Indentation.ToString() + "\t");
 
 			writer.Write(TextBlockFactory.OpeningSign.ToString());
-			writer.Write(sb.ToString());
+			writer.WriteLine(sb.ToString());
 			writer.Write(writer.Indentation.ToString() + TextBlockFactory.ClosingChar);
 		}
 	}

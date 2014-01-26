@@ -106,7 +106,7 @@ namespace Ikston_Unit_Tests
 			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(SampleSerializedObject));
 			var value = parser.ParseNext() as IkonComposite;
 
-			var subvalue = value["x"] as IkonNumeric;
+			var subvalue = value["x"];
 
 			Assert.AreEqual(2.1, subvalue.To<double>());
 		}
@@ -117,7 +117,7 @@ namespace Ikston_Unit_Tests
 			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader(SampleSerializedObject));
 			var value = parser.ParseNext() as IkonComposite;
 
-			var subvalue = value["y"] as IkonNumeric;
+			var subvalue = value["y"];
 
 			Assert.AreEqual(-3.4, subvalue.To<double>());
 		}
@@ -151,17 +151,17 @@ namespace Ikston_Unit_Tests
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
 
 			var subarray = new IkonArray();
-			subarray.Add(new IkonNumeric(0));
-			subarray.Add(new IkonNumeric(1));
-			subarray.Add(new IkonNumeric(2));
+			subarray.Add(new IkonInteger(0));
+			subarray.Add(new IkonInteger(1));
+			subarray.Add(new IkonInteger(2));
 			
 			var subvalue = new IkonComposite("Material");
-			subvalue["alpha"] = new IkonNumeric(1);
+			subvalue["alpha"] = new IkonFloat(1);
 
 			var value = new IkonComposite("Model");
 			value["name"] = new IkonText("A-10");
-			value["x"] = new IkonNumeric(2.1);
-			value["y"] = new IkonNumeric(-3.4);
+			value["x"] = new IkonFloat(2.1);
+			value["y"] = new IkonFloat(-3.4);
 			value["materials"] = subarray;
 			value["material0"] = subvalue;
 			value.Compose(writer);

@@ -70,8 +70,8 @@ namespace Ikadn.Ikon.Types
 		{
 			Type target = typeof(T);
 
-			if (NumericFactory.NumberTypes.Contains(target))
-				return (T)(object)value; //FIXME: doesn't work for int
+			if (converters.ContainsKey(target))
+				return (T)converters[target](value);
 			else if (target.IsAssignableFrom(this.GetType()))
 				return (T)(object)this;
 			else
@@ -93,5 +93,20 @@ namespace Ikadn.Ikon.Types
 
 			WriteReferences(writer);
 		}
+
+		private static Dictionary<Type, Func<long, object>> converters = new Dictionary<Type, Func<long, object>>() {
+			{typeof(byte), x => (object)Convert.ToByte(x)},	
+			{typeof(sbyte), x => (object)Convert.ToSByte(x)},
+			{typeof(char), x => (object)Convert.ToChar(x)},
+			{typeof(decimal), x => (object)Convert.ToDecimal(x)},
+			{typeof(double), x => (object)Convert.ToDouble(x)},
+			{typeof(float), x => (object)Convert.ToSingle(x)},
+			{typeof(int), x => (object)Convert.ToInt32(x)},
+			{typeof(uint), x => (object)Convert.ToUInt32(x)},
+			{typeof(long), x => (object)x},
+			{typeof(ulong), x => (object)Convert.ToUInt64(x)},
+			{typeof(short), x => (object)Convert.ToInt16(x)},
+			{typeof(ushort), x => (object)Convert.ToUInt16(x)},
+		};
 	}
 }

@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using Ikadn.Ikon.Types;
 using Ikadn;
+using Ikadn.Ikon.Factories;
 
 namespace Ikston_Unit_Tests
 {
@@ -13,6 +14,7 @@ namespace Ikston_Unit_Tests
 	public class TextTests
 	{
 		const char Q = '"';
+		static string N = Environment.NewLine;
 
 		[TestMethod]
 		public void TextType()
@@ -93,8 +95,8 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void TextWriteValueEscapes()
 		{
-			string rawIkonData = "some text\\nnew line\\ttab\\n\\ranother line and \\\" qoute";
-			string inputValue = "some text\nnew line\ttab\n\ranother line and \" qoute";
+			string rawIkonData = "some text\\ttab and \\\" qoute";
+			string inputValue = "some text\ttab and \" qoute";
 			string ikonData = Q + rawIkonData + Q;
 			StringBuilder output = new StringBuilder();
 
@@ -103,6 +105,22 @@ namespace Ikston_Unit_Tests
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
+		}
+
+		[TestMethod]
+		public void TextWriteValueMultiline()
+		{
+			string NT = N + "\t";
+			string rawData = NT + "some text" + NT + "new line\ttab" + NT + "another line and \" qoute";
+			string inputValue = "some text" + N + "new line\ttab" + N + "another line and \" qoute";
+			string expectedData = TextBlockFactory.OpeningSign + rawData + N + TextBlockFactory.ClosingChar;
+			StringBuilder output = new StringBuilder();
+
+			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
+			var value = new IkonText(inputValue);
+			value.Compose(writer);
+
+			Assert.AreEqual(expectedData, output.ToString().Trim());
 		}
 	}
 }

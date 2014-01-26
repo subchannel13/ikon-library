@@ -47,7 +47,7 @@ namespace Ikston_Unit_Tests
 			var parser = new Ikadn.Ikon.IkonParser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual(IkonNumeric.TypeTag, parser.GetNamedObject("number").Tag);
+			Assert.AreEqual(IkonInteger.TypeTag, parser.GetNamedObject("number").Tag);
 		}
 
 		[TestMethod]
@@ -56,7 +56,7 @@ namespace Ikston_Unit_Tests
 			var parser = new Ikadn.Ikon.IkonParser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual(IkonNumeric.TypeTag, parser.GetNamedObject("notNumber").Tag);
+			Assert.AreEqual(IkonFloat.TypeTag, parser.GetNamedObject("notNumber").Tag);
 		}
 
 		[TestMethod]
@@ -83,7 +83,7 @@ namespace Ikston_Unit_Tests
 			var parser = new Ikadn.Ikon.IkonParser(new StringReader(NamingTestInput));
 			var values = parser.ParseAll();
 
-			Assert.AreEqual(IkonNumeric.TypeTag, parser.GetNamedObject("nestedNumber").Tag);
+			Assert.AreEqual(IkonInteger.TypeTag, parser.GetNamedObject("nestedNumber").Tag);
 		}
 
 		[TestMethod]

@@ -27,8 +27,6 @@ namespace Ikadn.Ikon.Factories
 		/// Valid styles for IKON numeric objects.
 		/// </summary>
 		public static readonly NumberStyles NumberStyle = NumberStyles.Float;
-		
-		public static HashSet<Type> NumberTypes { get; private set; }
 
 		/// <summary>
 		/// Sign for IKADN numeric object.
@@ -100,20 +98,6 @@ namespace Ikadn.Ikon.Factories
 		static NumericFactory()
 		{
 			NumberFormat = NumberFormatInfo.InvariantInfo;
-			NumberTypes = new HashSet<Type>(new Type[] {
-			                                	typeof(byte),
-			                                	typeof(sbyte),
-			                                	typeof(char),
-			                                	typeof(decimal),
-			                                	typeof(double),
-			                                	typeof(float),
-			                                	typeof(int),
-			                                	typeof(uint),
-			                                	typeof(long),
-			                                	typeof(ulong),
-			                                	typeof(short),
-			                                	typeof(ushort),
-			                                });
 		}
 	}
 }
