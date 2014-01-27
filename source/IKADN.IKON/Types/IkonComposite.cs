@@ -99,7 +99,7 @@ namespace Ikadn.Ikon.Types
 			if (writer == null)
 				throw new System.ArgumentNullException("writer");
 
-			writer.Write(CompositeFactory.OpeningSign.ToString());
+			writer.Write(CompositeFactory.OpeningSign);
 			writer.Write(" ");
 			writer.WriteLine(dataTag);
 			writer.Indentation.Increase();
@@ -112,7 +112,7 @@ namespace Ikadn.Ikon.Types
 			}
 
 			writer.Indentation.Decrease();
-			writer.Write(CompositeFactory.ClosingChar.ToString());
+			writer.Write(CompositeFactory.ClosingChar);
 
 			WriteReferences(writer);
 		}

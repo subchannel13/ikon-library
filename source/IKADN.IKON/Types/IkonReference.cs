@@ -64,7 +64,7 @@ namespace Ikadn.Ikon.Types
 			if (writer == null)
 				throw new System.ArgumentNullException("writer");
 
-			writer.Write(ReferencedFactory.OpeningSign.ToString());
+			writer.Write(ReferencedFactory.OpeningSign);
 			writer.Write(name);
 
 			WriteReferences(writer);

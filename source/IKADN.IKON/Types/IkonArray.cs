@@ -140,14 +140,14 @@ namespace Ikadn.Ikon.Types
 			if (writer == null)
 				throw new System.ArgumentNullException("writer");
 
-			writer.WriteLine(ArrayFactory.OpeningSign.ToString());
+			writer.WriteLine(ArrayFactory.OpeningSign);
 			writer.Indentation.Increase();
 
 			foreach (IkadnBaseObject value in elements)
 				value.Compose(writer);
 
 			writer.Indentation.Decrease();
-			writer.Write(ArrayFactory.ClosingChar.ToString());
+			writer.Write(ArrayFactory.ClosingChar);
 
 			WriteReferences(writer);
 		}

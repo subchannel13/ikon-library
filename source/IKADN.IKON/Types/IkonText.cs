@@ -14,6 +14,8 @@ namespace Ikadn.Ikon.Types
 		/// </summary>
 		public const string TypeTag = "IKON.Text";
 
+		private static readonly string[] LineEnds = new string[] { "\r\n", "\n" };
+		
 		private string text;
 
 		/// <summary>
@@ -90,21 +92,21 @@ namespace Ikadn.Ikon.Types
 			sb.Replace("\r", @"\r");
 			sb.Replace("\t", @"\t");
 
-			writer.Write(TextFactory.OpeningSign.ToString());
+			writer.Write(TextFactory.OpeningSign);
 			writer.Write(sb.ToString());
-			writer.Write(TextFactory.ClosingChar.ToString());
+			writer.Write(TextFactory.ClosingChar);
 		}
 
 		private void composeBlock(IkadnWriter writer)
 		{
-			StringBuilder sb = new StringBuilder(Environment.NewLine + text);
-			sb.Replace(
-				Environment.NewLine,
-				Environment.NewLine + writer.Indentation.ToString() + "\t");
+			writer.WriteLine(TextBlockFactory.OpeningSign);
+			writer.Indentation.Increase();
+			
+			foreach(var line in text.Split(LineEnds, StringSplitOptions.None))
+				writer.WriteLine(line);
 
-			writer.Write(TextBlockFactory.OpeningSign.ToString());
-			writer.WriteLine(sb.ToString());
-			writer.Write(writer.Indentation.ToString() + TextBlockFactory.ClosingChar);
+			writer.Indentation.Decrease();
+			writer.Write(TextBlockFactory.ClosingChar);
 		}
 	}
 }

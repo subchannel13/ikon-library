@@ -88,7 +88,7 @@ namespace Ikadn.Ikon.Types
 			if (writer == null)
 				throw new System.ArgumentNullException("writer");
 
-			writer.Write(NumericFactory.OpeningSign.ToString());
+			writer.Write(NumericFactory.OpeningSign);
 			writer.Write(value.ToString(NumericFactory.NumberFormat));
 
 			WriteReferences(writer);

@@ -39,6 +39,11 @@ namespace Ikadn
 			this.Indentation = new Indentation();
 		}
 	
+		public void Write(char character)
+		{
+			Write(character.ToString());
+		}
+		
 		/// <summary>
 		/// Appends a text to the current line. Text entered with this method
 		/// is buffered and is not written immediately to the output stream.
@@ -54,6 +59,11 @@ namespace Ikadn
 			Line.Append(text);
 		}
 
+		public void WriteLine(char character)
+		{
+			WriteLine(character.ToString());
+		}
+		
 		/// <summary>
 		/// Appends a text to the current line and writes buffered line to the
 		/// output stream.
