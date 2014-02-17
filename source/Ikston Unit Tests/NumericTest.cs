@@ -215,12 +215,11 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void NumericWriteValueDoubleInfinity()
 		{
-			double rawValue = double.PositiveInfinity;
-			string ikonData = "=" + rawValue.ToString(NumberFormatInfo.InvariantInfo);
+			string ikonData = "=" + IkonFloat.PositiveInfinity;
 			StringBuilder output = new StringBuilder();
 
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
-			var value = new IkonFloat(rawValue);
+			var value = new IkonFloat(double.PositiveInfinity);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -229,12 +228,11 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void NumericWriteValueDoubleNegativeInfinity()
 		{
-			double rawValue = double.NegativeInfinity;
-			string ikonData = "=" + rawValue.ToString(NumberFormatInfo.InvariantInfo);
+			string ikonData = "=" + IkonFloat.NegativeInfinity;
 			StringBuilder output = new StringBuilder();
 
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
-			var value = new IkonFloat(rawValue);
+			var value = new IkonFloat(double.NegativeInfinity);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());
@@ -243,12 +241,11 @@ namespace Ikston_Unit_Tests
 		[TestMethod]
 		public void NumericWriteValueDoubleNaN()
 		{
-			double rawValue = double.NaN;
-			string ikonData = "=" + rawValue.ToString(NumberFormatInfo.InvariantInfo);
+			string ikonData = "=" + IkonFloat.NotANumber;
 			StringBuilder output = new StringBuilder();
 
 			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
-			var value = new IkonFloat(rawValue);
+			var value = new IkonFloat(double.NaN);
 			value.Compose(writer);
 
 			Assert.AreEqual(ikonData, output.ToString().Trim());

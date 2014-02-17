@@ -95,12 +95,9 @@ namespace Ikadn
 		/// </summary>
 		public void EndLine()
 		{
-			if (Line.Length > 0)
-			{
-				Writer.Write(Indentation);
-				Writer.WriteLine(Line);
-				Line.Length = 0;
-			}
+			Writer.Write(Indentation);
+			Writer.WriteLine(Line);
+			Line.Length = 0;
 		}
 	}
 }

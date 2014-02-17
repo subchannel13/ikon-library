@@ -49,6 +49,7 @@
     <Compile Include="CompositeTests.cs" />
     <Compile Include="ReferenceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextBlockTests.cs" />
     <Compile Include="TextTests.cs" />
     <Compile Include="NumericTest.cs" />
   </ItemGroup>
