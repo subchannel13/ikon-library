@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace Ikadn.Ikon.Types
 {
+	/// <summary>
+	/// IKON numeric object (fixed point).
+	/// </summary>
 	public class IkonDecimal : IkonBaseObject
 	{
 		/// <summary>
@@ -14,7 +17,7 @@ namespace Ikadn.Ikon.Types
 		private decimal value;
 
 		/// <summary>
-		/// Constructs IKON numeric object.
+		/// Constructs IKON fixed point numeric object.
 		/// </summary>
 		/// <param name="value">The value</param>
 		public IkonDecimal(decimal value)
@@ -33,13 +36,19 @@ namespace Ikadn.Ikon.Types
 		/// <summary>
 		/// Converts IKON numeric object to specified type. Supported target types:
 		/// 
-		/// System.decimal
-		/// System.double
-		/// System.float
-		/// System.int
-		/// System.long
-		/// System.short
-		/// Ikadn.Ikon.Types.IkonNumeric
+		/// byte
+		/// char
+		/// decimal
+		/// double
+		/// float
+		/// int
+		/// long
+		/// sbyte
+		/// short
+		/// uint
+		/// ulong
+		/// ushort
+		/// Ikadn.Ikon.Types.IkonDecimal
 		/// </summary>
 		/// <typeparam name="T">Target type</typeparam>
 		/// <returns>Converted value</returns>

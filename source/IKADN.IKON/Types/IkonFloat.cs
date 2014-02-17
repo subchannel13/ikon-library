@@ -4,27 +4,26 @@ using System.Collections.Generic;
 
 namespace Ikadn.Ikon.Types
 {
+	/// <summary>
+	/// IKON numeric object (floating point).
+	/// </summary>
 	public class IkonFloat : IkonBaseObject
 	{
-		//TODO: check docs
 		/// <summary>
 		/// Tag for IKON numeric objects.
 		/// </summary>
 		public const string TypeTag = "IKON.Numeric";
 
-		//TODO: check docs
 		/// <summary>
 		/// Textual representation of IKON numeric for positive infinity.
 		/// </summary>
 		public const string PositiveInfinity = "Inf";
 
-		//TODO: check docs
 		/// <summary>
 		/// Textual representation of IKON numeric for negative infinity.
 		/// </summary>
 		public const string NegativeInfinity = "-Inf";
 
-		//TODO: check docs
 		/// <summary>
 		/// Textual representation of IKON numeric for not a number.
 		/// </summary>
@@ -32,9 +31,8 @@ namespace Ikadn.Ikon.Types
 
 		private double value;
 
-		//TODO: check docs
 		/// <summary>
-		/// Constructs IKON numeric object.
+		/// Constructs IKON floating point numeric object.
 		/// </summary>
 		/// <param name="value">The value</param>
 		public IkonFloat(double value)
@@ -42,9 +40,8 @@ namespace Ikadn.Ikon.Types
 			this.value = value;
 		}
 
-		//TODO: check docs
 		/// <summary>
-		/// Constructs IKON numeric object.
+		/// Constructs IKON floating point numeric object.
 		/// </summary>
 		/// <param name="value">The value</param>
 		public IkonFloat(float value)
@@ -52,7 +49,6 @@ namespace Ikadn.Ikon.Types
 			this.value = value;
 		}
 
-		//TODO: check docs
 		/// <summary>
 		/// Tag of the IKADN object instance.
 		/// </summary>
@@ -61,24 +57,28 @@ namespace Ikadn.Ikon.Types
 			get { return TypeTag; }
 		}
 
-		//TODO: check docs
 		/// <summary>
 		/// Converts IKON numeric object to specified type. Supported target types:
 		/// 
-		/// System.decimal
-		/// System.double
-		/// System.float
-		/// System.int
-		/// System.long
-		/// System.short
-		/// Ikadn.Ikon.Types.IkonNumeric
+		/// byte
+		/// char
+		/// decimal
+		/// double
+		/// float
+		/// int
+		/// long
+		/// sbyte
+		/// short
+		/// uint
+		/// ulong
+		/// ushort
+		/// Ikadn.Ikon.Types.IkonFloat
 		/// </summary>
 		/// <typeparam name="T">Target type</typeparam>
 		/// <returns>Converted value</returns>
 		public override T To<T>()
 		{
 			Type target = typeof(T);
-
 			if (converters.ContainsKey(target))
 				return (T)converters[target](value);
 			else if (target.IsAssignableFrom(this.GetType()))
@@ -87,7 +87,6 @@ namespace Ikadn.Ikon.Types
 				throw new InvalidOperationException("Cast to " + target.Name + " is not supported for " + Tag);
 		}
 
-		//TODO: check docs
 		/// <summary>
 		/// Writes an IKON numeric object to the composer.
 		/// </summary>
@@ -98,7 +97,15 @@ namespace Ikadn.Ikon.Types
 				throw new System.ArgumentNullException("writer");
 
 			writer.Write(NumericFactory.OpeningSign);
-			writer.Write(value.ToString(NumericFactory.NumberFormat));
+			
+			if (double.IsNaN(value))
+				writer.Write(NotANumber);
+			else if (double.IsNegativeInfinity(value))
+				writer.Write(NegativeInfinity);
+			else if (double.IsPositiveInfinity(value))
+				writer.Write(PositiveInfinity);
+			else
+				writer.Write(value.ToString(NumericFactory.NumberFormat));
 
 			WriteReferences(writer);
 		}

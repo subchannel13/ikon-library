@@ -54,7 +54,9 @@ namespace Ikadn
 		/// </summary>
 		public int Column { get; private set; }
 
-		
+		/// <summary>
+		/// Leading whitespaces of currnet line.
+		/// </summary>
 		public string LineIndentation 
 		{
 			get

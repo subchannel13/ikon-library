@@ -4,9 +4,11 @@ using Ikadn.Ikon.Factories;
 
 namespace Ikadn.Ikon.Types
 {
+	/// <summary>
+	/// IKON numeric object (integer).
+	/// </summary>
 	public class IkonInteger : IkonBaseObject
 	{
-		//TODO: check docs
 		/// <summary>
 		/// Tag for IKON numeric objects.
 		/// </summary>
@@ -14,9 +16,8 @@ namespace Ikadn.Ikon.Types
 
 		private long value;
 
-		//TODO: check docs
 		/// <summary>
-		/// Constructs IKON numeric object.
+		/// Constructs IKON integer numeric object.
 		/// </summary>
 		/// <param name="value">The value</param>
 		public IkonInteger(long value)
@@ -24,9 +25,8 @@ namespace Ikadn.Ikon.Types
 			this.value = value;
 		}
 
-		//TODO: check docs
 		/// <summary>
-		/// Constructs IKON numeric object.
+		/// Constructs IKON integer numeric object.
 		/// </summary>
 		/// <param name="value">The value</param>
 		public IkonInteger(int value)
@@ -34,9 +34,8 @@ namespace Ikadn.Ikon.Types
 			this.value = value;
 		}
 
-		//TODO: check docs
 		/// <summary>
-		/// Constructs IKON numeric object.
+		/// Constructs IKON integer numeric object.
 		/// </summary>
 		/// <param name="value">The value</param>
 		public IkonInteger(short value)
@@ -52,17 +51,22 @@ namespace Ikadn.Ikon.Types
 			get { return TypeTag; }
 		}
 
-		//TODO: check docs
 		/// <summary>
 		/// Converts IKON numeric object to specified type. Supported target types:
 		/// 
-		/// System.decimal
-		/// System.double
-		/// System.float
-		/// System.int
-		/// System.long
-		/// System.short
-		/// Ikadn.Ikon.Types.IkonNumeric
+		/// byte
+		/// char
+		/// decimal
+		/// double
+		/// float
+		/// int
+		/// long
+		/// sbyte
+		/// short
+		/// uint
+		/// ulong
+		/// ushort
+		/// Ikadn.Ikon.Types.IkonInteger
 		/// </summary>
 		/// <typeparam name="T">Target type</typeparam>
 		/// <returns>Converted value</returns>
@@ -78,7 +82,6 @@ namespace Ikadn.Ikon.Types
 				throw new InvalidOperationException("Cast to " + target.Name + " is not supported for " + Tag);
 		}
 
-		//TODO: check docs
 		/// <summary>
 		/// Writes an IKON numeric object to the composer.
 		/// </summary>

@@ -8,18 +8,19 @@ using Ikadn.Utilities;
 namespace Ikadn.Ikon.Factories
 {
 	/// <summary>
-	/// IKADN object factory for IKON  textual objects.
+	/// IKADN object factory for IKON  textual objects from backslash escaped
+	/// format.
 	/// </summary>
 	public class TextFactory : IIkadnObjectFactory
 	{
 		/// <summary>
-		/// Sign for IKADN textual object.
+		/// Sign for IKADN textual object (backslash escaped format).
 		/// </summary>
 		public const char OpeningSign = '"';
 
 		/// <summary>
 		/// Closing character for IKON textual object in textual
-		/// representation.
+		/// representation (backslash escaped format).
 		/// </summary>
 		public const char ClosingChar = '"';
 
@@ -30,7 +31,7 @@ namespace Ikadn.Ikon.Factories
 		static Dictionary<char, char> EscapeCodes = DefineEscapeCodes();
 
 		/// <summary>
-		/// Sign for IKADN textual object.
+		/// Sign for IKADN textual object (backslash escaped format).
 		/// </summary>
 		public char Sign
 		{
