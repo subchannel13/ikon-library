@@ -118,15 +118,22 @@ namespace Ikadn.Ikon.Types
 		/// <summary>
 		/// Builder method fo adding one or more elements to IKON array.
 		/// </summary>
-		/// <param name="values">Elements to be added.</param>
+		/// <param name="firstValue">Elements to be added.</param>
+		/// <param name="otherValues">Elements to be added.</param>
 		/// <returns>Instance of the same IKON array method is called for.</returns>
-		public IkonArray Add(params IkadnBaseObject[] values)
+		public IkonArray Add(IkadnBaseObject firstValue, params IkadnBaseObject[] otherValues)
 		{
-			if (values == null)
-				throw new System.ArgumentNullException("values");
+			if (firstValue == null)
+				throw new System.ArgumentNullException("firstValue");
 
-			foreach (var item in values)
-				this.elements.Add(item);
+			this.elements.Add(firstValue);
+
+			if (otherValues != null)
+				foreach (var item in otherValues)
+					if (item != null)
+						this.elements.Add(item);
+					else
+						throw new System.ArgumentNullException("otherValues");
 			
 			return this;
 		}
@@ -203,8 +210,11 @@ namespace Ikadn.Ikon.Types
 		/// Adds an item to the System.Collections.Generic.ICollection&lt;T&gt;.
 		/// </summary>
 		/// <param name="item">The object to add to the System.Collections.Generic.ICollection&lt;T&gt;.</param>
-		public void Add(IkadnBaseObject item)
+		void ICollection<IkadnBaseObject>.Add(IkadnBaseObject item)
 		{
+			if (item == null)
+				throw new System.ArgumentNullException("item");
+
 			this.elements.Add(item);
 		}
 

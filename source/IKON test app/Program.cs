@@ -30,8 +30,6 @@ namespace IKON_test_app
 			StringWriter writer = new StringWriter();
 			var ikonWriter = new Ikadn.IkadnWriter(writer);
 
-			//value2.Compose(ikonWriter);
-			//value3.Compose(ikonWriter);
 			compositeData.Compose(ikonWriter);
 			Console.Write(writer.ToString());
 
