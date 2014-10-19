@@ -24,6 +24,36 @@ namespace Ikston_Unit_Tests
 		}
 
 		[TestMethod]
+		public void ArrayAddEnumerable()
+		{
+			IEnumerable<IkadnBaseObject> sequence = new IkadnBaseObject[] {
+				new IkonInteger(1), new IkonInteger(2), new IkonInteger(3), new IkonInteger(4)
+			};
+			var value = new IkonArray();
+			value.AddAll(sequence);
+
+			Assert.AreEqual(sequence.Count(), value.Count);
+		}
+
+		[TestMethod]
+		public void ArrayAddMultiple()
+		{
+			var value = new IkonArray();
+			value.Add(new IkonInteger(1), new IkonInteger(2), new IkonInteger(3), new IkonInteger(4));
+		
+			Assert.AreEqual(4, value.Count);
+		}
+
+		[TestMethod]
+		public void ArrayAddOne()
+		{
+			var value = new IkonArray();
+			value.Add(new IkonInteger(2));
+
+			Assert.AreEqual(1, value.Count);
+		}
+
+		[TestMethod]
 		public void ArrayConvertIkadnBaseArray()
 		{
 			IkonArray array = new IkonArray();

@@ -139,6 +139,25 @@ namespace Ikadn.Ikon.Types
 		}
 
 		/// <summary>
+		/// Builder method fo adding sequence of elements to IKON array.
+		/// </summary>
+		/// <param name="values">Sequence of elements.</param>
+		/// <returns>Instance of the same IKON array method is called for.</returns>
+		public IkonArray AddAll(IEnumerable<IkadnBaseObject> values)
+		{
+			if (values == null)
+				throw new System.ArgumentNullException("values");
+
+			foreach (var item in values)
+				if (item != null)
+					this.elements.Add(item);
+				else
+					throw new System.ArgumentNullException("values");
+
+			return this;
+		}
+
+		/// <summary>
 		/// Writes an IKON array to the composer.
 		/// </summary>
 		/// <param name="writer">Target composer.</param>
