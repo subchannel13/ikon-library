@@ -18,15 +18,15 @@ namespace Ikadn.Ikon.Factories
 		/// </summary>
 		public const char OpeningSign = '=';
 
-		/// <summary>
-		/// Number format used for IKON numeric objects.
-		/// </summary>
-		public static IFormatProvider NumberFormat { get; private set; }
+        /// <summary>
+        /// Number format used for IKON numeric objects.
+        /// </summary>
+        public static readonly IFormatProvider NumberFormat = NumberFormatInfo.InvariantInfo;
 
-		/// <summary>
-		/// Valid styles for IKON numeric objects.
-		/// </summary>
-		public static readonly NumberStyles NumberStyle = NumberStyles.Float;
+        /// <summary>
+        /// Valid styles for IKON numeric objects.
+        /// </summary>
+        public static readonly NumberStyles NumberStyle = NumberStyles.Float;
 
 		/// <summary>
 		/// Sign for IKADN numeric object.
@@ -93,11 +93,6 @@ namespace Ikadn.Ikon.Factories
 			for (char c = 'a'; c <= 'z'; c++) yield return c;
 			for (char c = 'A'; c <= 'Z'; c++) yield return c;
 			for (char c = '0'; c <= '9'; c++) yield return c;
-		}
-
-		static NumericFactory()
-		{
-			NumberFormat = NumberFormatInfo.InvariantInfo;
 		}
 	}
 }

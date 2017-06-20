@@ -10,19 +10,19 @@ namespace Ikadn.Utilities
 		/// <summary>
 		/// Character in question or new character is substitution is in to be perforemd.
 		/// </summary>
-		public char Character;
+		public char Character { get; private set; }
 
 		/// <summary>
 		/// The action to be performed.
 		/// </summary>
-		public CharacterAction Decision;
+		public CharacterAction Decision { get; private set; }
 
-		/// <summary>
-		/// Initializes reading decision result.
-		/// </summary>
-		/// <param name="character">Character in question or new character is substitution is in to be perforemd.</param>
-		/// <param name="decision">The action to be performed.</param>
-		public ReadingDecision(char character, CharacterAction decision)
+        /// <summary>
+        /// Initializes reading decision result.
+        /// </summary>
+        /// <param name="character">Character in question or new character is substitution is in to be perforemd.</param>
+        /// <param name="decision">The action to be performed.</param>
+        public ReadingDecision(char character, CharacterAction decision)
 		{
 			this.Character = character;
 			this.Decision = decision;

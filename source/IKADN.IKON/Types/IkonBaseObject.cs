@@ -25,7 +25,7 @@ namespace Ikadn.Ikon.Types
 		protected void WriteReferences(IkadnWriter writer)
 		{
 			if (writer == null)
-				throw new System.ArgumentNullException("writer");
+				throw new ArgumentNullException("writer");
 
 			if (referenceNames != null && referenceNames.Count > 0)
 				foreach (string name in referenceNames)
