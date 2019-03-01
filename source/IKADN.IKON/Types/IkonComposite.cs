@@ -12,12 +12,12 @@ namespace Ikadn.Ikon.Types
 		/// <summary>
 		/// Data defined tag.
 		/// </summary>
-		private string dataTag;
+		private readonly string dataTag;
 
 		/// <summary>
 		/// Collection of the nested IKADN objects.
 		/// </summary>
-		private IDictionary<string, IkadnBaseObject> members = new Dictionary<string, IkadnBaseObject>();
+		private readonly IDictionary<string, IkadnBaseObject> members = new Dictionary<string, IkadnBaseObject>();
 
 		/// <summary>
 		/// Constructs IKON composite object marked as specified class of data.

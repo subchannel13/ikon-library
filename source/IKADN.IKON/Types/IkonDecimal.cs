@@ -14,7 +14,7 @@ namespace Ikadn.Ikon.Types
 		/// </summary>
 		public const string TypeTag = "IKON.Numeric";
 
-		private decimal value;
+		private readonly decimal value;
 
 		/// <summary>
 		/// Constructs IKON fixed point numeric object.
@@ -79,7 +79,7 @@ namespace Ikadn.Ikon.Types
 			WriteReferences(writer);
 		}
 
-		private static Dictionary<Type, Func<decimal, object>> converters = new Dictionary<Type, Func<decimal, object>>() {
+		private static Dictionary<Type, Func<decimal, object>> converters = new Dictionary<Type, Func<decimal, object>> {
 			{typeof(byte), x => (object)Convert.ToByte(x)},	
 			{typeof(sbyte), x => (object)Convert.ToSByte(x)},
 			{typeof(char), x => (object)Convert.ToChar(x)},

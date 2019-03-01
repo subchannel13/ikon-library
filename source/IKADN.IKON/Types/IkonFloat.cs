@@ -29,7 +29,7 @@ namespace Ikadn.Ikon.Types
 		/// </summary>
 		public const string NotANumber = "NaN";
 
-		private double value;
+		private readonly double value;
 
 		/// <summary>
 		/// Constructs IKON floating point numeric object.
@@ -110,7 +110,7 @@ namespace Ikadn.Ikon.Types
 			WriteReferences(writer);
 		}
 
-		private static Dictionary<Type, Func<double, object>> converters = new Dictionary<Type, Func<double, object>>() {
+		private static Dictionary<Type, Func<double, object>> converters = new Dictionary<Type, Func<double, object>> {
 			{typeof(byte), x => (object)Convert.ToByte(x)},	
 			{typeof(sbyte), x => (object)Convert.ToSByte(x)},
 			{typeof(char), x => (object)Convert.ToChar(x)},

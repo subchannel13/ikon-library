@@ -16,7 +16,7 @@ namespace Ikadn.Ikon.Types
 		/// <summary>
 		/// Name of the object reference.
 		/// </summary>
-		private string name;
+		private readonly string name;
 
 		/// <summary>
 		/// Constructs IKON reference object with specified name.

@@ -14,7 +14,7 @@ namespace Ikadn.Ikon.Types
 		/// </summary>
 		public const string TypeTag = "IKON.Numeric";
 
-		private long value;
+		private readonly long value;
 
 		/// <summary>
 		/// Constructs IKON integer numeric object.
@@ -97,7 +97,7 @@ namespace Ikadn.Ikon.Types
 			WriteReferences(writer);
 		}
 
-		private static Dictionary<Type, Func<long, object>> converters = new Dictionary<Type, Func<long, object>>() {
+		private static Dictionary<Type, Func<long, object>> converters = new Dictionary<Type, Func<long, object>> {
 			{typeof(byte), x => (object)Convert.ToByte(x)},	
 			{typeof(sbyte), x => (object)Convert.ToSByte(x)},
 			{typeof(char), x => (object)Convert.ToChar(x)},

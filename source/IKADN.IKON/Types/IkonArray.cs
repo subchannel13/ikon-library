@@ -16,10 +16,10 @@ namespace Ikadn.Ikon.Types
 		/// </summary>
 		public const string TypeTag = "IKON.Array";
 
-		private static MethodInfo baseConverterMethod = null;
-		private static MethodInfo iListConverterMethod = null;
+		private static MethodInfo baseConverterMethod;
+		private static MethodInfo iListConverterMethod;
 
-		private IList<IkadnBaseObject> elements;
+		private readonly IList<IkadnBaseObject> elements;
 
 		/// <summary>
 		/// Constructs IKON array of IKADN objects
@@ -89,7 +89,7 @@ namespace Ikadn.Ikon.Types
 						target.IsAssignableFrom(typeof(List<>).MakeGenericType(type.GetGenericArguments()))) {
 						
 						if (iListConverterMethod == null)
-							iListConverterMethod = typeof(IkonArray).GetMethod("convertToIList", BindingFlags.NonPublic | BindingFlags.Instance/*, new Type[] { }*/);
+							iListConverterMethod = typeof(IkonArray).GetMethod("convertToIList", BindingFlags.NonPublic | BindingFlags.Instance);
 
 						MethodInfo converterMethod = iListConverterMethod.MakeGenericMethod(type.GetGenericArguments()[0]);
 						return (T)converterMethod.Invoke(this, null);

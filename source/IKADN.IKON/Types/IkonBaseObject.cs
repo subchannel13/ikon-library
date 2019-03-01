@@ -8,7 +8,7 @@ namespace Ikadn.Ikon.Types
 	/// </summary>
 	public abstract class IkonBaseObject : IkadnBaseObject
 	{
-		private HashSet<string> referenceNames = new HashSet<string>();
+		private readonly HashSet<string> referenceNames = new HashSet<string>();
 
 		/// <summary>
 		/// Set of names that can be used as reference to the object.
