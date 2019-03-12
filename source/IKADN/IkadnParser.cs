@@ -74,7 +74,8 @@ namespace Ikadn
 		/// <returns>Queue of parsed IKADN objects.</returns>
 		public TaggableQueue<object, IkadnBaseObject> ParseAll()
 		{
-			var queue = new TaggableQueue<object, IkadnBaseObject>(this.bufferedObjects);
+			var queue = this.bufferedObjects;
+			this.bufferedObjects = new TaggableQueue<object, IkadnBaseObject>();
 
 			while (this.HasNext())
 			{

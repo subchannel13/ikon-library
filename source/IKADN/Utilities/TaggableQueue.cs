@@ -10,9 +10,9 @@ namespace Ikadn.Utilities
 	/// <typeparam name="TValue">Element type</typeparam>
 	public class TaggableQueue<TTag, TValue> : IEnumerable<KeyValuePair<TTag, TValue>>
 	{
-		LinkedList<KeyValuePair<TTag, TValue>> elements = new LinkedList<KeyValuePair<TTag, TValue>>();
-		Dictionary<TTag, Queue<TValue>> tagGroups = new Dictionary<TTag, Queue<TValue>>();
-		Dictionary<TValue, LinkedListNode<KeyValuePair<TTag, TValue>>> indices = new Dictionary<TValue, LinkedListNode<KeyValuePair<TTag, TValue>>>();
+		private readonly LinkedList<KeyValuePair<TTag, TValue>> elements = new LinkedList<KeyValuePair<TTag, TValue>>();
+		private readonly Dictionary<TTag, Queue<TValue>> tagGroups = new Dictionary<TTag, Queue<TValue>>();
+		private readonly Dictionary<TValue, LinkedListNode<KeyValuePair<TTag, TValue>>> indices = new Dictionary<TValue, LinkedListNode<KeyValuePair<TTag, TValue>>>();
 
 		/// <summary>
 		/// Initializes a new empty instance of Ikadn.Utilities.TaggableQueue.
@@ -26,11 +26,11 @@ namespace Ikadn.Utilities
 		/// <param name="elements">Objects and corresponding tags for populating the Ikadn.Utilities.TaggableQueue.</param>
 		public TaggableQueue(IEnumerable<KeyValuePair<TTag, TValue>> elements)
 		{
-			if (elements == null)
+			if (this.elements == null)
 				throw new ArgumentNullException("elements");
 
 			foreach (var element in elements)
-				Enqueue(element.Key, element.Value);
+				this.Enqueue(element.Key, element.Value);
 		}
 
 		/// <summary>
@@ -40,7 +40,7 @@ namespace Ikadn.Utilities
 		/// </returns>
 		public IEnumerator<KeyValuePair<TTag, TValue>> GetEnumerator()
 		{
-			return elements.GetEnumerator();
+			return this.elements.GetEnumerator();
 		}
 
 		/// <summary>
@@ -50,7 +50,7 @@ namespace Ikadn.Utilities
 		/// </returns>
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return elements.GetEnumerator();
+			return this.elements.GetEnumerator();
 		}
 
 		/// <summary>
@@ -58,7 +58,7 @@ namespace Ikadn.Utilities
 		/// </summary>
 		public int Count
 		{
-			get { return elements.Count; }
+			get { return this.elements.Count; }
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@ namespace Ikadn.Utilities
 		/// </summary>
 		public bool IsEmpty
 		{
-			get { return elements.Count == 0; }
+			get { return this.elements.Count == 0; }
 		}
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace Ikadn.Utilities
 		/// <returns>Number of elements in question.</returns>
 		public int CountOf(TTag tag)
 		{
-			return (tagGroups.ContainsKey(tag)) ? tagGroups[tag].Count : 0;
+			return this.tagGroups.ContainsKey(tag) ? this.tagGroups[tag].Count : 0;
 		}
 
 		/// <summary>
@@ -85,12 +85,12 @@ namespace Ikadn.Utilities
 		/// <returns>The object that is removed from the beginning of the Ikadn.Utilities.TaggableQueue.</returns>
 		public TValue Dequeue()
 		{
-			var element = elements.First.Value;
-			
-			elements.RemoveFirst();
+			var element = this.elements.First.Value;
+
+			this.elements.RemoveFirst();
 			if (element.Key != null) {
-				indices.Remove(element.Value);
-				tagGroups[element.Key].Dequeue();
+				this.indices.Remove(element.Value);
+				this.tagGroups[element.Key].Dequeue();
 			}
 
 			return element.Value;
@@ -105,12 +105,12 @@ namespace Ikadn.Utilities
 		public TValue Dequeue(TTag tag)
 		{
 			if (tag == null)
-				return Dequeue();
+				return this.Dequeue();
 
-			TValue element = tagGroups[tag].Dequeue();
-			
-			elements.Remove(indices[element]);
-			indices.Remove(element);
+			var element = this.tagGroups[tag].Dequeue();
+
+			this.elements.Remove(this.indices[element]);
+			this.indices.Remove(element);
 
 			return element;
 		}
@@ -126,13 +126,13 @@ namespace Ikadn.Utilities
 			if (item == null)
 				throw new ArgumentNullException("item");
 
-			elements.AddLast(new KeyValuePair<TTag, TValue>(tag, item));
+			this.elements.AddLast(new KeyValuePair<TTag, TValue>(tag, item));
 			
 			if (tag != null) {
-				if (!tagGroups.ContainsKey(tag))
-					tagGroups.Add(tag, new Queue<TValue>());
-				indices.Add(item, elements.Last);
-				tagGroups[tag].Enqueue(item);
+				if (!this.tagGroups.ContainsKey(tag))
+					this.tagGroups.Add(tag, new Queue<TValue>());
+				this.indices.Add(item, elements.Last);
+				this.tagGroups[tag].Enqueue(item);
 			}
 		}
 	}
