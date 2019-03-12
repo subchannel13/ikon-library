@@ -168,5 +168,15 @@ namespace Ikston_Unit_Tests
 
 			Assert.AreEqual(SampleSerializedObject, output.ToString().Trim());
 		}
+
+		[TestMethod]
+		public void CompositeEnumerateSinglePair()
+		{
+			IkadnParser parser = new Ikadn.Ikon.IkonParser(new StringReader("{Test aKey=1}"));
+			var value = parser.ParseNext().To<IkonComposite>();
+
+			foreach (var pair in value)
+				Assert.AreEqual("aKey", pair.Key);
+		}
 	}
 }

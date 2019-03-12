@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Ikadn.Ikon.Factories;
 
@@ -7,7 +8,7 @@ namespace Ikadn.Ikon.Types
 	/// <summary>
 	/// IKON composite object with key-value pairs of nested IKADN objects.
 	/// </summary>
-	public class IkonComposite : IkonBaseObject
+	public class IkonComposite : IkonBaseObject, IEnumerable<KeyValuePair<string, IkadnBaseObject>>
 	{
 		/// <summary>
 		/// Data defined tag.
@@ -115,6 +116,24 @@ namespace Ikadn.Ikon.Types
 			writer.Write(CompositeFactory.ClosingChar);
 
 			WriteReferences(writer);
+		}
+
+		/// <summary>
+		/// Returns an enumerator that iterates through the key-value pairs of Ikadn.Ikon.Types.IkonComposite.
+		/// </summary>
+		/// <returns>An System.Collections.IEnumerator object that can be used to iterate through the key-value pairs.</returns>
+		public IEnumerator<KeyValuePair<string, IkadnBaseObject>> GetEnumerator()
+		{
+			return this.members.GetEnumerator();
+		}
+
+		/// <summary>
+		/// Returns an enumerator that iterates through the key-value pairs of Ikadn.Ikon.Types.IkonComposite.
+		/// </summary>
+		/// <returns>An System.Collections.IEnumerator object that can be used to iterate through the key-value pairs.</returns>
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return this.members.GetEnumerator();
 		}
 	}
 }

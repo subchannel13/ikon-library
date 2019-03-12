@@ -1,17 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IKON test app", "IKON test app\IKON test app.csproj", "{67F84DD4-FF87-4322-A1A7-BFE685B467D5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ikston Unit Tests", "Ikston Unit Tests\Ikston Unit Tests.csproj", "{28DF8B06-A426-4407-997B-E4D8684BFEF7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C88B1AB0-9C80-4820-B1D3-580F10D7D759}"
-	ProjectSection(SolutionItems) = preProject
-		IKON.vsmdi = IKON.vsmdi
-		Local.testsettings = Local.testsettings
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ikadn", "IKADN\Ikadn.csproj", "{6F9B8B29-4ACF-4C44-B6E2-1146912E94A0}"
 EndProject
@@ -71,6 +67,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2724E20C-264F-453D-85C1-357CA3E1B3AF}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = IKON.vsmdi
