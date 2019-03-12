@@ -11,7 +11,7 @@ namespace Ikadn
 	/// </summary>
 	public class IkadnParser : IDisposable
 	{
-		private TaggableQueue<object, IkadnBaseObject> bufferedObjects = new TaggableQueue<object,IkadnBaseObject>();
+		private TaggableQueue<object, IkadnBaseObject> bufferedObjects = new TaggableQueue<object, IkadnBaseObject>();
 
 		/// <summary>
 		/// Collection on object factories.
@@ -49,7 +49,7 @@ namespace Ikadn
 				throw new ArgumentNullException("factories");
 
 			foreach (var factory in factories)
-				RegisterFactory(factory);
+				this.RegisterFactory(factory);
 		}
 
 		/// <summary>
@@ -74,10 +74,11 @@ namespace Ikadn
 		/// <returns>Queue of parsed IKADN objects.</returns>
 		public TaggableQueue<object, IkadnBaseObject> ParseAll()
 		{
-			var queue = new TaggableQueue<object, IkadnBaseObject>(bufferedObjects);
+			var queue = new TaggableQueue<object, IkadnBaseObject>(this.bufferedObjects);
 
-			while (HasNext()) {
-				var dataObj = ParseNext();
+			while (this.HasNext())
+			{
+				var dataObj = this.ParseNext();
 				queue.Enqueue(dataObj.Tag, dataObj);
 			}
 
@@ -90,7 +91,8 @@ namespace Ikadn
 		/// <returns>True if it is possible.</returns>
 		public bool HasNext()
 		{
-			if (this.bufferedObjects.Count == 0) {
+			if (this.bufferedObjects.Count == 0)
+			{
 				var dataObj = this.TryParseNext();
 				if (dataObj != null)
 					this.bufferedObjects.Enqueue(dataObj.Tag, dataObj);
@@ -100,22 +102,43 @@ namespace Ikadn
 		}
 
 		/// <summary>
+		/// Checks whether the parser can read more IKADN objects with a specific
+		/// tag from the input stream.
+		/// </summary>
+		/// <param name="tag">Desired object tag</param>
+		/// <returns>True if it is possible.</returns>
+		public bool HasNext(object tag)
+		{
+			while (this.bufferedObjects.CountOf(tag) == 0)
+			{
+				var dataObj = this.TryParseNext();
+
+				if (dataObj == null)
+					return false;
+
+				bufferedObjects.Enqueue(dataObj.Tag, dataObj);
+			}
+
+			return true;
+		}
+
+		/// <summary>
 		/// Parses and returns next IKADN object from the input stream. 
 		/// 
 		/// Throws System.IO.EndOfStreamException if end of
 		/// the input stream is encountered while parsing.
 		/// </summary>
-		/// <returns>An IKADN object</returns>
+		/// <returns>An IKADN object.</returns>
 		public IkadnBaseObject ParseNext()
 		{
 			if (this.bufferedObjects.Count > 0)
 				return this.bufferedObjects.Dequeue();
 
-			IkadnBaseObject res = this.TryParseNext();
+			var res = this.TryParseNext();
 
 			if (res == null)
-				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + Reader.PositionDescription + ".");
-			
+				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + this.Reader.PositionDescription + ".");
+
 			return res;
 		}
 
@@ -129,15 +152,9 @@ namespace Ikadn
 		/// <returns>An IKADN object</returns>
 		public IkadnBaseObject ParseNext(object tag)
 		{
-			while (this.bufferedObjects.CountOf(tag) == 0) {
-				IkadnBaseObject dataObj = this.TryParseNext();
-				
-				if (dataObj == null)
-					throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + Reader.PositionDescription + ".");
+			if (!this.HasNext(tag))
+				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + this.Reader.PositionDescription + ".");
 
-				bufferedObjects.Enqueue(dataObj.Tag, dataObj);
-			}
-				
 			return this.bufferedObjects.Dequeue(tag);
 		}
 
@@ -156,11 +173,11 @@ namespace Ikadn
 			if (skipResult.EndOfStream)
 				return null;
 
-			char sign = Reader.Read();
-			if (!Factories.ContainsKey(sign))
-				throw new FormatException("No factory defined for an object starting with " + sign + " at " + Reader.PositionDescription + ".");
+			char sign = this.Reader.Read();
+			if (!this.Factories.ContainsKey(sign))
+				throw new FormatException("No factory defined for an object starting with " + sign + " at " + this.Reader.PositionDescription + ".");
 
-			return Factories[sign].Parse(this);
+			return this.Factories[sign].Parse(this);
 		}
 
 		/// <summary>
@@ -171,7 +188,7 @@ namespace Ikadn
 		/// false to release only unmanaged resources.</param>
 		protected virtual void Dispose(bool disposing)
 		{
-			Reader.Dispose();
+			this.Reader.Dispose();
 		}
 
 		/// <summary>
@@ -180,7 +197,7 @@ namespace Ikadn
 		/// </summary>
 		public void Dispose()
 		{
-			Dispose(true);
+			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 	}

@@ -119,7 +119,8 @@ namespace Ikadn.Ikon.Types
 		}
 
 		/// <summary>
-		/// Returns an enumerator that iterates through the key-value pairs of Ikadn.Ikon.Types.IkonComposite.
+		/// Returns an enumerator that iterates through the key-value pairs of
+		/// Ikadn.Ikon.Types.IkonComposite.
 		/// </summary>
 		/// <returns>An System.Collections.IEnumerator object that can be used to iterate through the key-value pairs.</returns>
 		public IEnumerator<KeyValuePair<string, IkadnBaseObject>> GetEnumerator()
@@ -128,7 +129,8 @@ namespace Ikadn.Ikon.Types
 		}
 
 		/// <summary>
-		/// Returns an enumerator that iterates through the key-value pairs of Ikadn.Ikon.Types.IkonComposite.
+		/// Returns an enumerator that iterates through the key-value pairs of
+		/// Ikadn.Ikon.Types.IkonComposite.
 		/// </summary>
 		/// <returns>An System.Collections.IEnumerator object that can be used to iterate through the key-value pairs.</returns>
 		IEnumerator IEnumerable.GetEnumerator()

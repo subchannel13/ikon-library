@@ -52,6 +52,7 @@
     <Compile Include="TextBlockTests.cs" />
     <Compile Include="TextTests.cs" />
     <Compile Include="NumericTest.cs" />
+    <Compile Include="ParserTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IKADN.IKON\Ikadn.Ikon.csproj">
