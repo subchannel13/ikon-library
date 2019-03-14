@@ -50,6 +50,8 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IkadnReader.cs" />
     <Compile Include="Utilities\CharacterAction.cs" />
+    <Compile Include="Utilities\MultistreamTextReader.cs" />
+    <Compile Include="Utilities\NamedStream.cs" />
     <Compile Include="Utilities\ReadingDecision.cs" />
     <Compile Include="Utilities\Indentation.cs" />
     <Compile Include="IIkadnObjectFactory.cs" />

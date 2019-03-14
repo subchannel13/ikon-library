@@ -28,15 +28,20 @@ namespace Ikadn.Ikon
 		/// </summary>
 		/// <param name="reader"></param>
 		public IkonParser(TextReader reader)
-			: base(reader, new IIkadnObjectFactory[] {
-			new CompositeFactory(),
-			new TextFactory(),
-			new TextBlockFactory(),
-			new NumericFactory(),
-			new ArrayFactory(),
-			new ReferencedFactory() })
+			: this(new[] { new NamedStream(reader, null) }, new IIkadnObjectFactory[0])
 		{
-			this.NamedObjects = new Dictionary<string, IkadnBaseObject>();
+			//no extra operation
+		}
+
+		/// <summary>
+		/// Constructs IKON parser with multiple input documents and default IKON
+		/// object factories.
+		/// </summary>
+		/// <param name="streams">Input named streams with IKADN syntax.</param>
+		public IkonParser(IEnumerable<NamedStream> streams)
+			: this(streams, new IIkadnObjectFactory[0])
+		{
+			//no extra operation
 		}
 
 		/// <summary>
@@ -45,13 +50,31 @@ namespace Ikadn.Ikon
 		/// <param name="reader">Input stream with IKADN syntax.</param>
 		/// <param name="factories">Collection of object factories.</param>
 		public IkonParser(TextReader reader, IEnumerable<IIkadnObjectFactory> factories)
-			: this(reader)
+			: this(new[] { new NamedStream(reader, null) }, factories)
 		{
-			if (factories == null)
-				throw new ArgumentNullException("factories");
+			//no extra operation
+		}
+
+		/// <summary>
+		/// Constructs IKON parser with multiple input documents and registers
+		/// additional object factories to it.
+		/// </summary>
+		/// <param name="streams">Input named streams with IKADN syntax.</param>
+		/// <param name="factories">Collection of object factories.</param>
+		public IkonParser(IEnumerable<NamedStream> streams, IEnumerable<IIkadnObjectFactory> factories)
+			: base(streams, new IIkadnObjectFactory[] {
+				new CompositeFactory(),
+				new TextFactory(),
+				new TextBlockFactory(),
+				new NumericFactory(),
+				new ArrayFactory(),
+				new ReferencedFactory() }
+			)
+		{
+			this.NamedObjects = new Dictionary<string, IkadnBaseObject>();
 
 			foreach (var factory in factories)
-				RegisterFactory(factory);
+				this.RegisterFactory(factory);
 		}
 
 		/// <summary>

@@ -28,13 +28,9 @@ namespace Ikadn
 		/// </summary>
 		/// <param name="reader">Input stream with IKADN syntax</param>
 		public IkadnParser(TextReader reader)
+			: this(new[] { new NamedStream(reader, null) }, new IIkadnObjectFactory[0])
 		{
-			if (reader == null)
-				throw new ArgumentNullException("reader");
-
-			this.Reader = new IkadnReader(reader);
-
-			this.Factories = new Dictionary<char, IIkadnObjectFactory>();
+			//no extra operation
 		}
 
 		/// <summary>
@@ -43,15 +39,31 @@ namespace Ikadn
 		/// <param name="reader">Input stream with IKADN syntax.</param>
 		/// <param name="factories">Collection of object factories.</param>
 		public IkadnParser(TextReader reader, IEnumerable<IIkadnObjectFactory> factories)
-			: this(reader)
+			: this(new[] { new NamedStream(reader, null) }, factories)
 		{
+			//no extra operation
+		}
+
+		/// <summary>
+		/// Constructs parser with multiple input documents and registers object
+		/// factories to it.
+		/// </summary>
+		/// <param name="streams">Input named streams with IKADN syntax.</param>
+		/// <param name="factories">Collection of object factories.</param>
+		public IkadnParser(IEnumerable<NamedStream> streams, IEnumerable<IIkadnObjectFactory> factories)
+		{
+			if (streams == null)
+				throw new ArgumentNullException("streams");
 			if (factories == null)
 				throw new ArgumentNullException("factories");
+
+			this.Reader = new IkadnReader(streams);
+
+			this.Factories = new Dictionary<char, IIkadnObjectFactory>();
 
 			foreach (var factory in factories)
 				this.RegisterFactory(factory);
 		}
-
 		/// <summary>
 		/// Registers an object factory to the parser. If parser already
 		/// has a factory with the same sign, it will be replaced.

@@ -13,13 +13,7 @@ namespace Ikadn
 	/// </summary>
 	public class IkadnReader : IDisposable
 	{
-		/// <summary>
-		/// Value returned by System.IO.TextReader methods when the end of the stream is reached.
-		/// </summary>
-		public const int EndOfStreamResult = -1;
-
-		private TextReader reader;
-		private int lastCharacter = EndOfStreamResult;
+		private readonly MultistreamTextReader reader;
 
 		private bool recordIndentation = true;
 		private StringBuilder indentation = new StringBuilder();
@@ -28,15 +22,22 @@ namespace Ikadn
 		/// Wraps TextReader with IkonReader
 		/// </summary>
 		/// <param name="reader">Input stream</param>
-		public IkadnReader(TextReader reader)
+		public IkadnReader(TextReader reader) : 
+			this(new NamedStream[] { new NamedStream(reader, null)})
 		{
-			if (reader == null)
-				throw new ArgumentNullException("reader");
+			//No extra operation
+		}
 
-			this.reader = reader;
-			this.Index = 0;
-			this.Line = 0;
-			this.Column = 0;
+		/// <summary>
+		/// Wraps one or more NamedStream instances with IkonReader
+		/// </summary>
+		/// <param name="namedStreams"></param>
+		public IkadnReader(IEnumerable<NamedStream> namedStreams)
+		{
+			if (namedStreams == null)
+				throw new ArgumentNullException("namedStreams");
+
+			this.reader = new MultistreamTextReader(namedStreams);
 		}
 
 		#region Position report properties
@@ -44,15 +45,20 @@ namespace Ikadn
 		/// <summary>
 		/// Index of the last read character.
 		/// </summary>
-		public int Index { get; private set; }
+		public int Index { get { return this.reader.Index; } }
 		/// <summary>
 		/// Line of the last read character.
 		/// </summary>
-		public int Line { get; private set; }
+		public int Line { get { return this.reader.Line; } }
 		/// <summary>
 		/// Column within the line of the last read character.
 		/// </summary>
-		public int Column { get; private set; }
+		public int Column { get { return this.reader.Column; } }
+
+		/// <summary>
+		/// Name of the current reader.
+		/// </summary>
+		public string StreamName { get { return this.reader.StreamName; } }
 
 		/// <summary>
 		/// Leading whitespaces of currnet line.
@@ -61,7 +67,7 @@ namespace Ikadn
 		{
 			get
 			{
-				return indentation.ToString();
+				return this.indentation.ToString();
 			}
 		}
 
@@ -72,7 +78,13 @@ namespace Ikadn
 		public string PositionDescription
 		{
 			get {
-				return "line " + (Line + 1) + ", column " + (Column + 1) + " (index: " + Index + ")";
+				if (this.reader.HasStream)
+				{
+					var name = this.StreamName != null ? "stream " + this.StreamName + ", " : "";
+					return name + "line " + (Line + 1) + ", column " + (Column + 1) + " (index: " + Index + ")";
+				}
+				else
+					return "end of stream";
 			}
 		}
 
@@ -85,7 +97,10 @@ namespace Ikadn
 		/// </summary>
 		public bool HasNext
 		{
-			get { return reader.Peek() != EndOfStreamResult; }
+			get
+			{
+				return this.reader.Peek() != MultistreamTextReader.EndOfStreamResult;
+			}
 		}
 
 		/// <summary>
@@ -93,7 +108,7 @@ namespace Ikadn
 		/// </summary>
 		public char Peek()
 		{
-			return (char)reader.Peek();
+			return (char)this.reader.Peek();
 		}
 
 		/// <summary>
@@ -104,7 +119,7 @@ namespace Ikadn
 		/// <returns>A non-white character</returns>
 		public char PeekNextNonwhite()
 		{
-			var skipResult = SkipWhiteSpaces();
+			var skipResult = this.SkipWhiteSpaces();
 			if (skipResult.EndOfStream)
 				throw new FormatException();
 
@@ -119,30 +134,21 @@ namespace Ikadn
 		/// <returns>Read character.</returns>
 		public char Read()
 		{
-			if (lastCharacter != EndOfStreamResult)
-				Index++;
-
-			if (lastCharacter == '\n') {
-				Line++;
-				Column = 0;
-				indentation.Length = 0;
-				recordIndentation = true;
+			if (this.reader.LastCharacter == '\n') {
+				this.indentation.Length = 0;
+				this.recordIndentation = true;
 			}
-			else if (lastCharacter != EndOfStreamResult) {
-				char c = (char)lastCharacter;
+			else if (this.reader.LastCharacter != MultistreamTextReader.None) {
+				char c = (char)this.reader.LastCharacter;
 				
-				if (!char.IsControl(c))
-					Column++;
-
-				if (recordIndentation)
+				if (this.recordIndentation)
 					if (char.IsWhiteSpace(c))
-						indentation.Append(c);
+						this.indentation.Append(c);
 					else
-						recordIndentation = false;
+						this.recordIndentation = false;
 			}
 
-			lastCharacter = reader.Read();
-			return (char)lastCharacter;
+			return this.reader.Read();
 		}
 
 		/// <summary>
@@ -158,7 +164,7 @@ namespace Ikadn
 			if (acceptableCharacters.Length == 0)
 				throw new ArgumentException("No readable characters specified", "acceptableCharacters");
 
-			return ReadWhile(new HashSet<char>(acceptableCharacters).Contains);
+			return this.ReadWhile(new HashSet<char>(acceptableCharacters).Contains);
 		}
 
 		/// <summary>
@@ -173,7 +179,7 @@ namespace Ikadn
 			if (acceptableCharacters.Count == 0)
 				throw new ArgumentException("No readable characters specified", "acceptableCharacters");
 
-			return ReadWhile(acceptableCharacters.Contains);
+			return this.ReadWhile(acceptableCharacters.Contains);
 		}
 
 		/// <summary>
@@ -183,12 +189,12 @@ namespace Ikadn
 		/// <returns>Successfully read part of the stream.</returns>
 		public string ReadWhile(Predicate<char> readCondition)
 		{
-			if (reader == null)
+			if (readCondition == null)
 				throw new ArgumentNullException("readCondition");
 
-			return ReadConditionally(c =>
+			return this.ReadConditionally(c =>
 			{
-				return new ReadingDecision((char)c, (readCondition((char)c)) ?
+				return new ReadingDecision((char)c, readCondition((char)c) ?
 					CharacterAction.AcceptAsIs :
 					CharacterAction.Stop
 				);
@@ -209,7 +215,7 @@ namespace Ikadn
 				throw new ArgumentException("No terminating characters specified", "terminatingCharacters");
 
 			var terminatingCharactersSet = new HashSet<int>(terminatingCharacters);
-			return ReadUntil(terminatingCharactersSet.Contains);
+			return this.ReadUntil(terminatingCharactersSet.Contains);
 		}
 
 		/// <summary>
@@ -223,11 +229,11 @@ namespace Ikadn
 			if (terminatingCondition == null)
 				throw new ArgumentNullException("terminatingCondition");
 
-			return ReadConditionally(c =>
+			return this.ReadConditionally(c =>
 			{
 				if (terminatingCondition(c))
 					return new ReadingDecision((char)c, CharacterAction.Stop);
-				else if (c == EndOfStreamResult)
+				else if (c == MultistreamTextReader.EndOfStreamResult)
 					throw new EndOfStreamException("Unexpected end of stream at " + PositionDescription);
 				else
 					return new ReadingDecision((char)c, CharacterAction.AcceptAsIs);
@@ -245,24 +251,24 @@ namespace Ikadn
 			if (readingController == null)
 				throw new ArgumentNullException("readingController");
 
-			StringBuilder readChars = new StringBuilder();
+			var readChars = new StringBuilder();
 			while (true) {
-				int currentChar = reader.Peek();
+				int currentChar = this.reader.Peek();
 
-				if (currentChar == EndOfStreamResult)
+				if (currentChar == MultistreamTextReader.EndOfStreamResult)
 					return readChars.ToString();
 
-				ReadingDecision action = readingController(currentChar);
+				var action = readingController(currentChar);
 				switch(action.Decision & CharacterAction.AllInputActions) {
 					case CharacterAction.AcceptAsIs:
-						readChars.Append(Read());
+						readChars.Append(this.Read());
 						break;
 					case CharacterAction.Skip:
-						Read();
+						this.Read();
 						break;
 					case CharacterAction.Substitute:
 						readChars.Append(action.Character);
-						Read();
+						this.Read();
 						break;
 				}
 
@@ -279,7 +285,7 @@ namespace Ikadn
 		/// <returns>Descrtipion of the skipping process.</returns>
 		public SkipResult SkipWhiteSpaces()
 		{
-			return SkipWhile(char.IsWhiteSpace);
+			return this.SkipWhile(char.IsWhiteSpace);
 		}
 
 		/// <summary>
@@ -294,7 +300,7 @@ namespace Ikadn
 			if (skippableCharacters.Length == 0)
 				throw new ArgumentException("No skippable characters specified", "skippableCharacters");
 
-			return SkipWhile(new HashSet<char>(skippableCharacters).Contains);
+			return this.SkipWhile(new HashSet<char>(skippableCharacters).Contains);
 		}
 
 		/// <summary>
@@ -309,7 +315,7 @@ namespace Ikadn
 			if (skippableCharacters.Count == 0)
 				throw new ArgumentException("No skippable characters specified", "skippableCharacters");
 
-			return SkipWhile(skippableCharacters.Contains);
+			return this.SkipWhile(skippableCharacters.Contains);
 		}
 
 		/// <summary>
@@ -325,13 +331,13 @@ namespace Ikadn
 
 			StringBuilder skipped = new StringBuilder();
 			while (true) {
-				int currentChar = reader.Peek();
+				int currentChar = this.reader.Peek();
 
-				if (currentChar == EndOfStreamResult)
+				if (currentChar == MultistreamTextReader.EndOfStreamResult)
 					return new SkipResult(skipped.ToString(), true);
 
 				if (skipCondition((char)currentChar))
-					skipped.Append(Read());
+					skipped.Append(this.Read());
 				else
 					return new SkipResult(skipped.ToString(), false);
 			}
@@ -348,7 +354,7 @@ namespace Ikadn
 			if (terminatingCharacters.Length == 0)
 				throw new ArgumentException("No terminating characters specified", "terminatingCharacters");
 
-			return SkipUntil(new HashSet<int>(terminatingCharacters).Contains);
+			return this.SkipUntil(new HashSet<int>(terminatingCharacters).Contains);
 		}
 
 		/// <summary>
@@ -362,7 +368,7 @@ namespace Ikadn
 			if (terminatingCharacters.Count == 0)
 				throw new ArgumentException("No terminating characters specified", "terminatingCharacters");
 
-			return SkipUntil(terminatingCharacters.Contains);
+			return this.SkipUntil(terminatingCharacters.Contains);
 		}
 
 		/// <summary>
@@ -375,13 +381,13 @@ namespace Ikadn
 			if (stopCondition == null)
 				throw new ArgumentNullException("stopCondition");
 
-			StringBuilder skipped = new StringBuilder();
+			var skipped = new StringBuilder();
 			while (true) {
-				int currentChar = reader.Peek();
+				int currentChar = this.reader.Peek();
 
 				if (!stopCondition(currentChar))
-					skipped.Append(Read());
-				else if (currentChar == EndOfStreamResult)
+					skipped.Append(this.Read());
+				else if (currentChar == MultistreamTextReader.EndOfStreamResult)
 					return new SkipResult(skipped.ToString(), true);
 				else
 					return new SkipResult(skipped.ToString(), false);
@@ -398,7 +404,7 @@ namespace Ikadn
 		/// false to release only unmanaged resources.</param>
 		protected virtual void Dispose(bool disposing)
 		{
-			reader.Dispose();
+			this.reader.Dispose();
 		}
 
 		/// <summary>
@@ -407,7 +413,7 @@ namespace Ikadn
 		/// </summary>
 		public void Dispose()
 		{
-			Dispose(true);
+			this.Dispose(true);
 			GC.SuppressFinalize(this);
 		}
 		#endregion
