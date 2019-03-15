@@ -1,4 +1,7 @@
-﻿namespace Ikadn
+﻿// Copyright © 2019 Ivan Kravarščan. All rights reserved. Licensed under the 
+// LGPL License. See License.txt in the project root for license information.
+
+namespace Ikadn
 {
 	/// <summary>
 	/// Interface for IKADN object factories usable by IKADN parser.

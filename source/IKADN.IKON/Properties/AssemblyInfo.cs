@@ -1,4 +1,7 @@
-﻿using System.Reflection;
+﻿// Copyright © 2019 Ivan Kravarščan. All rights reserved. Licensed under the 
+// LGPL License. See License.txt in the project root for license information.
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -10,7 +13,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("IKADN.IKON")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright © 2019 Ivan Kravarščan. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
