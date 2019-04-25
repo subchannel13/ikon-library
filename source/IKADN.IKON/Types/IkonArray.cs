@@ -17,7 +17,7 @@ namespace Ikadn.Ikon.Types
 		/// <summary>
 		/// Tag for IKON arrays.
 		/// </summary>
-		public const string TypeTag = "IKON.Array";
+		public static readonly string TypeTag = "IKON.Array";
 
 		private static MethodInfo baseConverterMethod;
 		private static MethodInfo iListConverterMethod;
@@ -83,8 +83,7 @@ namespace Ikadn.Ikon.Types
 			else if (target.IsAssignableFrom(this.GetType()))
 				return (T)(object)this;
 			else {
-				List<Type> subTypes = new List<Type>();
-				subTypes.Add(target);
+				var subTypes = new List<Type> { target };
 				subTypes.AddRange(target.GetInterfaces());
 
 				foreach (var type in subTypes)

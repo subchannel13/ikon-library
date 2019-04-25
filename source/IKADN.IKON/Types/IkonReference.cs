@@ -14,7 +14,7 @@ namespace Ikadn.Ikon.Types
 		/// <summary>
 		/// Tag for IKON referecne objects.
 		/// </summary>
-		public const string TypeTag = "IKON.Reference";
+		public static readonly string TypeTag = "IKON.Reference";
 
 		/// <summary>
 		/// Name of the object reference.

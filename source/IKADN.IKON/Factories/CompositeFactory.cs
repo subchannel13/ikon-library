@@ -14,13 +14,13 @@ namespace Ikadn.Ikon.Factories
 		/// <summary>
 		/// Sign for IKADN composite object.
 		/// </summary>
-		public const char OpeningSign = '{';
+		public static readonly char OpeningSign = '{';
 
 		/// <summary>
 		/// Closing character for IKON composite object in textual
 		/// representation.
 		/// </summary>
-		public const char ClosingChar = '}';
+		public static readonly char ClosingChar = '}';
 
 		/// <summary>
 		/// Sign for IKADN composite object.

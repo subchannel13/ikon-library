@@ -15,22 +15,22 @@ namespace Ikadn.Ikon.Types
 		/// <summary>
 		/// Tag for IKON numeric objects.
 		/// </summary>
-		public const string TypeTag = "IKON.Numeric";
+		public static readonly string TypeTag = "IKON.Numeric";
 
 		/// <summary>
 		/// Textual representation of IKON numeric for positive infinity.
 		/// </summary>
-		public const string PositiveInfinity = "Inf";
+		public static readonly string PositiveInfinity = "Inf";
 
 		/// <summary>
 		/// Textual representation of IKON numeric for negative infinity.
 		/// </summary>
-		public const string NegativeInfinity = "-Inf";
+		public static readonly string NegativeInfinity = "-Inf";
 
 		/// <summary>
 		/// Textual representation of IKON numeric for not a number.
 		/// </summary>
-		public const string NotANumber = "NaN";
+		public static readonly string NotANumber = "NaN";
 
 		private readonly double value;
 

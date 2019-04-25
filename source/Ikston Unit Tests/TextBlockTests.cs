@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Ikadn.Ikon.Factories;
 using Ikadn;
@@ -13,10 +11,10 @@ namespace Ikston_Unit_Tests
 	[TestClass]
 	public class TextBlockTests
 	{
-		const char O = TextBlockFactory.OpeningSign;
-		const char C = TextBlockFactory.ClosingChar;
-		static string N = Environment.NewLine;
-		static string NT = Environment.NewLine + "\t";
+		static readonly char O = TextBlockFactory.OpeningSign;
+		static readonly char C = TextBlockFactory.ClosingChar;
+		static readonly string N = Environment.NewLine;
+		static readonly string NT = Environment.NewLine + "\t";
 
 		[TestMethod]
 		public void TextBlockType()

@@ -19,7 +19,7 @@ namespace Ikadn.Ikon.Factories
 		/// <summary>
 		/// Sign for IKADN numeric object.
 		/// </summary>
-		public const char OpeningSign = '=';
+		public static readonly char OpeningSign = '=';
 
         /// <summary>
         /// Number format used for IKON numeric objects.
@@ -85,10 +85,10 @@ namespace Ikadn.Ikon.Factories
 			throw new FormatException("Characters from " + startPosition + " to " + parser.Reader.PositionDescription + " couldn't be parsed as IKON numeric value (possibly value too big)");
 		}
 
-		static ICollection<char> ValidChars = new HashSet<char>(DefineValidChars());
-		static Regex NumberMatcher = new Regex("[\\+\\-]?[0-9\\.eE]+");
+		private static readonly ICollection<char> ValidChars = new HashSet<char>(defineValidChars());
+		private static readonly Regex NumberMatcher = new Regex("[\\+\\-]?[0-9\\.eE]+");
 
-		private static IEnumerable<char> DefineValidChars()
+		private static IEnumerable<char> defineValidChars()
 		{
 			yield return '-';
 			yield return '.';

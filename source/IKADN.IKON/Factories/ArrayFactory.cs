@@ -15,13 +15,13 @@ namespace Ikadn.Ikon.Factories
 		/// <summary>
 		/// Sign for IKADN array.
 		/// </summary>
-		public const char OpeningSign = '[';
+		public static readonly char OpeningSign = '[';
 
 		/// <summary>
 		/// Closing character for IKON array in textual
 		/// representation.
 		/// </summary>
-		public const char ClosingChar = ']';
+		public static readonly char ClosingChar = ']';
 
 		/// <summary>
 		/// Sign for IKADN array.

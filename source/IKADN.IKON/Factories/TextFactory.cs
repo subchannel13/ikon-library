@@ -19,19 +19,19 @@ namespace Ikadn.Ikon.Factories
 		/// <summary>
 		/// Sign for IKADN textual object (backslash escaped format).
 		/// </summary>
-		public const char OpeningSign = '"';
+		public static readonly char OpeningSign = '"';
 
 		/// <summary>
 		/// Closing character for IKON textual object in textual
 		/// representation (backslash escaped format).
 		/// </summary>
-		public const char ClosingChar = '"';
+		public static readonly char ClosingChar = '"';
 
 		private const char EscapeChar = '\\';
 		private const char Unicode16Char = 'u';
 		private const char Unicode32Char = 'U';
-		
-		static Dictionary<char, char> EscapeCodes = DefineEscapeCodes();
+
+		private static readonly Dictionary<char, char> EscapeCodes = defineEscapeCodes();
 
 		/// <summary>
 		/// Sign for IKADN textual object (backslash escaped format).
@@ -58,18 +58,22 @@ namespace Ikadn.Ikon.Factories
 			{
 				char c = (char)nextChar;
 
-				if (unicodeDigits > 0) {
+				if (unicodeDigits > 0)
+				{
 					unicodeChar *= 16;
-					try {
+					try
+					{
 						unicodeChar += Convert.ToInt32(c.ToString(), 16);
 					}
-					catch (FormatException) {
+					catch (FormatException)
+					{
 						throw new FormatException("Unexpected character after " + parser.Reader.PositionDescription + " while reading unicode character number for IKON textual data.");
 					}
 					unicodeDigits--;
-					
+
 					ReadingDecision decision;
-					if (unicodeDigits % 4 == 0) {
+					if (unicodeDigits % 4 == 0)
+					{
 						decision = new ReadingDecision((char)unicodeChar, CharacterAction.Substitute);
 						unicodeChar = 0;
 					}
@@ -80,34 +84,38 @@ namespace Ikadn.Ikon.Factories
 					return decision;
 				}
 
-				if (escaping) {
-					if (EscapeCodes.ContainsKey(c)) {
+				if (escaping)
+				{
+					if (EscapeCodes.ContainsKey(c))
+					{
 						escaping = false;
 						return new ReadingDecision(EscapeCodes[c], CharacterAction.Substitute);
 					}
-					else if (c == Unicode16Char) {
+					else if (c == Unicode16Char)
+					{
 						unicodeDigits = 4;
 						unicodeChar = 0;
 						return new ReadingDecision(c, CharacterAction.Skip);
 					}
-					else if (c == Unicode32Char) {
+					else if (c == Unicode32Char)
+					{
 						unicodeDigits = 8;
 						unicodeChar = 0;
 						return new ReadingDecision(c, CharacterAction.Skip);
 					}
 					else
 						throw new FormatException("Unsupported string escape sequence: \\" + nextChar);
-					
+
 				}
-				switch (nextChar) {
-					case EscapeChar:
-						escaping = true;
-						return new ReadingDecision(c, CharacterAction.Skip);
-					case ClosingChar:
-						return new ReadingDecision(c, CharacterAction.Stop);
-					default:
-						return new ReadingDecision(c, CharacterAction.AcceptAsIs);
+				if (nextChar == EscapeChar)
+				{
+					escaping = true;
+					return new ReadingDecision(c, CharacterAction.Skip);
 				}
+				else if (nextChar == ClosingChar)
+					return new ReadingDecision(c, CharacterAction.Stop);
+				else
+					return new ReadingDecision(c, CharacterAction.AcceptAsIs);
 			});
 
 			if (parser.Reader.Peek() != ClosingChar)
@@ -117,17 +125,16 @@ namespace Ikadn.Ikon.Factories
 			return new IkonText(text);
 		}
 
-		private static Dictionary<char, char> DefineEscapeCodes()
+		private static Dictionary<char, char> defineEscapeCodes()
 		{
-			Dictionary<char, char> res = new Dictionary<char, char>();
-
-			res.Add('\\', '\\');
-			res.Add('"', '"');
-			res.Add('n', '\n');
-			res.Add('r', '\r');
-			res.Add('t', '\t');
-
-			return res;
+			return new Dictionary<char, char>
+			{
+				{ '\\', '\\' },
+				{ '"', '"' },
+				{ 'n', '\n' },
+				{ 'r', '\r' },
+				{ 't', '\t' }
+			};
 		}
 	}
 }

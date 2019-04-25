@@ -19,12 +19,12 @@ namespace Ikadn.Ikon
 		/// <summary>
 		/// Character that marks the beginning of the reference name.
 		/// </summary>
-		public const char ReferenceSign = '@';
+		public static readonly char ReferenceSign = '@';
 
 		/// <summary>
 		/// Collection of named objects.
 		/// </summary>
-		protected IDictionary<string, IkadnBaseObject> NamedObjects { get; private set; }
+		protected IDictionary<string, IkadnBaseObject> namedObjects { get; private set; }
 
 		/// <summary>
 		/// Constructs IKON parser with default IKON object factories.
@@ -74,7 +74,7 @@ namespace Ikadn.Ikon
 				new ReferencedFactory() }
 			)
 		{
-			this.NamedObjects = new Dictionary<string, IkadnBaseObject>();
+			this.namedObjects = new Dictionary<string, IkadnBaseObject>();
 
 			foreach (var factory in factories)
 				this.RegisterFactory(factory);
@@ -99,7 +99,7 @@ namespace Ikadn.Ikon
 			while (!this.Reader.SkipWhiteSpaces().EndOfStream &&
 					this.Reader.Peek() == ReferenceSign) {
 				this.Reader.Read();
-				NamedObjects.Add(ReadIdentifier(this.Reader), dataObj);
+				namedObjects.Add(ReadIdentifier(this.Reader), dataObj);
 			}
 
 			return dataObj;
@@ -115,13 +115,13 @@ namespace Ikadn.Ikon
 		/// <returns>Desired IKADN object.</returns>
 		public IkadnBaseObject GetNamedObject(string name)
 		{
-			if (NamedObjects.ContainsKey(name))
-				return NamedObjects[name];
+			if (namedObjects.ContainsKey(name))
+				return namedObjects[name];
 			else
 				throw new KeyNotFoundException("Object named '" + name + "' not found");
 		}
 
-		private static ICollection<char> IdentifierChars = DefineIdentifierChars();
+		private static readonly ICollection<char> IdentifierChars = defineIdentifierChars();
 
 		/// <summary>
 		/// Reads the input stream for an IKON identifier. Throws System.FormatException if there is
@@ -143,11 +143,10 @@ namespace Ikadn.Ikon
 			return identifier;
 		}
 
-		private static HashSet<char> DefineIdentifierChars()
+		private static HashSet<char> defineIdentifierChars()
 		{
-			HashSet<char> res = new HashSet<char>();
+			var res = new HashSet<char> { '_' };
 
-			res.Add('_');
 			for (char c = 'a'; c <= 'z'; c++) res.Add(c);
 			for (char c = 'A'; c <= 'Z'; c++) res.Add(c);
 			for (char c = '0'; c <= '9'; c++) res.Add(c);

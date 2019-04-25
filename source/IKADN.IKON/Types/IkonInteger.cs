@@ -15,7 +15,7 @@ namespace Ikadn.Ikon.Types
 		/// <summary>
 		/// Tag for IKON numeric objects.
 		/// </summary>
-		public const string TypeTag = "IKON.Numeric";
+		public static readonly string TypeTag = "IKON.Numeric";
 
 		private readonly long value;
 

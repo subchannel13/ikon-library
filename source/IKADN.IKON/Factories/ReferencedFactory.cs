@@ -13,7 +13,7 @@ namespace Ikadn.Ikon.Factories
 		/// <summary>
 		/// Sign for IKADN object reference.
 		/// </summary>
-		public const char OpeningSign = '#';
+		public static readonly char OpeningSign = '#';
 
 		/// <summary>
 		/// Sign for IKADN object reference.

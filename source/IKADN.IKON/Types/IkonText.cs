@@ -15,7 +15,7 @@ namespace Ikadn.Ikon.Types
 		/// <summary>
 		/// Tag for IKON text objects.
 		/// </summary>
-		public const string TypeTag = "IKON.Text";
+		public static readonly string TypeTag = "IKON.Text";
 
 		private static readonly string[] LineEnds = new[] { "\r\n", "\n" };
 		
