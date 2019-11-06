@@ -277,5 +277,16 @@ namespace Ikston_Unit_Tests
 
 			Assert.AreEqual(expected, output.ToString().Trim());
 		}
+
+		[TestMethod]
+		public void ArrayParseSecondCorrectness()
+		{
+			using (var parser = new Ikadn.Ikon.IkonParser(new StringReader("{First} [ \"Second\" ]")))
+			{
+				var value = parser.ParseNext(IkonArray.TypeTag).To<IkonArray>();
+
+				Assert.AreEqual(IkonText.TypeTag, value[0].Tag);
+			}
+		}
 	}
 }

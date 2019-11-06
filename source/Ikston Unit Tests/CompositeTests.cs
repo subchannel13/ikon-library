@@ -176,5 +176,16 @@ namespace Ikston_Unit_Tests
 			foreach (var pair in value)
 				Assert.AreEqual("aKey", pair.Key);
 		}
+
+		[TestMethod]
+		public void CompositeParseSecondCorrectness()
+		{
+			using (var parser = new Ikadn.Ikon.IkonParser(new StringReader("{First} {Second data []}")))
+			{
+				var value = parser.ParseNext("Second").To<IkonComposite>();
+
+				Assert.AreEqual(IkonArray.TypeTag, value["data"].Tag);
+			}
+		}
 	}
 }
