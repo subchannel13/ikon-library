@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using Ikadn.Utilities;
@@ -16,10 +17,17 @@ namespace Ikadn
 	/// </summary>
 	public class IkadnReader : IDisposable
 	{
+		/// <summary>
+		/// Value returned by System.IO.TextReader methods when the end of the stream is reached.
+		/// </summary>
+		public const int EndOfStreamResult = -1;
+		
+		private const int HashSearchThreshold = 3;
+
 		private readonly MultistreamTextReader reader;
 
 		private bool recordIndentation = true;
-		private StringBuilder indentation = new StringBuilder();
+		private readonly StringBuilder indentation = new StringBuilder();
 
 		/// <summary>
 		/// Wraps TextReader with IkonReader
@@ -167,7 +175,10 @@ namespace Ikadn
 			if (acceptableCharacters.Length == 0)
 				throw new ArgumentException("No readable characters specified", "acceptableCharacters");
 
-			return this.ReadWhile(new HashSet<char>(acceptableCharacters).Contains);
+			if (acceptableCharacters.Length < HashSearchThreshold)
+				return this.ReadWhile(acceptableCharacters.Contains);
+			else
+				return this.ReadWhile(new HashSet<char>(acceptableCharacters).Contains);
 		}
 
 		/// <summary>
@@ -217,8 +228,10 @@ namespace Ikadn
 			if (terminatingCharacters.Length == 0)
 				throw new ArgumentException("No terminating characters specified", "terminatingCharacters");
 
-			var terminatingCharactersSet = new HashSet<int>(terminatingCharacters);
-			return this.ReadUntil(terminatingCharactersSet.Contains);
+			if (terminatingCharacters.Length < HashSearchThreshold)
+				return this.ReadUntil(terminatingCharacters.Contains);
+			else
+				return this.ReadUntil(new HashSet<int>(terminatingCharacters).Contains);
 		}
 
 		/// <summary>
@@ -303,7 +316,10 @@ namespace Ikadn
 			if (skippableCharacters.Length == 0)
 				throw new ArgumentException("No skippable characters specified", "skippableCharacters");
 
-			return this.SkipWhile(new HashSet<char>(skippableCharacters).Contains);
+			if (skippableCharacters.Length < HashSearchThreshold)
+				return this.SkipWhile(skippableCharacters.Contains);
+			else
+				return this.SkipWhile(new HashSet<char>(skippableCharacters).Contains);
 		}
 
 		/// <summary>
@@ -357,7 +373,10 @@ namespace Ikadn
 			if (terminatingCharacters.Length == 0)
 				throw new ArgumentException("No terminating characters specified", "terminatingCharacters");
 
-			return this.SkipUntil(new HashSet<int>(terminatingCharacters).Contains);
+			if (terminatingCharacters.Length < HashSearchThreshold)
+				return this.SkipUntil(terminatingCharacters.Contains);
+			else
+				return this.SkipUntil(new HashSet<int>(terminatingCharacters).Contains);
 		}
 
 		/// <summary>
