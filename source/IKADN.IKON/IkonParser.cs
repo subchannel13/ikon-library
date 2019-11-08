@@ -14,7 +14,7 @@ namespace Ikadn.Ikon
 	/// <summary>
 	/// Parser that can parse input with IKON syntax.
 	/// </summary>
-	public class IkonParser : Ikadn.IkadnParser
+	public class IkonParser : IkadnParser
 	{
 		/// <summary>
 		/// Character that marks the beginning of the reference name.
@@ -70,11 +70,11 @@ namespace Ikadn.Ikon
 				new TextFactory(),
 				new TextBlockFactory(),
 				new NumericFactory(),
-				new ArrayFactory(),
-				new ReferencedFactory() }
-			)
+				new ArrayFactory() 
+			})
 		{
 			this.namedObjects = new Dictionary<string, IkadnBaseObject>();
+			this.RegisterFactory(new ReferencedFactory(x => this.namedObjects[x]));
 
 			foreach (var factory in factories)
 				this.RegisterFactory(factory);
@@ -92,9 +92,6 @@ namespace Ikadn.Ikon
 			IkadnBaseObject dataObj = base.TryParseNext();
 			if (dataObj == null)
 				return null;
-
-			if (IkonReference.TypeTag.Equals(dataObj.Tag))
-				return GetNamedObject(dataObj.To<string>());
 
 			while (!this.Reader.SkipWhiteSpaces().EndOfStream &&
 					this.Reader.Peek() == ReferenceSign) {
@@ -121,8 +118,6 @@ namespace Ikadn.Ikon
 				throw new KeyNotFoundException("Object named '" + name + "' not found");
 		}
 
-		private static readonly ICollection<char> IdentifierChars = defineIdentifierChars();
-
 		/// <summary>
 		/// Reads the input stream for an IKON identifier. Throws System.FormatException if there is
 		/// no valid identifier.
@@ -142,6 +137,8 @@ namespace Ikadn.Ikon
 
 			return identifier;
 		}
+
+		private static readonly ICollection<char> IdentifierChars = defineIdentifierChars();
 
 		private static HashSet<char> defineIdentifierChars()
 		{

@@ -1,7 +1,7 @@
 ﻿// Copyright © 2019 Ivan Kravarščan. All rights reserved. Licensed under the 
 // LGPL License. See License.txt in the project root for license information.
 
-using Ikadn.Ikon.Types;
+using System;
 
 namespace Ikadn.Ikon.Factories
 {
@@ -15,12 +15,23 @@ namespace Ikadn.Ikon.Factories
 		/// </summary>
 		public static readonly char OpeningSign = '#';
 
+		private readonly Func<string, IkadnBaseObject> resolver;
+
 		/// <summary>
 		/// Sign for IKADN object reference.
 		/// </summary>
 		public char Sign
 		{
 			get { return OpeningSign; }
+		}
+
+		/// <summary>
+		/// Constructs IKADN object factory for named object references.
+		/// </summary>
+		/// <param name="resolver">Function for resolving IKADN object from a name</param>
+		public ReferencedFactory(Func<string, IkadnBaseObject> resolver)
+		{
+			this.resolver = resolver;
 		}
 
 		/// <summary>
@@ -33,7 +44,7 @@ namespace Ikadn.Ikon.Factories
 			if (parser == null)
 				throw new System.ArgumentNullException("parser");
 
-			return new IkonReference(Ikadn.Ikon.IkonParser.ReadIdentifier(parser.Reader));
+			return this.resolver(IkonParser.ReadIdentifier(parser.Reader));
 		}
 	}
 }

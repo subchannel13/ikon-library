@@ -55,7 +55,6 @@
     <Compile Include="Types\IkonFloat.cs" />
     <Compile Include="Types\IkonInteger.cs" />
     <Compile Include="Types\IkonComposite.cs" />
-    <Compile Include="Types\IkonReference.cs" />
     <Compile Include="Types\IkonText.cs" />
   </ItemGroup>
   <ItemGroup>
