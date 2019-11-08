@@ -14,8 +14,8 @@ namespace Ikadn.Utilities
 	public class TaggableQueue<TTag, TValue> : IEnumerable<KeyValuePair<TTag, TValue>>
 	{
 		private readonly LinkedList<KeyValuePair<TTag, TValue>> elements = new LinkedList<KeyValuePair<TTag, TValue>>();
-		private readonly Dictionary<TTag, Queue<TValue>> tagGroups = new Dictionary<TTag, Queue<TValue>>();
-		private readonly Dictionary<TValue, LinkedListNode<KeyValuePair<TTag, TValue>>> indices = new Dictionary<TValue, LinkedListNode<KeyValuePair<TTag, TValue>>>();
+		private readonly Dictionary<TTag, LinkedList<TValue>> tagGroups = new Dictionary<TTag, LinkedList<TValue>>();
+		private readonly Dictionary<TValue, IndexData> indices = new Dictionary<TValue, IndexData>();
 
 		/// <summary>
 		/// Initializes a new empty instance of Ikadn.Utilities.TaggableQueue.
@@ -93,7 +93,7 @@ namespace Ikadn.Utilities
 			this.elements.RemoveFirst();
 			if (element.Key != null) {
 				this.indices.Remove(element.Value);
-				this.tagGroups[element.Key].Dequeue();
+				this.tagGroups[element.Key].RemoveFirst();
 			}
 
 			return element.Value;
@@ -110,9 +110,11 @@ namespace Ikadn.Utilities
 			if (tag == null)
 				return this.Dequeue();
 
-			var element = this.tagGroups[tag].Dequeue();
+			var group = this.tagGroups[tag];
+			var element = group.First.Value;
 
-			this.elements.Remove(this.indices[element]);
+			group.RemoveFirst();
+			this.elements.Remove(this.indices[element].ElementIndex);
 			this.indices.Remove(element);
 
 			return element;
@@ -121,7 +123,7 @@ namespace Ikadn.Utilities
 		/// <summary>
 		/// Adds an object to the end of the Ikadn.Utilities.TaggableQueue.
 		/// </summary>
-		/// <param name="item">The object to add to the end of Ikadn.Utilities.TaggableQueue. Can be null for reference types.
+		/// <param name="item">The object to add to the end of Ikadn.Utilities.TaggableQueue.
 		/// <param name="tag">Tag of the object</param>
 		/// </param>
 		public void Enqueue(TTag tag, TValue item)
@@ -130,12 +132,45 @@ namespace Ikadn.Utilities
 				throw new ArgumentNullException("item");
 
 			this.elements.AddLast(new KeyValuePair<TTag, TValue>(tag, item));
-			
-			if (tag != null) {
-				if (!this.tagGroups.ContainsKey(tag))
-					this.tagGroups.Add(tag, new Queue<TValue>());
-				this.indices.Add(item, elements.Last);
-				this.tagGroups[tag].Enqueue(item);
+
+			if (tag != null)
+			{
+				if (!this.tagGroups.TryGetValue(tag, out var group))
+				{
+					group = new LinkedList<TValue>();
+					this.tagGroups.Add(tag, group);
+				}
+
+				group.AddLast(item);
+				this.indices.Add(item, new IndexData(elements.Last, group.Last));
+			}
+		}
+
+		/// <summary>
+		/// Removes an object from the Ikadn.Utilities.TaggableQueue.
+		/// </summary>
+		/// <param name="item">The object to remove</param>
+		public void Remove(TValue item)
+		{
+			if (item == null)
+				throw new ArgumentNullException("item");
+
+			var itemIndex = this.indices[item];
+
+			this.elements.Remove(itemIndex.ElementIndex);
+			this.tagGroups[itemIndex.ElementIndex.Value.Key].Remove(itemIndex.GroupIndex);
+			this.indices.Remove(item);
+		}
+
+		class IndexData
+		{
+			public LinkedListNode<KeyValuePair<TTag, TValue>> ElementIndex { get; private set; }
+			public LinkedListNode<TValue> GroupIndex { get; private set; }
+
+			public IndexData(LinkedListNode<KeyValuePair<TTag, TValue>> elementIndex, LinkedListNode<TValue> groupIndex)
+			{
+				this.ElementIndex = elementIndex;
+				this.GroupIndex = groupIndex;
 			}
 		}
 	}

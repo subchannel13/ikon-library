@@ -15,6 +15,7 @@ namespace Ikadn
 	public class IkadnParser : IDisposable
 	{
 		private TaggableQueue<object, IkadnBaseObject> bufferedObjects = new TaggableQueue<object, IkadnBaseObject>();
+		private Queue<IkadnBaseObject> bufferedNextObjects = new Queue<IkadnBaseObject>();
 
 		/// <summary>
 		/// Collection on object factories.
@@ -91,8 +92,9 @@ namespace Ikadn
 		{
 			var queue = this.bufferedObjects;
 			this.bufferedObjects = new TaggableQueue<object, IkadnBaseObject>();
+			this.bufferedNextObjects = new Queue<IkadnBaseObject>();
 
-			while (this.HasNext())
+			while (this.HasMore())
 			{
 				var dataObj = this.ParseNext();
 				queue.Enqueue(dataObj.Tag, dataObj);
@@ -102,19 +104,27 @@ namespace Ikadn
 		}
 
 		/// <summary>
-		/// Checks whether parser can read more IKADN objects from the input stream.
+		/// Checks whether parser can read more IKADN objects from input streams.
 		/// </summary>
 		/// <returns>True if it is possible.</returns>
 		public bool HasNext()
 		{
-			if (this.bufferedObjects.Count == 0)
-			{
-				var dataObj = this.TryParseNext();
-				if (dataObj != null)
-					this.bufferedObjects.Enqueue(dataObj.Tag, dataObj);
-			}
+			this.TryParseNext();
 
-			return (this.bufferedObjects.Count != 0);
+			return this.bufferedNextObjects.Count != 0;
+		}
+
+		/// <summary>
+		/// Checks whether parser can produce more IKADN objects, either buffered
+		/// or by reading from input streams.
+		/// </summary>
+		/// <returns>True if it is possible.</returns>
+		public bool HasMore()
+		{
+			if (this.bufferedObjects.Count == 0)
+				this.TryParseNext();
+
+			return this.bufferedObjects.Count != 0;
 		}
 
 		/// <summary>
@@ -123,19 +133,29 @@ namespace Ikadn
 		/// </summary>
 		/// <param name="tag">Desired object tag</param>
 		/// <returns>True if it is possible.</returns>
-		public bool HasNext(object tag)
+		public bool HasMore(object tag)
 		{
 			while (this.bufferedObjects.CountOf(tag) == 0)
-			{
-				var dataObj = this.TryParseNext();
-
-				if (dataObj == null)
+				if (this.tryParseMore() == null)
 					return false;
 
-				bufferedObjects.Enqueue(dataObj.Tag, dataObj);
-			}
-
 			return true;
+		}
+
+		/// <summary>
+		/// Produces next IKADN object, either buffered or by parsing a next one
+		/// from input streams.
+		/// 
+		/// Throws System.IO.EndOfStreamException if end of
+		/// the input stream is encountered while parsing.
+		/// </summary>
+		/// <returns>An IKADN object.</returns>
+		public IkadnBaseObject ParseNext()
+		{
+			if (!this.HasMore())
+				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + this.Reader.PositionDescription + ".");
+
+			return this.dequeBuffered(null);
 		}
 
 		/// <summary>
@@ -145,17 +165,15 @@ namespace Ikadn
 		/// the input stream is encountered while parsing.
 		/// </summary>
 		/// <returns>An IKADN object.</returns>
-		public IkadnBaseObject ParseNext()
+		public IkadnBaseObject ParseImmediateNext()
 		{
-			if (this.bufferedObjects.Count > 0)
-				return this.bufferedObjects.Dequeue();
+			if (this.bufferedNextObjects.Count > 0)
+				return this.dequeBufferedNext();
 
-			var res = this.TryParseNext();
-
-			if (res == null)
+			if (this.HasNext())
 				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + this.Reader.PositionDescription + ".");
 
-			return res;
+			return this.dequeBufferedNext();
 		}
 
 		/// <summary>
@@ -168,10 +186,10 @@ namespace Ikadn
 		/// <returns>An IKADN object</returns>
 		public IkadnBaseObject ParseNext(object tag)
 		{
-			if (!this.HasNext(tag))
+			if (!this.HasMore(tag))
 				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + this.Reader.PositionDescription + ".");
 
-			return this.bufferedObjects.Dequeue(tag);
+			return this.dequeBuffered(tag);
 		}
 
 		/// <summary>
@@ -184,16 +202,10 @@ namespace Ikadn
 		/// <returns>An IKADN object if there is one, null otherwise.</returns>
 		protected virtual IkadnBaseObject TryParseNext()
 		{
-			var skipResult = this.Reader.SkipWhiteSpaces();
+			if (this.bufferedNextObjects.Count != 0)
+				return this.bufferedNextObjects.Peek();
 
-			if (skipResult.EndOfStream)
-				return null;
-
-			char sign = this.Reader.Read();
-			if (!this.Factories.ContainsKey(sign))
-				throw new FormatException("No factory defined for an object starting with " + sign + " at " + this.Reader.PositionDescription + ".");
-
-			return this.Factories[sign].Parse(this);
+			return this.tryParseMore();
 		}
 
 		/// <summary>
@@ -215,6 +227,41 @@ namespace Ikadn
 		{
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
+		}
+
+		private IkadnBaseObject tryParseMore()
+		{
+			var skipResult = this.Reader.SkipWhiteSpaces();
+
+			if (skipResult.EndOfStream)
+				return null;
+
+			char sign = this.Reader.Read();
+			if (!this.Factories.ContainsKey(sign))
+				throw new FormatException("No factory defined for an object starting with " + sign + " at " + this.Reader.PositionDescription + ".");
+
+			var dataObj = this.Factories[sign].Parse(this);
+			this.bufferedNextObjects.Enqueue(dataObj);
+			this.bufferedObjects.Enqueue(dataObj.Tag, dataObj);
+
+			return dataObj;
+		}
+
+		private IkadnBaseObject dequeBuffered(object tag)
+		{
+			var dataObj = this.bufferedObjects.Dequeue(tag);
+			if (this.bufferedNextObjects.Peek() == dataObj)
+				this.bufferedNextObjects.Dequeue();
+
+			return dataObj;
+		}
+
+		private IkadnBaseObject dequeBufferedNext()
+		{
+			var dataObj = this.bufferedNextObjects.Dequeue();
+			this.bufferedObjects.Remove(dataObj);
+
+			return dataObj;
 		}
 	}
 }

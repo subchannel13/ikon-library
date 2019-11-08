@@ -47,7 +47,7 @@ namespace Ikadn.Ikon.Factories
 				string memberName = Ikadn.Ikon.IkonParser.ReadIdentifier(parser.Reader);
 				
 				string startPosition = parser.Reader.PositionDescription;
-				if (parser.HasNext())
+				if (parser.HasMore())
 					res[memberName] = parser.ParseNext();
 				else
 					throw new FormatException("Characters from " + startPosition + " to " + parser.Reader.PositionDescription + " couldn't be parsed as IKADN value");
