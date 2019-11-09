@@ -15,12 +15,6 @@ namespace Ikadn
 	public class IkadnParser : IDisposable
 	{
 		private TaggableQueue<object, IkadnBaseObject> bufferedObjects = new TaggableQueue<object, IkadnBaseObject>();
-		private Queue<IkadnBaseObject> bufferedNextObjects = new Queue<IkadnBaseObject>();
-
-		/// <summary>
-		/// Collection on object factories.
-		/// </summary>
-		protected IDictionary<char, IIkadnObjectFactory> Factories { get; private set; }
 
 		/// <summary>
 		/// Input stream that is being parsed.
@@ -63,27 +57,10 @@ namespace Ikadn
 
 			this.Reader = new IkadnReader(streams);
 
-			this.Factories = new Dictionary<char, IIkadnObjectFactory>();
-
 			foreach (var factory in factories)
-				this.RegisterFactory(factory);
+				this.Reader.RegisterFactory(factory);
 		}
-		/// <summary>
-		/// Registers an object factory to the parser. If parser already
-		/// has a factory with the same sign, it will be replaced.
-		/// </summary>
-		/// <param name="factory">An object factory.</param>
-		public void RegisterFactory(IIkadnObjectFactory factory)
-		{
-			if (factory == null)
-				throw new ArgumentNullException("factory");
-
-			if (this.Factories.ContainsKey(factory.Sign))
-				this.Factories[factory.Sign] = factory;
-			else
-				this.Factories.Add(factory.Sign, factory);
-		}
-
+		
 		/// <summary>
 		/// Parses whole input stream.
 		/// </summary>
@@ -92,9 +69,8 @@ namespace Ikadn
 		{
 			var queue = this.bufferedObjects;
 			this.bufferedObjects = new TaggableQueue<object, IkadnBaseObject>();
-			this.bufferedNextObjects = new Queue<IkadnBaseObject>();
 
-			while (this.HasMore())
+			while (this.HasNext())
 			{
 				var dataObj = this.ParseNext();
 				queue.Enqueue(dataObj.Tag, dataObj);
@@ -104,27 +80,13 @@ namespace Ikadn
 		}
 
 		/// <summary>
-		/// Checks whether parser can read more IKADN objects from input streams.
-		/// </summary>
-		/// <returns>True if it is possible.</returns>
-		public bool HasNext()
-		{
-			this.TryParseNext();
-
-			return this.bufferedNextObjects.Count != 0;
-		}
-
-		/// <summary>
 		/// Checks whether parser can produce more IKADN objects, either buffered
 		/// or by reading from input streams.
 		/// </summary>
 		/// <returns>True if it is possible.</returns>
-		public bool HasMore()
+		public bool HasNext()
 		{
-			if (this.bufferedObjects.Count == 0)
-				this.TryParseNext();
-
-			return this.bufferedObjects.Count != 0;
+			return this.bufferedObjects.Count != 0 || this.Reader.HasNextObject();
 		}
 
 		/// <summary>
@@ -133,10 +95,15 @@ namespace Ikadn
 		/// </summary>
 		/// <param name="tag">Desired object tag</param>
 		/// <returns>True if it is possible.</returns>
-		public bool HasMore(object tag)
+		public bool HasNext(object tag)
 		{
 			while (this.bufferedObjects.CountOf(tag) == 0)
-				if (this.tryParseMore() == null)
+				if (this.Reader.HasNextObject())
+				{
+					var dataObj = this.Reader.ReadObject();
+					this.bufferedObjects.Enqueue(dataObj.Tag, dataObj);
+				}
+				else
 					return false;
 
 			return true;
@@ -152,28 +119,13 @@ namespace Ikadn
 		/// <returns>An IKADN object.</returns>
 		public IkadnBaseObject ParseNext()
 		{
-			if (!this.HasMore())
+			if (!this.HasNext())
 				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + this.Reader.PositionDescription + ".");
 
-			return this.dequeBuffered(null);
-		}
+			if (this.bufferedObjects.Count != 0)
+				return this.bufferedObjects.Dequeue();
 
-		/// <summary>
-		/// Parses and returns next IKADN object from the input stream. 
-		/// 
-		/// Throws System.IO.EndOfStreamException if end of
-		/// the input stream is encountered while parsing.
-		/// </summary>
-		/// <returns>An IKADN object.</returns>
-		public IkadnBaseObject ParseImmediateNext()
-		{
-			if (this.bufferedNextObjects.Count > 0)
-				return this.dequeBufferedNext();
-
-			if (this.HasNext())
-				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + this.Reader.PositionDescription + ".");
-
-			return this.dequeBufferedNext();
+			return this.Reader.ReadObject();
 		}
 
 		/// <summary>
@@ -186,26 +138,10 @@ namespace Ikadn
 		/// <returns>An IKADN object</returns>
 		public IkadnBaseObject ParseNext(object tag)
 		{
-			if (!this.HasMore(tag))
+			if (!this.HasNext(tag))
 				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + this.Reader.PositionDescription + ".");
 
-			return this.dequeBuffered(tag);
-		}
-
-		/// <summary>
-		/// Trys to parse next IKADN object from the input stream. Returns null 
-		/// if there is none (end of input stream reached).
-		/// 
-		/// Throws System.FormatException if there is no object factory
-		/// that can parse current state of the input.
-		/// </summary>
-		/// <returns>An IKADN object if there is one, null otherwise.</returns>
-		protected virtual IkadnBaseObject TryParseNext()
-		{
-			if (this.bufferedNextObjects.Count != 0)
-				return this.bufferedNextObjects.Peek();
-
-			return this.tryParseMore();
+			return this.bufferedObjects.Dequeue(tag);
 		}
 
 		/// <summary>
@@ -227,41 +163,6 @@ namespace Ikadn
 		{
 			this.Dispose(true);
 			GC.SuppressFinalize(this);
-		}
-
-		private IkadnBaseObject tryParseMore()
-		{
-			var skipResult = this.Reader.SkipWhiteSpaces();
-
-			if (skipResult.EndOfStream)
-				return null;
-
-			char sign = this.Reader.Read();
-			if (!this.Factories.ContainsKey(sign))
-				throw new FormatException("No factory defined for an object starting with " + sign + " at " + this.Reader.PositionDescription + ".");
-
-			var dataObj = this.Factories[sign].Parse(this);
-			this.bufferedNextObjects.Enqueue(dataObj);
-			this.bufferedObjects.Enqueue(dataObj.Tag, dataObj);
-
-			return dataObj;
-		}
-
-		private IkadnBaseObject dequeBuffered(object tag)
-		{
-			var dataObj = this.bufferedObjects.Dequeue(tag);
-			if (this.bufferedNextObjects.Peek() == dataObj)
-				this.bufferedNextObjects.Dequeue();
-
-			return dataObj;
-		}
-
-		private IkadnBaseObject dequeBufferedNext()
-		{
-			var dataObj = this.bufferedNextObjects.Dequeue();
-			this.bufferedObjects.Remove(dataObj);
-
-			return dataObj;
 		}
 	}
 }

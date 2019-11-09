@@ -25,7 +25,9 @@ namespace Ikadn
 		private const int HashSearchThreshold = 3;
 
 		private readonly MultistreamTextReader reader;
+		private readonly Dictionary<char, IIkadnObjectFactory> factories = new Dictionary<char, IIkadnObjectFactory>();
 
+		private IkadnBaseObject bufferedObject = null;
 		private bool recordIndentation = true;
 		private readonly StringBuilder indentation = new StringBuilder();
 
@@ -49,6 +51,22 @@ namespace Ikadn
 				throw new ArgumentNullException("namedStreams");
 
 			this.reader = new MultistreamTextReader(namedStreams);
+		}
+
+		/// <summary>
+		/// Registers an object factory to the reader. If parser already
+		/// has a factory with the same sign, it will be replaced.
+		/// </summary>
+		/// <param name="factory">An object factory.</param>
+		public void RegisterFactory(IIkadnObjectFactory factory)
+		{
+			if (factory == null)
+				throw new ArgumentNullException("factory");
+
+			if (this.factories.ContainsKey(factory.Sign))
+				this.factories[factory.Sign] = factory;
+			else
+				this.factories.Add(factory.Sign, factory);
 		}
 
 		#region Position report properties
@@ -414,6 +432,49 @@ namespace Ikadn
 				else
 					return new SkipResult(skipped.ToString(), false);
 			}
+		}
+		#endregion
+
+		#region IKADN object reading methods
+		/// <summary>
+		/// Checks whether parser can produce more IKADN objects, either buffered
+		/// or by reading from input streams.
+		/// </summary>
+		/// <returns>True if it is possible.</returns>
+		public bool HasNextObject()
+		{
+			this.tryReadObject();
+
+			return this.bufferedObject != null;
+		}
+
+		/// <summary>
+		/// Reads next IKADN object from input streams.
+		/// </summary>
+		/// <returns>IKADN object</returns>
+		public IkadnBaseObject ReadObject()
+		{
+			this.tryReadObject();
+
+			if (this.bufferedObject == null)
+				throw new FormatException("Trying to read IKADN object beyond end of stream.");
+
+			var result = this.bufferedObject;
+			this.bufferedObject = null;
+
+			return result;
+		}
+
+		private void tryReadObject()
+		{
+			if (this.bufferedObject != null || this.SkipWhiteSpaces().EndOfStream)
+				return;
+
+			char sign = this.Read();
+			if (!this.factories.ContainsKey(sign))
+				throw new FormatException("No factory defined for an object starting with " + sign + " at " + this.PositionDescription + ".");
+
+			this.bufferedObject = this.factories[sign].Parse(this);
 		}
 		#endregion
 

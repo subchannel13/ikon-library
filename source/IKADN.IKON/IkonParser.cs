@@ -74,32 +74,10 @@ namespace Ikadn.Ikon
 			})
 		{
 			this.namedObjects = new Dictionary<string, IkadnBaseObject>();
-			this.RegisterFactory(new ReferencedFactory(x => this.namedObjects[x]));
+			this.Reader.RegisterFactory(new ReferencedFactory(x => this.namedObjects[x]));
 
 			foreach (var factory in factories)
-				this.RegisterFactory(factory);
-		}
-
-		/// <summary>
-		/// Trys to parse next IKADN object from the input stream. 
-		/// 
-		/// Throws System.FormatException if there is no object factory
-		/// that can parse current state of the input.
-		/// </summary>
-		/// <returns>Return an IKADN object if there is one, null otherwise.</returns>
-		protected override IkadnBaseObject TryParseNext()
-		{
-			IkadnBaseObject dataObj = base.TryParseNext();
-			if (dataObj == null)
-				return null;
-
-			while (!this.Reader.SkipWhiteSpaces().EndOfStream &&
-					this.Reader.Peek() == ReferenceSign) {
-				this.Reader.Read();
-				namedObjects.Add(ReadIdentifier(this.Reader), dataObj);
-			}
-
-			return dataObj;
+				this.Reader.RegisterFactory(factory);
 		}
 
 		/// <summary>

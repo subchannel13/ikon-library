@@ -23,7 +23,7 @@ namespace Ikston_Unit_Tests
 		{
 			var parser = new Ikadn.Ikon.IkonParser(new StringReader(""));
 
-			Assert.AreEqual(false, parser.HasMore());
+			Assert.AreEqual(false, parser.HasNext());
 		}
 
 		[TestMethod]
@@ -35,7 +35,7 @@ namespace Ikston_Unit_Tests
 				new NamedStream(new StringReader(""), "2")
 			});
 
-			Assert.AreEqual(false, parser.HasMore());
+			Assert.AreEqual(false, parser.HasNext());
 		}
 
 		[TestMethod]
@@ -80,7 +80,7 @@ namespace Ikston_Unit_Tests
 		{
 			var parser = new Ikadn.Ikon.IkonParser(new StringReader(TreeValueSingleDocument));
 
-			Assert.AreEqual(true, parser.HasMore());
+			Assert.AreEqual(true, parser.HasNext());
 		}
 
 		[TestMethod]
@@ -88,7 +88,7 @@ namespace Ikston_Unit_Tests
 		{
 			var parser = new Ikadn.Ikon.IkonParser(new StringReader(TreeValueSingleDocument));
 
-			Assert.AreEqual(true, parser.HasMore("Third"));
+			Assert.AreEqual(true, parser.HasNext("Third"));
 		}
 
 		[TestMethod]
@@ -96,7 +96,7 @@ namespace Ikston_Unit_Tests
 		{
 			var parser = new Ikadn.Ikon.IkonParser(TreeValueSeparateDocuments);
 
-			Assert.AreEqual(true, parser.HasMore("Third"));
+			Assert.AreEqual(true, parser.HasNext("Third"));
 		}
 	}
 }

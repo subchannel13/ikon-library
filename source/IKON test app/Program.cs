@@ -12,10 +12,10 @@ namespace IKON_test_app
 	{
 		static void Main(string[] args)
 		{
-			StreamReader reader = new StreamReader(args[0]);
+			var reader = new StreamReader(args[0]);
 
-			IkonParser parser = new IkonParser(reader);
-			var testObj = parser.ParseNext().To<string>();
+			var parser = new IkonParser(reader);
+			parser.ParseNext().To<string>();
 
 			var compositeData = parser.ParseNext().To<IkonComposite>();
 

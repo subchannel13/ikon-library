@@ -37,14 +37,14 @@ namespace Ikadn.Ikon.Factories
 		/// <summary>
 		/// Parses input for a IKON reference name.
 		/// </summary>
-		/// <param name="parser">IKADN parser instance.</param>
+		/// <param name="reader">IKADN parser instance.</param>
 		/// <returns>Referenced IKADN object.</returns>
-		public IkadnBaseObject Parse(Ikadn.IkadnParser parser)
+		public IkadnBaseObject Parse(IkadnReader reader)
 		{
-			if (parser == null)
-				throw new System.ArgumentNullException("parser");
+			if (reader == null)
+				throw new ArgumentNullException("reader");
 
-			return this.resolver(IkonParser.ReadIdentifier(parser.Reader));
+			return this.resolver(IkonParser.ReadIdentifier(reader));
 		}
 	}
 }
