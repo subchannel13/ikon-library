@@ -32,7 +32,7 @@ namespace Ikadn.Ikon.Types
 
 			if (referenceNames != null && referenceNames.Count > 0)
 				foreach (string name in referenceNames)
-					writer.Write(" " + IkonParser.ReferenceSign + name);
+					writer.Write(" " + IkonParser.AnchorSign + name);
 		}
 	}
 }

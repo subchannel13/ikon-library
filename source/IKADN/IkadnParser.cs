@@ -55,12 +55,12 @@ namespace Ikadn
 			if (factories == null)
 				throw new ArgumentNullException("factories");
 
-			this.Reader = new IkadnReader(streams);
+			this.Reader = new IkadnReader(streams, this.ObjectTransform);
 
 			foreach (var factory in factories)
 				this.Reader.RegisterFactory(factory);
 		}
-		
+
 		/// <summary>
 		/// Parses whole input stream.
 		/// </summary>
@@ -142,6 +142,11 @@ namespace Ikadn
 				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + this.Reader.PositionDescription + ".");
 
 			return this.bufferedObjects.Dequeue(tag);
+		}
+
+		protected virtual IkadnBaseObject ObjectTransform(IkadnBaseObject parsedObject)
+		{
+			return parsedObject;
 		}
 
 		/// <summary>

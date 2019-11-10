@@ -19,7 +19,7 @@ namespace Ikadn.Ikon
 		/// <summary>
 		/// Character that marks the beginning of the reference name.
 		/// </summary>
-		public static readonly char ReferenceSign = '@';
+		public static readonly char AnchorSign = '@';
 
 		/// <summary>
 		/// Collection of named objects.
@@ -96,6 +96,18 @@ namespace Ikadn.Ikon
 				throw new KeyNotFoundException("Object named '" + name + "' not found");
 		}
 
+		protected override IkadnBaseObject ObjectTransform(IkadnBaseObject parsedObject)
+		{
+			while (!this.Reader.SkipWhiteSpaces().EndOfStream &&
+					this.Reader.Peek() == AnchorSign)
+			{
+				this.Reader.Read();
+				namedObjects.Add(ReadIdentifier(this.Reader), parsedObject);
+			}
+
+			return parsedObject;
+		}
+
 		/// <summary>
 		/// Reads the input stream for an IKON identifier. Throws System.FormatException if there is
 		/// no valid identifier.
@@ -115,7 +127,7 @@ namespace Ikadn.Ikon
 
 			return identifier;
 		}
-
+		
 		private static readonly ICollection<char> IdentifierChars = defineIdentifierChars();
 
 		private static HashSet<char> defineIdentifierChars()
