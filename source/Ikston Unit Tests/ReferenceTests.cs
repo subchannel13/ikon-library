@@ -211,5 +211,24 @@ namespace Ikston_Unit_Tests
 
 			Assert.AreEqual(expected, output.ToString().Trim());
 		}
+
+		[TestMethod]
+		public void ReferenceWriteDereference()
+		{
+			string expected = "\"something\" @name" + Environment.NewLine + 
+				"#name";
+
+			StringBuilder output = new StringBuilder();
+			IkadnWriter writer = new IkadnWriter(new StringWriter(output));
+
+			var value = new IkonText("something");
+			value.ReferenceNames.Add("name");
+			value.Compose(writer);
+
+			var reference = new IkonReference("name");
+			reference.Compose(writer);
+
+			Assert.AreEqual(expected, output.ToString().Trim());
+		}
 	}
 }

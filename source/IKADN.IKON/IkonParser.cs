@@ -17,11 +17,6 @@ namespace Ikadn.Ikon
 	public class IkonParser : IkadnParser
 	{
 		/// <summary>
-		/// Character that marks the beginning of the reference name.
-		/// </summary>
-		public static readonly char AnchorSign = '@';
-
-		/// <summary>
 		/// Collection of named objects.
 		/// </summary>
 		protected IDictionary<string, IkadnBaseObject> namedObjects { get; private set; }
@@ -99,7 +94,7 @@ namespace Ikadn.Ikon
 		protected override IkadnBaseObject ObjectTransform(IkadnBaseObject parsedObject)
 		{
 			while (!this.Reader.SkipWhiteSpaces().EndOfStream &&
-					this.Reader.Peek() == AnchorSign)
+					this.Reader.Peek() == IkonBaseObject.AnchorSign)
 			{
 				this.Reader.Read();
 				namedObjects.Add(ReadIdentifier(this.Reader), parsedObject);

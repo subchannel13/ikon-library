@@ -11,6 +11,11 @@ namespace Ikadn.Ikon.Types
 	/// </summary>
 	public abstract class IkonBaseObject : IkadnBaseObject
 	{
+		/// <summary>
+		/// Character that marks the beginning of the reference name (anchor).
+		/// </summary>
+		public static readonly char AnchorSign = '@';
+
 		private readonly HashSet<string> referenceNames = new HashSet<string>();
 
 		/// <summary>
@@ -32,7 +37,7 @@ namespace Ikadn.Ikon.Types
 
 			if (referenceNames != null && referenceNames.Count > 0)
 				foreach (string name in referenceNames)
-					writer.Write(" " + IkonParser.AnchorSign + name);
+					writer.Write(" " + AnchorSign + name);
 		}
 	}
 }
