@@ -14,7 +14,7 @@ namespace Ikadn
 	/// </summary>
 	public class IkadnParser : IDisposable
 	{
-		private TaggableQueue<object, IkadnBaseObject> bufferedObjects = new TaggableQueue<object, IkadnBaseObject>();
+		private LabeledQueue<object, IkadnBaseObject> bufferedObjects = new LabeledQueue<object, IkadnBaseObject>();
 
 		/// <summary>
 		/// Input stream that is being parsed.
@@ -65,10 +65,10 @@ namespace Ikadn
 		/// Parses whole input stream.
 		/// </summary>
 		/// <returns>Queue of parsed IKADN objects.</returns>
-		public TaggableQueue<object, IkadnBaseObject> ParseAll()
+		public LabeledQueue<object, IkadnBaseObject> ParseAll()
 		{
 			var queue = this.bufferedObjects;
-			this.bufferedObjects = new TaggableQueue<object, IkadnBaseObject>();
+			this.bufferedObjects = new LabeledQueue<object, IkadnBaseObject>();
 
 			while (this.HasNext())
 			{

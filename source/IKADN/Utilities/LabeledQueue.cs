@@ -7,27 +7,27 @@ using System.Collections.Generic;
 namespace Ikadn.Utilities
 {
 	/// <summary>
-	/// Represents a first-in, first-out collection of taggable objects.
+	/// Represents a first-in, first-out collection of label objects.
 	/// </summary>
-	/// <typeparam name="TTag">Tag type</typeparam>
+	/// <typeparam name="TLabel">Label type</typeparam>
 	/// <typeparam name="TValue">Element type</typeparam>
-	public class TaggableQueue<TTag, TValue> : IEnumerable<KeyValuePair<TTag, TValue>>
+	public class LabeledQueue<TLabel, TValue> : IEnumerable<KeyValuePair<TLabel, TValue>>
 	{
-		private readonly LinkedList<KeyValuePair<TTag, TValue>> elements = new LinkedList<KeyValuePair<TTag, TValue>>();
-		private readonly Dictionary<TTag, LinkedList<TValue>> tagGroups = new Dictionary<TTag, LinkedList<TValue>>();
+		private readonly LinkedList<KeyValuePair<TLabel, TValue>> elements = new LinkedList<KeyValuePair<TLabel, TValue>>();
+		private readonly Dictionary<TLabel, LinkedList<TValue>> labelGroups = new Dictionary<TLabel, LinkedList<TValue>>();
 		private readonly Dictionary<TValue, IndexData> indices = new Dictionary<TValue, IndexData>();
 
 		/// <summary>
-		/// Initializes a new empty instance of Ikadn.Utilities.TaggableQueue.
+		/// Initializes a new empty instance of Ikadn.Utilities.LabeledQueue.
 		/// </summary>
-		public TaggableQueue()
+		public LabeledQueue()
 		{ }
 		
 		/// <summary>
-		/// Initializes an instance of Ikadn.Utilities.TaggableQueue filled with given elements.
+		/// Initializes an instance of Ikadn.Utilities.LabeledQueue filled with given elements.
 		/// </summary>
-		/// <param name="elements">Objects and corresponding tags for populating the Ikadn.Utilities.TaggableQueue.</param>
-		public TaggableQueue(IEnumerable<KeyValuePair<TTag, TValue>> elements)
+		/// <param name="elements">Objects and corresponding labels for populating the Ikadn.Utilities.LabeledQueue.</param>
+		public LabeledQueue(IEnumerable<KeyValuePair<TLabel, TValue>> elements)
 		{
 			if (this.elements == null)
 				throw new ArgumentNullException("elements");
@@ -41,7 +41,7 @@ namespace Ikadn.Utilities
 		/// </summary>
 		/// <returns>A System.Collections.Generic.IEnumerator&lt;T&gt; that can be used to iterate through the collection.
 		/// </returns>
-		public IEnumerator<KeyValuePair<TTag, TValue>> GetEnumerator()
+		public IEnumerator<KeyValuePair<TLabel, TValue>> GetEnumerator()
 		{
 			return this.elements.GetEnumerator();
 		}
@@ -57,7 +57,7 @@ namespace Ikadn.Utilities
 		}
 
 		/// <summary>
-		/// Gets the number of elements contained in the Ikadn.Utilities.TaggableQueue.
+		/// Gets the number of elements contained in the Ikadn.Utilities.LabeledQueue.
 		/// </summary>
 		public int Count
 		{
@@ -65,7 +65,7 @@ namespace Ikadn.Utilities
 		}
 
 		/// <summary>
-		/// Checks whether there are any elements in Ikadn.Utilities.TaggableQueue.
+		/// Checks whether there are any elements in Ikadn.Utilities.LabeledQueue.
 		/// </summary>
 		public bool IsEmpty
 		{
@@ -73,19 +73,19 @@ namespace Ikadn.Utilities
 		}
 
 		/// <summary>
-		/// Gets the number of elements with a given tag contained in the Ikadn.Utilities.TaggableQueue.
+		/// Gets the number of elements with a given label contained in the Ikadn.Utilities.LabeledQueue.
 		/// </summary>
-		/// <param name="tag">Object tag.</param>
+		/// <param name="label">Object label.</param>
 		/// <returns>Number of elements in question.</returns>
-		public int CountOf(TTag tag)
+		public int CountOf(TLabel label)
 		{
-			return this.tagGroups.ContainsKey(tag) ? this.tagGroups[tag].Count : 0;
+			return this.labelGroups.ContainsKey(label) ? this.labelGroups[label].Count : 0;
 		}
 
 		/// <summary>
-		/// Removes and returns the object at the beginning of the Ikadn.Utilities.TaggableQueue.
+		/// Removes and returns the object at the beginning of the Ikadn.Utilities.LabeledQueue.
 		/// </summary>
-		/// <returns>The object that is removed from the beginning of the Ikadn.Utilities.TaggableQueue.</returns>
+		/// <returns>The object that is removed from the beginning of the Ikadn.Utilities.LabeledQueue.</returns>
 		public TValue Dequeue()
 		{
 			var element = this.elements.First.Value;
@@ -93,24 +93,24 @@ namespace Ikadn.Utilities
 			this.elements.RemoveFirst();
 			if (element.Key != null) {
 				this.indices.Remove(element.Value);
-				this.tagGroups[element.Key].RemoveFirst();
+				this.labelGroups[element.Key].RemoveFirst();
 			}
 
 			return element.Value;
 		}
 
 		/// <summary>
-		/// Removes and returns the first element of the Ikadn.Utilities.TaggableQueue
-		/// with specified tag.
+		/// Removes and returns the first element of the Ikadn.Utilities.LabeledQueue
+		/// with specified label.
 		/// </summary>
-		/// <param name="tag">Tag of an object to dequeue.</param>
+		/// <param name="label">Label of an object to dequeue.</param>
 		/// <returns>The object.</returns>
-		public TValue Dequeue(TTag tag)
+		public TValue Dequeue(TLabel label)
 		{
-			if (tag == null)
+			if (label == null)
 				return this.Dequeue();
 
-			var group = this.tagGroups[tag];
+			var group = this.labelGroups[label];
 			var element = group.First.Value;
 
 			group.RemoveFirst();
@@ -121,24 +121,24 @@ namespace Ikadn.Utilities
 		}
 
 		/// <summary>
-		/// Adds an object to the end of the Ikadn.Utilities.TaggableQueue.
+		/// Adds an object to the end of the Ikadn.Utilities.LabeledQueue.
 		/// </summary>
-		/// <param name="item">The object to add to the end of Ikadn.Utilities.TaggableQueue.
-		/// <param name="tag">Tag of the object</param>
+		/// <param name="item">The object to add to the end of Ikadn.Utilities.LabeledQueue.
+		/// <param name="label">Label of the object</param>
 		/// </param>
-		public void Enqueue(TTag tag, TValue item)
+		public void Enqueue(TLabel label, TValue item)
 		{
 			if (item == null)
 				throw new ArgumentNullException("item");
 
-			this.elements.AddLast(new KeyValuePair<TTag, TValue>(tag, item));
+			this.elements.AddLast(new KeyValuePair<TLabel, TValue>(label, item));
 
-			if (tag != null)
+			if (label != null)
 			{
-				if (!this.tagGroups.TryGetValue(tag, out var group))
+				if (!this.labelGroups.TryGetValue(label, out var group))
 				{
 					group = new LinkedList<TValue>();
-					this.tagGroups.Add(tag, group);
+					this.labelGroups.Add(label, group);
 				}
 
 				group.AddLast(item);
@@ -147,7 +147,7 @@ namespace Ikadn.Utilities
 		}
 
 		/// <summary>
-		/// Removes an object from the Ikadn.Utilities.TaggableQueue.
+		/// Removes an object from the Ikadn.Utilities.LabeledQueue.
 		/// </summary>
 		/// <param name="item">The object to remove</param>
 		public void Remove(TValue item)
@@ -158,16 +158,16 @@ namespace Ikadn.Utilities
 			var itemIndex = this.indices[item];
 
 			this.elements.Remove(itemIndex.ElementIndex);
-			this.tagGroups[itemIndex.ElementIndex.Value.Key].Remove(itemIndex.GroupIndex);
+			this.labelGroups[itemIndex.ElementIndex.Value.Key].Remove(itemIndex.GroupIndex);
 			this.indices.Remove(item);
 		}
 
 		class IndexData
 		{
-			public LinkedListNode<KeyValuePair<TTag, TValue>> ElementIndex { get; private set; }
+			public LinkedListNode<KeyValuePair<TLabel, TValue>> ElementIndex { get; private set; }
 			public LinkedListNode<TValue> GroupIndex { get; private set; }
 
-			public IndexData(LinkedListNode<KeyValuePair<TTag, TValue>> elementIndex, LinkedListNode<TValue> groupIndex)
+			public IndexData(LinkedListNode<KeyValuePair<TLabel, TValue>> elementIndex, LinkedListNode<TValue> groupIndex)
 			{
 				this.ElementIndex = elementIndex;
 				this.GroupIndex = groupIndex;
