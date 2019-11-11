@@ -28,17 +28,17 @@ namespace Ikadn
 		/// <summary>
 		/// Writes objects's content to the output stream.
 		/// </summary>
-		/// <param name="writer">Wrapper around target output stream.</param>
+		/// <param name="writer">Wrapper around target output stream</param>
 		protected abstract void DoCompose(IkadnWriter writer);
 
 		/// <summary>
 		/// Writes an IKADN object to the output stream.
 		/// </summary>
-		/// <param name="writer">Wrapper around target output stream.</param>
+		/// <param name="writer">Wrapper around target output stream</param>
 		public void Compose(IkadnWriter writer)
 		{
 			if (writer == null)
-				throw new ArgumentNullException("writer");
+				throw new ArgumentNullException(nameof(writer));
 
 			DoCompose(writer);
 			

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -33,9 +34,10 @@ namespace Ikadn
 		private readonly StringBuilder indentation = new StringBuilder();
 
 		/// <summary>
-		/// Wraps TextReader with IkonReader
+		/// Wraps TextReader with IkadnReader
 		/// </summary>
 		/// <param name="reader">Input stream</param>
+		/// <param name="objectTransform">Callback when new IKADN object is parsed</param>
 		public IkadnReader(TextReader reader, Func<IkadnBaseObject, IkadnBaseObject> objectTransform) : 
 			this(new NamedStream[] { new NamedStream(reader, null)}, objectTransform)
 		{
@@ -43,27 +45,28 @@ namespace Ikadn
 		}
 
 		/// <summary>
-		/// Wraps one or more NamedStream instances with IkonReader
+		/// Wraps one or more NamedStream instances with IkadnReader
 		/// </summary>
-		/// <param name="namedStreams"></param>
+		/// <param name="namedStreams">Name input streams</param>
+		/// <param name="objectTransform">Callback when new IKADN object is parsed</param>
 		public IkadnReader(IEnumerable<NamedStream> namedStreams, Func<IkadnBaseObject, IkadnBaseObject> objectTransform)
 		{
 			if (namedStreams == null)
-				throw new ArgumentNullException("namedStreams");
+				throw new ArgumentNullException(nameof(namedStreams));
 
 			this.reader = new MultistreamTextReader(namedStreams);
 			this.objectTransform = objectTransform;
 		}
 
 		/// <summary>
-		/// Registers an object factory to the reader. If parser already
-		/// has a factory with the same sign, it will be replaced.
+		/// Registers an object factory to the reader. If there is already
+		/// a factory with the same sign, it will be replaced.
 		/// </summary>
-		/// <param name="factory">An object factory.</param>
+		/// <param name="factory">An object factory</param>
 		public void RegisterFactory(IIkadnObjectFactory factory)
 		{
 			if (factory == null)
-				throw new ArgumentNullException("factory");
+				throw new ArgumentNullException(nameof(factory));
 
 			if (this.factories.ContainsKey(factory.Sign))
 				this.factories[factory.Sign] = factory;
@@ -76,35 +79,29 @@ namespace Ikadn
 		/// <summary>
 		/// Index of the last read character.
 		/// </summary>
-		public int Index { get { return this.reader.Index; } }
+		public int Index => this.reader.Index;
 		/// <summary>
 		/// Line of the last read character.
 		/// </summary>
-		public int Line { get { return this.reader.Line; } }
+		public int Line => this.reader.Line;
 		/// <summary>
 		/// Column within the line of the last read character.
 		/// </summary>
-		public int Column { get { return this.reader.Column; } }
+		public int Column => this.reader.Column;
 
 		/// <summary>
-		/// Name of the current reader.
+		/// Name of the current input stream.
 		/// </summary>
-		public string StreamName { get { return this.reader.StreamName; } }
+		public string StreamName => this.reader.StreamName;
 
 		/// <summary>
 		/// Leading whitespaces of currnet line.
 		/// </summary>
-		public string LineIndentation 
-		{
-			get
-			{
-				return this.indentation.ToString();
-			}
-		}
+		public string LineIndentation => this.indentation.ToString();
 
 		/// <summary>
-		/// Gets text that describes position (line, column and index) of the last
-		/// successfuly read character from the stream.
+		/// Text that describes position (stream name, line, column and index) of the
+		/// last successfuly read character from the stream.
 		/// </summary>
 		public string PositionDescription
 		{
@@ -112,7 +109,9 @@ namespace Ikadn
 				if (this.reader.HasStream)
 				{
 					var name = this.StreamName != null ? "stream " + this.StreamName + ", " : "";
-					return name + "line " + (Line + 1) + ", column " + (Column + 1) + " (index: " + Index + ")";
+					return name + "line " + (Line + 1).ToString(CultureInfo.InvariantCulture) + 
+						", column " + (Column + 1).ToString(CultureInfo.InvariantCulture) + 
+						" (index: " + Index.ToString(CultureInfo.InvariantCulture) + ")";
 				}
 				else
 					return "end of stream";
@@ -185,15 +184,15 @@ namespace Ikadn
 		/// <summary>
 		/// Reads characters from the input stream until the stopping condition is met. 
 		/// </summary>
-		/// <param name="acceptableCharacters">Characters that can be read.</param>
+		/// <param name="acceptableCharacters">Characters that can be read</param>
 		/// <returns>Successfully read part of the stream.</returns>
 		public string ReadWhile(params char[] acceptableCharacters)
 		{
 			if (acceptableCharacters == null)
-				throw new ArgumentNullException("acceptableCharacters");
+				throw new ArgumentNullException(nameof(acceptableCharacters));
 
 			if (acceptableCharacters.Length == 0)
-				throw new ArgumentException("No readable characters specified", "acceptableCharacters");
+				throw new ArgumentException("No readable characters specified", nameof(acceptableCharacters));
 
 			if (acceptableCharacters.Length < HashSearchThreshold)
 				return this.ReadWhile(acceptableCharacters.Contains);
@@ -204,14 +203,14 @@ namespace Ikadn
 		/// <summary>
 		/// Reads characters from the input stream until the stopping condition is met.
 		/// </summary>
-		/// <param name="acceptableCharacters">Set of characters that can be read.</param>
+		/// <param name="acceptableCharacters">Set of characters that can be read</param>
 		/// <returns>Successfully read part of the stream.</returns>
 		public string ReadWhile(ICollection<char> acceptableCharacters)
 		{
 			if (acceptableCharacters == null)
-				throw new ArgumentNullException("acceptableCharacters");
+				throw new ArgumentNullException(nameof(acceptableCharacters));
 			if (acceptableCharacters.Count == 0)
-				throw new ArgumentException("No readable characters specified", "acceptableCharacters");
+				throw new ArgumentException("No readable characters specified", nameof(acceptableCharacters));
 
 			return this.ReadWhile(acceptableCharacters.Contains);
 		}
@@ -219,12 +218,12 @@ namespace Ikadn
 		/// <summary>
 		/// Reads characters from the input stream until the stopping condition is met.
 		/// </summary>
-		/// <param name="readCondition">Set of characters that can be read.</param>
+		/// <param name="readCondition">Set of characters that can be read</param>
 		/// <returns>Successfully read part of the stream.</returns>
 		public string ReadWhile(Predicate<char> readCondition)
 		{
 			if (readCondition == null)
-				throw new ArgumentNullException("readCondition");
+				throw new ArgumentNullException(nameof(readCondition));
 
 			return this.ReadConditionally(c =>
 			{
@@ -239,14 +238,14 @@ namespace Ikadn
 		/// Reads characters from the input stream until one of terminating character
 		/// is found. 
 		/// </summary>
-		/// <param name="terminatingCharacters">Characters that ends reading.</param>
+		/// <param name="terminatingCharacters">Characters that ends reading</param>
 		/// <returns>Successfully read part of the stream.</returns>
 		public string ReadUntil(params int[] terminatingCharacters)
 		{
 			if (terminatingCharacters == null)
-				throw new ArgumentNullException("terminatingCharacters");
+				throw new ArgumentNullException(nameof(terminatingCharacters));
 			if (terminatingCharacters.Length == 0)
-				throw new ArgumentException("No terminating characters specified", "terminatingCharacters");
+				throw new ArgumentException("No terminating characters specified", nameof(terminatingCharacters));
 
 			if (terminatingCharacters.Length < HashSearchThreshold)
 				return this.ReadUntil(terminatingCharacters.Contains);
@@ -258,12 +257,12 @@ namespace Ikadn
 		/// Reads characters from the input stream until one of terminating character
 		/// is found. 
 		/// </summary>
-		/// <param name="terminatingCondition">Characters that ends reading.</param>
+		/// <param name="terminatingCondition">Characters that ends reading</param>
 		/// <returns>Successfully read part of the stream.</returns>
 		public string ReadUntil(Predicate<int> terminatingCondition)
 		{
 			if (terminatingCondition == null)
-				throw new ArgumentNullException("terminatingCondition");
+				throw new ArgumentNullException(nameof(terminatingCondition));
 
 			return this.ReadConditionally(c =>
 			{
@@ -285,7 +284,7 @@ namespace Ikadn
 		public string ReadConditionally(Func<int, ReadingDecision> readingController)
 		{
 			if (readingController == null)
-				throw new ArgumentNullException("readingController");
+				throw new ArgumentNullException(nameof(readingController));
 
 			var readChars = new StringBuilder();
 			while (true) {
@@ -332,9 +331,9 @@ namespace Ikadn
 		public SkipResult SkipWhile(params char[] skippableCharacters)
 		{
 			if (skippableCharacters == null)
-				throw new ArgumentNullException("skippableCharacters");
+				throw new ArgumentNullException(nameof(skippableCharacters));
 			if (skippableCharacters.Length == 0)
-				throw new ArgumentException("No skippable characters specified", "skippableCharacters");
+				throw new ArgumentException("No skippable characters specified", nameof(skippableCharacters));
 
 			if (skippableCharacters.Length < HashSearchThreshold)
 				return this.SkipWhile(skippableCharacters.Contains);
@@ -345,14 +344,14 @@ namespace Ikadn
 		/// <summary>
 		/// Skips consequentive characters from the input stream.
 		/// </summary>
-		/// <param name="skippableCharacters">Set of characters that should be skipped.</param>
+		/// <param name="skippableCharacters">Set of characters that should be skipped</param>
 		/// <returns>Descrtipion of the skipping process.</returns>
 		public SkipResult SkipWhile(ICollection<char> skippableCharacters)
 		{
 			if (skippableCharacters == null)
-				throw new ArgumentNullException("skippableCharacters");
+				throw new ArgumentNullException(nameof(skippableCharacters));
 			if (skippableCharacters.Count == 0)
-				throw new ArgumentException("No skippable characters specified", "skippableCharacters");
+				throw new ArgumentException("No skippable characters specified", nameof(skippableCharacters));
 
 			return this.SkipWhile(skippableCharacters.Contains);
 		}
@@ -366,7 +365,7 @@ namespace Ikadn
 		public SkipResult SkipWhile(Predicate<char> skipCondition)
 		{
 			if (skipCondition == null)
-				throw new ArgumentNullException("skipCondition");
+				throw new ArgumentNullException(nameof(skipCondition));
 
 			StringBuilder skipped = new StringBuilder();
 			while (true) {
@@ -385,13 +384,13 @@ namespace Ikadn
 		/// <summary>
 		/// Skips consequentive characters from the input stream.
 		/// </summary>
-		/// <param name="terminatingCharacters">Character that stop skipping process.</param>
+		/// <param name="terminatingCharacters">Character that stop skipping process</param>
 		public SkipResult SkipUntil(params int[] terminatingCharacters)
 		{
 			if (terminatingCharacters == null)
-				throw new ArgumentNullException("terminatingCharacters");
+				throw new ArgumentNullException(nameof(terminatingCharacters));
 			if (terminatingCharacters.Length == 0)
-				throw new ArgumentException("No terminating characters specified", "terminatingCharacters");
+				throw new ArgumentException("No terminating characters specified", nameof(terminatingCharacters));
 
 			if (terminatingCharacters.Length < HashSearchThreshold)
 				return this.SkipUntil(terminatingCharacters.Contains);
@@ -402,13 +401,13 @@ namespace Ikadn
 		/// <summary>
 		/// Skips consequentive characters from the input stream.
 		/// </summary>
-		/// <param name="terminatingCharacters">Set of characters that stop skipping process.</param>
+		/// <param name="terminatingCharacters">Set of characters that stop skipping process</param>
 		public SkipResult SkipUntil(ICollection<int> terminatingCharacters)
 		{
 			if (terminatingCharacters == null)
-				throw new ArgumentNullException("terminatingCharacters");
+				throw new ArgumentNullException(nameof(terminatingCharacters));
 			if (terminatingCharacters.Count == 0)
-				throw new ArgumentException("No terminating characters specified", "terminatingCharacters");
+				throw new ArgumentException("No terminating characters specified", nameof(terminatingCharacters));
 
 			return this.SkipUntil(terminatingCharacters.Contains);
 		}
@@ -421,7 +420,7 @@ namespace Ikadn
 		public SkipResult SkipUntil(Predicate<int> stopCondition)
 		{
 			if (stopCondition == null)
-				throw new ArgumentNullException("stopCondition");
+				throw new ArgumentNullException(nameof(stopCondition));
 
 			var skipped = new StringBuilder();
 			while (true) {
@@ -439,8 +438,8 @@ namespace Ikadn
 
 		#region IKADN object reading methods
 		/// <summary>
-		/// Checks whether parser can produce more IKADN objects, either buffered
-		/// or by reading from input streams.
+		/// Checks whether the reader can read another IKADN object from input
+		/// stream.
 		/// </summary>
 		/// <returns>True if it is possible.</returns>
 		public bool HasNextObject()

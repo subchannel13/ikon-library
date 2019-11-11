@@ -17,7 +17,7 @@ namespace Ikadn
 		private LabeledQueue<object, IkadnBaseObject> bufferedObjects = new LabeledQueue<object, IkadnBaseObject>();
 
 		/// <summary>
-		/// Input stream that is being parsed.
+		/// Wrapper and helper tools for reading from input streams.
 		/// </summary>
 		public IkadnReader Reader { get; private set; }
 
@@ -34,8 +34,8 @@ namespace Ikadn
 		/// <summary>
 		/// Constructs parser and registers object factories to it.
 		/// </summary>
-		/// <param name="reader">Input stream with IKADN syntax.</param>
-		/// <param name="factories">Collection of object factories.</param>
+		/// <param name="reader">Input stream with IKADN syntax</param>
+		/// <param name="factories">Collection of object factories</param>
 		public IkadnParser(TextReader reader, IEnumerable<IIkadnObjectFactory> factories)
 			: this(new[] { new NamedStream(reader, null) }, factories)
 		{
@@ -46,14 +46,14 @@ namespace Ikadn
 		/// Constructs parser with multiple input documents and registers object
 		/// factories to it.
 		/// </summary>
-		/// <param name="streams">Input named streams with IKADN syntax.</param>
-		/// <param name="factories">Collection of object factories.</param>
+		/// <param name="streams">Input named streams with IKADN syntax</param>
+		/// <param name="factories">Collection of object factories</param>
 		public IkadnParser(IEnumerable<NamedStream> streams, IEnumerable<IIkadnObjectFactory> factories)
 		{
 			if (streams == null)
-				throw new ArgumentNullException("streams");
+				throw new ArgumentNullException(nameof(streams));
 			if (factories == null)
-				throw new ArgumentNullException("factories");
+				throw new ArgumentNullException(nameof(factories));
 
 			this.Reader = new IkadnReader(streams, this.ObjectTransform);
 
@@ -62,7 +62,7 @@ namespace Ikadn
 		}
 
 		/// <summary>
-		/// Parses whole input stream.
+		/// Parses input streams to the end.
 		/// </summary>
 		/// <returns>Queue of parsed IKADN objects.</returns>
 		public LabeledQueue<object, IkadnBaseObject> ParseAll()
@@ -80,8 +80,9 @@ namespace Ikadn
 		}
 
 		/// <summary>
-		/// Checks whether parser can produce more IKADN objects, either buffered
-		/// or by reading from input streams.
+		/// Checks whether the parser can produce more IKADN objects.
+		/// 
+		/// Objects can either be read from input streams or are already buffered.
 		/// </summary>
 		/// <returns>True if it is possible.</returns>
 		public bool HasNext()
@@ -90,14 +91,16 @@ namespace Ikadn
 		}
 
 		/// <summary>
-		/// Checks whether the parser can read more IKADN objects with a specific
-		/// tag from the input stream.
+		/// Checks whether the parser can produce more IKADN objects with a
+		/// specific label.
+		/// 
+		/// Objects can either be read from input streams or are already buffered.
 		/// </summary>
-		/// <param name="tag">Desired object tag</param>
+		/// <param name="label">Desired object label</param>
 		/// <returns>True if it is possible.</returns>
-		public bool HasNext(object tag)
+		public bool HasNext(object label)
 		{
-			while (this.bufferedObjects.CountOf(tag) == 0)
+			while (this.bufferedObjects.CountOf(label) == 0)
 				if (this.Reader.HasNextObject())
 				{
 					var dataObj = this.Reader.ReadObject();
@@ -114,7 +117,7 @@ namespace Ikadn
 		/// from input streams.
 		/// 
 		/// Throws System.IO.EndOfStreamException if end of
-		/// the input stream is encountered while parsing.
+		/// the input streams is encountered while parsing.
 		/// </summary>
 		/// <returns>An IKADN object.</returns>
 		public IkadnBaseObject ParseNext()
@@ -129,21 +132,28 @@ namespace Ikadn
 		}
 
 		/// <summary>
-		/// Parses and returns next IKADN object from the input stream. 
+		/// Produces next IKADN object with specific label, either buffered or
+		/// by parsing from input streams.
 		/// 
 		/// Throws System.IO.EndOfStreamException if end of
-		/// the input stream is encountered while parsing.
+		/// the input streams is encountered while parsing.
 		/// </summary>
-		/// <param name="tag">Desired object tag</param>
+		/// <param name="labels">Desired object label</param>
 		/// <returns>An IKADN object</returns>
-		public IkadnBaseObject ParseNext(object tag)
+		public IkadnBaseObject ParseNext(object labels)
 		{
-			if (!this.HasNext(tag))
+			if (!this.HasNext(labels))
 				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + this.Reader.PositionDescription + ".");
 
-			return this.bufferedObjects.Dequeue(tag);
+			return this.bufferedObjects.Dequeue(labels);
 		}
 
+		/// <summary>
+		/// Notifys a parser when new IKADN object is parsed and allow for
+		/// substituting with a different one.
+		/// </summary>
+		/// <param name="parsedObject">Parsed IKADN object</param>
+		/// <returns>Substitute IKADN object</returns>
 		protected virtual IkadnBaseObject ObjectTransform(IkadnBaseObject parsedObject)
 		{
 			return parsedObject;

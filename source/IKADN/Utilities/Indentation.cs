@@ -1,8 +1,6 @@
 ﻿// Copyright © 2019 Ivan Kravarščan. All rights reserved. Licensed under the 
 // LGPL License. See License.txt in the project root for license information.
 
-using System;
-
 namespace Ikadn.Utilities
 {
 	/// <summary>
@@ -20,7 +18,7 @@ namespace Ikadn.Utilities
 		/// <returns>Indentation string.</returns>
 		public override string ToString()
 		{
-			return indentation;
+			return this.indentation;
 		}
 
 		/// <summary>
@@ -28,7 +26,7 @@ namespace Ikadn.Utilities
 		/// </summary>
 		public void Increase()
 		{
-			indentation += IndentChar;
+			this.indentation += IndentChar;
 		}
 
 		/// <summary>
@@ -36,7 +34,7 @@ namespace Ikadn.Utilities
 		/// </summary>
 		public void Decrease()
 		{
-			indentation = indentation.Remove(indentation.Length - 1);
+			this.indentation = this.indentation.Remove(this.indentation.Length - 1);
 		}
 	}
 }

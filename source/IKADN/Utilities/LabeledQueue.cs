@@ -26,11 +26,11 @@ namespace Ikadn.Utilities
 		/// <summary>
 		/// Initializes an instance of Ikadn.Utilities.LabeledQueue filled with given elements.
 		/// </summary>
-		/// <param name="elements">Objects and corresponding labels for populating the Ikadn.Utilities.LabeledQueue.</param>
+		/// <param name="elements">Objects and corresponding labels for populating the Ikadn.Utilities.LabeledQueue</param>
 		public LabeledQueue(IEnumerable<KeyValuePair<TLabel, TValue>> elements)
 		{
-			if (this.elements == null)
-				throw new ArgumentNullException("elements");
+			if (elements == null)
+				throw new ArgumentNullException(nameof(elements));
 
 			foreach (var element in elements)
 				this.Enqueue(element.Key, element.Value);
@@ -49,7 +49,7 @@ namespace Ikadn.Utilities
 		/// <summary>
 		/// Returns an enumerator that iterates through a collection.
 		/// </summary>
-		/// <returns>An System.Collections.IEnumerator object that can be used to iterate through the collection.
+		/// <returns>A System.Collections.IEnumerator object that can be used to iterate through the collection.
 		/// </returns>
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
@@ -59,23 +59,17 @@ namespace Ikadn.Utilities
 		/// <summary>
 		/// Gets the number of elements contained in the Ikadn.Utilities.LabeledQueue.
 		/// </summary>
-		public int Count
-		{
-			get { return this.elements.Count; }
-		}
+		public int Count =>  this.elements.Count;
 
 		/// <summary>
 		/// Checks whether there are any elements in Ikadn.Utilities.LabeledQueue.
 		/// </summary>
-		public bool IsEmpty
-		{
-			get { return this.elements.Count == 0; }
-		}
+		public bool IsEmpty => this.elements.Count == 0;
 
 		/// <summary>
 		/// Gets the number of elements with a given label contained in the Ikadn.Utilities.LabeledQueue.
 		/// </summary>
-		/// <param name="label">Object label.</param>
+		/// <param name="label">Label of interest</param>
 		/// <returns>Number of elements in question.</returns>
 		public int CountOf(TLabel label)
 		{
@@ -101,9 +95,9 @@ namespace Ikadn.Utilities
 
 		/// <summary>
 		/// Removes and returns the first element of the Ikadn.Utilities.LabeledQueue
-		/// with specified label.
+		/// with a specified label.
 		/// </summary>
-		/// <param name="label">Label of an object to dequeue.</param>
+		/// <param name="label">Label of an object to dequeue</param>
 		/// <returns>The object.</returns>
 		public TValue Dequeue(TLabel label)
 		{
@@ -123,13 +117,12 @@ namespace Ikadn.Utilities
 		/// <summary>
 		/// Adds an object to the end of the Ikadn.Utilities.LabeledQueue.
 		/// </summary>
-		/// <param name="item">The object to add to the end of Ikadn.Utilities.LabeledQueue.
 		/// <param name="label">Label of the object</param>
-		/// </param>
+		/// <param name="item">The object to add to the end of Ikadn.Utilities.LabeledQueue</param>
 		public void Enqueue(TLabel label, TValue item)
 		{
 			if (item == null)
-				throw new ArgumentNullException("item");
+				throw new ArgumentNullException(nameof(item));
 
 			this.elements.AddLast(new KeyValuePair<TLabel, TValue>(label, item));
 
@@ -153,7 +146,7 @@ namespace Ikadn.Utilities
 		public void Remove(TValue item)
 		{
 			if (item == null)
-				throw new ArgumentNullException("item");
+				throw new ArgumentNullException(nameof(item));
 
 			var itemIndex = this.indices[item];
 

@@ -28,7 +28,7 @@ namespace Ikadn.Utilities
 
 		public string StreamName
 		{
-			get { return this.currentReader != null ? this.currentReader.StreamName : null; }
+			get { return this.currentReader?.StreamName; }
 		}
 
 		public int Peek()
@@ -67,6 +67,8 @@ namespace Ikadn.Utilities
 		{
 			while (this.currentReader != null)
 				this.nextReader();
+
+			this.readers.Dispose();
 		}
 
 		private void nextReader()

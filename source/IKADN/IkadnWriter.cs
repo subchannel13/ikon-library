@@ -51,7 +51,7 @@ namespace Ikadn
 		/// <param name="character">A character to write</param>
 		public void Write(char character)
 		{
-			Write(character.ToString());
+			this.Write(character);
 		}
 		
 		/// <summary>
@@ -60,13 +60,13 @@ namespace Ikadn
 		/// To finalize the buffered data (and write it to output stream) call
 		/// either EndLine or WrtieLine.
 		/// </summary>
-		/// <param name="text">Raw text.</param>
+		/// <param name="text">Raw text</param>
 		public void Write(string text)
 		{
 			if (text == null)
-				throw new ArgumentNullException("text");
+				throw new ArgumentNullException(nameof(text));
 
-			Line.Append(text);
+			this.Line.Append(text);
 		}
 
 		/// <summary>
@@ -76,21 +76,21 @@ namespace Ikadn
 		/// <param name="character">Raw text.</param>
 		public void WriteLine(char character)
 		{
-			WriteLine(character.ToString());
+			this.WriteLine(character);
 		}
 		
 		/// <summary>
 		/// Appends a text to the current line and writes buffered line to the
 		/// output stream.
 		/// </summary>
-		/// <param name="text">Raw text.</param>
+		/// <param name="text">Raw text</param>
 		public void WriteLine(string text)
 		{
 			if (text == null)
-				throw new ArgumentNullException("text");
+				throw new ArgumentNullException(nameof(text));
 
-			Line.Append(text);
-			EndLine();
+			this.Line.Append(text);
+			this.EndLine();
 		}
 
 		/// <summary>
@@ -98,9 +98,9 @@ namespace Ikadn
 		/// </summary>
 		public void EndLine()
 		{
-			Writer.Write(Indentation);
-			Writer.WriteLine(Line);
-			Line.Length = 0;
+			this.Writer.Write(this.Indentation);
+			this.Writer.WriteLine(this.Line);
+			this.Line.Length = 0;
 		}
 	}
 }
