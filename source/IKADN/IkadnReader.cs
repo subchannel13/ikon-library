@@ -27,7 +27,6 @@ namespace Ikadn
 
 		private readonly MultistreamTextReader reader;
 		private readonly Dictionary<char, IIkadnObjectFactory> factories = new Dictionary<char, IIkadnObjectFactory>();
-		private readonly Func<IkadnBaseObject, IkadnBaseObject> objectTransform;
 
 		private IkadnBaseObject bufferedObject = null;
 		private bool recordIndentation = true;
@@ -37,9 +36,8 @@ namespace Ikadn
 		/// Wraps TextReader with IkadnReader
 		/// </summary>
 		/// <param name="reader">Input stream</param>
-		/// <param name="objectTransform">Callback when new IKADN object is parsed</param>
-		public IkadnReader(TextReader reader, Func<IkadnBaseObject, IkadnBaseObject> objectTransform) : 
-			this(new NamedStream[] { new NamedStream(reader, null)}, objectTransform)
+		public IkadnReader(TextReader reader) :
+			this(new NamedStream[] { new NamedStream(reader, null)})
 		{
 			//No extra operation
 		}
@@ -48,14 +46,12 @@ namespace Ikadn
 		/// Wraps one or more NamedStream instances with IkadnReader
 		/// </summary>
 		/// <param name="namedStreams">Name input streams</param>
-		/// <param name="objectTransform">Callback when new IKADN object is parsed</param>
-		public IkadnReader(IEnumerable<NamedStream> namedStreams, Func<IkadnBaseObject, IkadnBaseObject> objectTransform)
+		public IkadnReader(IEnumerable<NamedStream> namedStreams)
 		{
 			if (namedStreams == null)
 				throw new ArgumentNullException(nameof(namedStreams));
 
 			this.reader = new MultistreamTextReader(namedStreams);
-			this.objectTransform = objectTransform;
 		}
 
 		/// <summary>
@@ -475,7 +471,7 @@ namespace Ikadn
 			if (!this.factories.ContainsKey(sign))
 				throw new FormatException("No factory defined for an object starting with " + sign + " at " + this.PositionDescription + ".");
 
-			this.bufferedObject = this.objectTransform(this.factories[sign].Parse(this));
+			this.bufferedObject = this.factories[sign].Parse(this);
 		}
 		#endregion
 

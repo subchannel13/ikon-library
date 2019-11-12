@@ -8,7 +8,7 @@ namespace Ikadn.Ikon.Factories
 	/// <summary>
 	/// IKADN object factory for named object references.
 	/// </summary>
-	public class ReferencedFactory : IIkadnObjectFactory
+	public class ReferencedFactory : AIkonFactory
 	{
 		/// <summary>
 		/// Sign for IKADN object reference.
@@ -20,16 +20,14 @@ namespace Ikadn.Ikon.Factories
 		/// <summary>
 		/// Sign for IKADN object reference.
 		/// </summary>
-		public char Sign
-		{
-			get { return OpeningSign; }
-		}
+		public override char Sign => OpeningSign;
 
 		/// <summary>
 		/// Constructs IKADN object factory for named object references.
 		/// </summary>
 		/// <param name="resolver">Function for resolving IKADN object from a name</param>
-		public ReferencedFactory(Func<string, IkadnBaseObject> resolver)
+		public ReferencedFactory(Func<string, IkadnBaseObject> resolver, Action<string, IkadnBaseObject> registerName)
+			: base(registerName)
 		{
 			this.resolver = resolver;
 		}
@@ -39,7 +37,7 @@ namespace Ikadn.Ikon.Factories
 		/// </summary>
 		/// <param name="reader">IKADN parser instance.</param>
 		/// <returns>Referenced IKADN object.</returns>
-		public IkadnBaseObject Parse(IkadnReader reader)
+		protected override IkadnBaseObject ParseObject(IkadnReader reader)
 		{
 			if (reader == null)
 				throw new ArgumentNullException("reader");

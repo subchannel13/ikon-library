@@ -60,16 +60,16 @@ namespace Ikadn.Ikon
 		/// <param name="streams">Input named streams with IKADN syntax.</param>
 		/// <param name="factories">Collection of object factories.</param>
 		public IkonParser(IEnumerable<NamedStream> streams, IEnumerable<IIkadnObjectFactory> factories)
-			: base(streams, new IIkadnObjectFactory[] {
-				new CompositeFactory(),
-				new TextFactory(),
-				new TextBlockFactory(),
-				new NumericFactory(),
-				new ArrayFactory() 
-			})
+			: base(streams)
 		{
 			this.namedObjects = new Dictionary<string, IkadnBaseObject>();
-			this.Reader.RegisterFactory(new ReferencedFactory(x => this.namedObjects[x]));
+
+			this.Reader.RegisterFactory(new ArrayFactory(this.registerName));
+			this.Reader.RegisterFactory(new CompositeFactory(this.registerName));
+			this.Reader.RegisterFactory(new NumericFactory(this.registerName));
+			this.Reader.RegisterFactory(new ReferencedFactory(x => this.namedObjects[x], this.registerName));
+			this.Reader.RegisterFactory(new TextFactory(this.registerName));
+			this.Reader.RegisterFactory(new TextBlockFactory(this.registerName));
 
 			foreach (var factory in factories)
 				this.Reader.RegisterFactory(factory);
@@ -89,18 +89,6 @@ namespace Ikadn.Ikon
 				return namedObjects[name];
 			else
 				throw new KeyNotFoundException("Object named '" + name + "' not found");
-		}
-
-		protected override IkadnBaseObject ObjectTransform(IkadnBaseObject parsedObject)
-		{
-			while (!this.Reader.SkipWhiteSpaces().EndOfStream &&
-					this.Reader.Peek() == IkonBaseObject.AnchorSign)
-			{
-				this.Reader.Read();
-				namedObjects.Add(ReadIdentifier(this.Reader), parsedObject);
-			}
-
-			return parsedObject;
 		}
 
 		/// <summary>
@@ -123,6 +111,11 @@ namespace Ikadn.Ikon
 			return identifier;
 		}
 		
+		private void registerName(string name, IkadnBaseObject ikadnObj)
+		{
+			this.namedObjects[name] = ikadnObj;
+		}
+
 		private static readonly ICollection<char> IdentifierChars = defineIdentifierChars();
 
 		private static HashSet<char> defineIdentifierChars()

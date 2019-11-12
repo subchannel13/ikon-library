@@ -43,10 +43,20 @@ namespace Ikadn
 		}
 
 		/// <summary>
+		/// Constructs parser without registerd object factories.
+		/// </summary>
+		/// <param name="streams">Named input streams with IKADN syntax</param>
+		public IkadnParser(IEnumerable<NamedStream> streams)
+			: this(streams, new IIkadnObjectFactory[0])
+		{
+			//no extra operation
+		}
+
+		/// <summary>
 		/// Constructs parser with multiple input documents and registers object
 		/// factories to it.
 		/// </summary>
-		/// <param name="streams">Input named streams with IKADN syntax</param>
+		/// <param name="streams">Named input  streams with IKADN syntax</param>
 		/// <param name="factories">Collection of object factories</param>
 		public IkadnParser(IEnumerable<NamedStream> streams, IEnumerable<IIkadnObjectFactory> factories)
 		{
@@ -55,7 +65,7 @@ namespace Ikadn
 			if (factories == null)
 				throw new ArgumentNullException(nameof(factories));
 
-			this.Reader = new IkadnReader(streams, this.ObjectTransform);
+			this.Reader = new IkadnReader(streams);
 
 			foreach (var factory in factories)
 				this.Reader.RegisterFactory(factory);
@@ -146,17 +156,6 @@ namespace Ikadn
 				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + this.Reader.PositionDescription + ".");
 
 			return this.bufferedObjects.Dequeue(labels);
-		}
-
-		/// <summary>
-		/// Notifys a parser when new IKADN object is parsed and allow for
-		/// substituting with a different one.
-		/// </summary>
-		/// <param name="parsedObject">Parsed IKADN object</param>
-		/// <returns>Substitute IKADN object</returns>
-		protected virtual IkadnBaseObject ObjectTransform(IkadnBaseObject parsedObject)
-		{
-			return parsedObject;
 		}
 
 		/// <summary>
