@@ -1,5 +1,5 @@
 ﻿// Copyright © 2019 Ivan Kravarščan. All rights reserved. Licensed under the 
-// LGPL License. See License.txt in the project root for license information.
+// BSD 3-Clause License. See License.txt in the project root for license information.
 
 using System;
 using Ikadn.Ikon.Types;
