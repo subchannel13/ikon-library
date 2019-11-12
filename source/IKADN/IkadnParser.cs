@@ -16,10 +16,7 @@ namespace Ikadn
 	{
 		private LabeledQueue<object, IkadnBaseObject> bufferedObjects = new LabeledQueue<object, IkadnBaseObject>();
 
-		/// <summary>
-		/// Wrapper and helper tools for reading from input streams.
-		/// </summary>
-		public IkadnReader Reader { get; private set; }
+		private readonly IkadnReader reader;
 
 		/// <summary>
 		/// Constructs parser without registerd object factories.
@@ -65,10 +62,10 @@ namespace Ikadn
 			if (factories == null)
 				throw new ArgumentNullException(nameof(factories));
 
-			this.Reader = new IkadnReader(streams);
+			this.reader = new IkadnReader(streams);
 
 			foreach (var factory in factories)
-				this.Reader.RegisterFactory(factory);
+				this.reader.RegisterFactory(factory);
 		}
 
 		/// <summary>
@@ -97,7 +94,7 @@ namespace Ikadn
 		/// <returns>True if it is possible.</returns>
 		public bool HasNext()
 		{
-			return this.bufferedObjects.Count != 0 || this.Reader.HasNextObject();
+			return this.bufferedObjects.Count != 0 || this.reader.HasNextObject();
 		}
 
 		/// <summary>
@@ -111,9 +108,9 @@ namespace Ikadn
 		public bool HasNext(object label)
 		{
 			while (this.bufferedObjects.CountOf(label) == 0)
-				if (this.Reader.HasNextObject())
+				if (this.reader.HasNextObject())
 				{
-					var dataObj = this.Reader.ReadObject();
+					var dataObj = this.reader.ReadObject();
 					this.bufferedObjects.Enqueue(dataObj.Tag, dataObj);
 				}
 				else
@@ -133,12 +130,12 @@ namespace Ikadn
 		public IkadnBaseObject ParseNext()
 		{
 			if (!this.HasNext())
-				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + this.Reader.PositionDescription + ".");
+				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + this.reader.PositionDescription + ".");
 
 			if (this.bufferedObjects.Count != 0)
 				return this.bufferedObjects.Dequeue();
 
-			return this.Reader.ReadObject();
+			return this.reader.ReadObject();
 		}
 
 		/// <summary>
@@ -153,9 +150,19 @@ namespace Ikadn
 		public IkadnBaseObject ParseNext(object labels)
 		{
 			if (!this.HasNext(labels))
-				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + this.Reader.PositionDescription + ".");
+				throw new EndOfStreamException("Trying to read beyond the end of stream. Last read character was at " + this.reader.PositionDescription + ".");
 
 			return this.bufferedObjects.Dequeue(labels);
+		}
+
+		/// <summary>
+		/// Registers an object factory to the parser. If there is already
+		/// a factory with the same sign, it will be replaced.
+		/// </summary>
+		/// <param name="factory">An IKADN object factory</param>
+		protected virtual void RegisterFactory(IIkadnObjectFactory factory)
+		{
+			this.reader.RegisterFactory(factory);
 		}
 
 		/// <summary>
@@ -166,7 +173,7 @@ namespace Ikadn
 		/// false to release only unmanaged resources.</param>
 		protected virtual void Dispose(bool disposing)
 		{
-			this.Reader.Dispose();
+			this.reader.Dispose();
 		}
 
 		/// <summary>

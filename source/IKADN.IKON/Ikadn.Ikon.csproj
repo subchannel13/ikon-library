@@ -40,6 +40,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factories\AIkonFactory.cs" />
     <Compile Include="Factories\ArrayFactory.cs" />
     <Compile Include="Factories\NumericFactory.cs" />
     <Compile Include="Factories\CompositeFactory.cs" />

@@ -58,7 +58,7 @@ namespace Ikadn
 		/// Registers an object factory to the reader. If there is already
 		/// a factory with the same sign, it will be replaced.
 		/// </summary>
-		/// <param name="factory">An object factory</param>
+		/// <param name="factory">An IKADN object factory</param>
 		public void RegisterFactory(IIkadnObjectFactory factory)
 		{
 			if (factory == null)

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 
 using Ikadn.Ikon.Factories;
-using Ikadn.Ikon.Types;
 using Ikadn.Utilities;
 
 namespace Ikadn.Ikon
@@ -64,15 +63,15 @@ namespace Ikadn.Ikon
 		{
 			this.namedObjects = new Dictionary<string, IkadnBaseObject>();
 
-			this.Reader.RegisterFactory(new ArrayFactory(this.registerName));
-			this.Reader.RegisterFactory(new CompositeFactory(this.registerName));
-			this.Reader.RegisterFactory(new NumericFactory(this.registerName));
-			this.Reader.RegisterFactory(new ReferencedFactory(x => this.namedObjects[x], this.registerName));
-			this.Reader.RegisterFactory(new TextFactory(this.registerName));
-			this.Reader.RegisterFactory(new TextBlockFactory(this.registerName));
+			this.RegisterFactory(new ArrayFactory(this.registerName));
+			this.RegisterFactory(new CompositeFactory(this.registerName));
+			this.RegisterFactory(new NumericFactory(this.registerName));
+			this.RegisterFactory(new ReferencedFactory(x => this.namedObjects[x], this.registerName));
+			this.RegisterFactory(new TextFactory(this.registerName));
+			this.RegisterFactory(new TextBlockFactory(this.registerName));
 
 			foreach (var factory in factories)
-				this.Reader.RegisterFactory(factory);
+				this.RegisterFactory(factory);
 		}
 
 		/// <summary>
@@ -110,7 +109,27 @@ namespace Ikadn.Ikon
 
 			return identifier;
 		}
-		
+
+		/// <summary>
+		/// Do not use this overload, use one accepting Ikadn.Ikon.Factories.AIkonFactory
+		/// instead.
+		/// </summary>
+		/// <param name="factory">An IKADN object factory</param>
+		protected sealed override void RegisterFactory(IIkadnObjectFactory factory)
+		{
+			throw new NotSupportedException("Method overload not supported, use overload with " + nameof(AIkonFactory) + "instead");
+		}
+
+		/// <summary>
+		/// Registers an object factory to the parser. If there is already
+		/// a factory with the same sign, it will be replaced.
+		/// </summary>
+		/// <param name="factory">An IKON object factory</param>
+		protected virtual void RegisterFactory(AIkonFactory factory)
+		{
+			base.RegisterFactory(factory);
+		}
+
 		private void registerName(string name, IkadnBaseObject ikadnObj)
 		{
 			this.namedObjects[name] = ikadnObj;
