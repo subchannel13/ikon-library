@@ -40,7 +40,7 @@ namespace Ikadn
 			if (writer == null)
 				throw new ArgumentNullException(nameof(writer));
 
-			DoCompose(writer);
+			this.DoCompose(writer);
 			
 			writer.EndLine();
 		}

@@ -51,7 +51,7 @@ namespace Ikadn
 		/// <param name="character">A character to write</param>
 		public void Write(char character)
 		{
-			this.Write(character);
+			this.Line.Append(character);
 		}
 		
 		/// <summary>
@@ -76,7 +76,8 @@ namespace Ikadn
 		/// <param name="character">Raw text.</param>
 		public void WriteLine(char character)
 		{
-			this.WriteLine(character);
+			this.Line.Append(character);
+			this.EndLine();
 		}
 		
 		/// <summary>

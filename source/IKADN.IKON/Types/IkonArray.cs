@@ -171,7 +171,7 @@ namespace Ikadn.Ikon.Types
 			writer.WriteLine(ArrayFactory.OpeningSign);
 			writer.Indentation.Increase();
 
-			foreach (IkadnBaseObject value in elements)
+			foreach (var value in elements)
 				value.Compose(writer);
 
 			writer.Indentation.Decrease();

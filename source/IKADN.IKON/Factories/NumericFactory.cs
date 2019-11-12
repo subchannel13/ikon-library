@@ -83,7 +83,7 @@ namespace Ikadn.Ikon.Factories
 		}
 
 		private static readonly ICollection<char> ValidChars = new HashSet<char>(defineValidChars());
-		private static readonly Regex NumberMatcher = new Regex("[\\+\\-]?[0-9\\.eE]+");
+		private static readonly Regex NumberMatcher = new Regex("[\\+\\-]?[0-9\\.eE]+", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
 		private static IEnumerable<char> defineValidChars()
 		{
