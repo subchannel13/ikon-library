@@ -36,6 +36,10 @@ namespace Ikadn.Ikon.Factories
 		/// </summary>
 		public override char Sign => OpeningSign;
 
+		/// <summary>
+		/// Constructs IKON number object factory.
+		/// </summary>
+		/// <param name="registerName">Callback for registering IKADN object anchor</param>
 		public NumericFactory(Action<string, IkadnBaseObject> registerName) : base(registerName)
 		{
 			//no extra operation
@@ -49,7 +53,7 @@ namespace Ikadn.Ikon.Factories
 		protected override IkadnBaseObject ParseObject(IkadnReader reader)
 		{
 			if (reader == null)
-				throw new ArgumentNullException("reader");
+				throw new ArgumentNullException(nameof(reader));
 
 			reader.SkipWhiteSpaces();
 			if (!reader.HasNext)

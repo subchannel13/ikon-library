@@ -26,6 +26,7 @@ namespace Ikadn.Ikon.Factories
 		/// Constructs IKADN object factory for named object references.
 		/// </summary>
 		/// <param name="resolver">Function for resolving IKADN object from a name</param>
+		/// <param name="registerName">Callback for registering IKADN object anchor</param>
 		public ReferencedFactory(Func<string, IkadnBaseObject> resolver, Action<string, IkadnBaseObject> registerName)
 			: base(registerName)
 		{
@@ -40,7 +41,7 @@ namespace Ikadn.Ikon.Factories
 		protected override IkadnBaseObject ParseObject(IkadnReader reader)
 		{
 			if (reader == null)
-				throw new ArgumentNullException("reader");
+				throw new ArgumentNullException(nameof(reader));
 
 			return this.resolver(IkonParser.ReadIdentifier(reader));
 		}

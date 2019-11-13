@@ -15,17 +15,14 @@ namespace Ikadn.Ikon
 	/// </summary>
 	public class IkonParser : IkadnParser
 	{
-		/// <summary>
-		/// Collection of named objects.
-		/// </summary>
-		protected IDictionary<string, IkadnBaseObject> namedObjects { get; private set; }
+		private readonly IDictionary<string, IkadnBaseObject> namedObjects = new Dictionary<string, IkadnBaseObject>();
 
 		/// <summary>
 		/// Constructs IKON parser with default IKON object factories.
 		/// </summary>
 		/// <param name="reader"></param>
 		public IkonParser(TextReader reader)
-			: this(new[] { new NamedStream(reader, null) }, new IIkadnObjectFactory[0])
+			: this(new[] { new NamedStream(reader, null) }, new AIkonFactory[0])
 		{
 			//no extra operation
 		}
@@ -36,7 +33,7 @@ namespace Ikadn.Ikon
 		/// </summary>
 		/// <param name="streams">Input named streams with IKADN syntax.</param>
 		public IkonParser(IEnumerable<NamedStream> streams)
-			: this(streams, new IIkadnObjectFactory[0])
+			: this(streams, new AIkonFactory[0])
 		{
 			//no extra operation
 		}
@@ -46,7 +43,7 @@ namespace Ikadn.Ikon
 		/// </summary>
 		/// <param name="reader">Input stream with IKADN syntax.</param>
 		/// <param name="factories">Collection of object factories.</param>
-		public IkonParser(TextReader reader, IEnumerable<IIkadnObjectFactory> factories)
+		public IkonParser(TextReader reader, IEnumerable<AIkonFactory> factories)
 			: this(new[] { new NamedStream(reader, null) }, factories)
 		{
 			//no extra operation
@@ -58,20 +55,23 @@ namespace Ikadn.Ikon
 		/// </summary>
 		/// <param name="streams">Input named streams with IKADN syntax.</param>
 		/// <param name="factories">Collection of object factories.</param>
-		public IkonParser(IEnumerable<NamedStream> streams, IEnumerable<IIkadnObjectFactory> factories)
+		public IkonParser(IEnumerable<NamedStream> streams, IEnumerable<AIkonFactory> factories)
 			: base(streams)
 		{
+			if (factories == null)
+				throw new ArgumentNullException(nameof(factories));
+
 			this.namedObjects = new Dictionary<string, IkadnBaseObject>();
 
-			this.RegisterFactory(new ArrayFactory(this.registerName));
-			this.RegisterFactory(new CompositeFactory(this.registerName));
-			this.RegisterFactory(new NumericFactory(this.registerName));
-			this.RegisterFactory(new ReferencedFactory(x => this.namedObjects[x], this.registerName));
-			this.RegisterFactory(new TextFactory(this.registerName));
-			this.RegisterFactory(new TextBlockFactory(this.registerName));
+			base.RegisterFactory(new ArrayFactory(this.registerName));
+			base.RegisterFactory(new CompositeFactory(this.registerName));
+			base.RegisterFactory(new NumericFactory(this.registerName));
+			base.RegisterFactory(new ReferencedFactory(x => this.namedObjects[x], this.registerName));
+			base.RegisterFactory(new TextFactory(this.registerName));
+			base.RegisterFactory(new TextBlockFactory(this.registerName));
 
 			foreach (var factory in factories)
-				this.RegisterFactory(factory);
+				base.RegisterFactory(factory);
 		}
 
 		/// <summary>
@@ -98,7 +98,7 @@ namespace Ikadn.Ikon
 		public static string ReadIdentifier(IkadnReader reader)
 		{
 			if (reader == null)
-				throw new ArgumentNullException("reader");
+				throw new ArgumentNullException(nameof(reader));
 
 			if (reader.SkipWhiteSpaces().EndOfStream)
 				throw new EndOfStreamException("Unexpected end of stream at " + reader.PositionDescription + " while reading IKON identifier.");
@@ -117,7 +117,7 @@ namespace Ikadn.Ikon
 		/// <param name="factory">An IKADN object factory</param>
 		protected sealed override void RegisterFactory(IIkadnObjectFactory factory)
 		{
-			throw new NotSupportedException("Method overload not supported, use overload with " + nameof(AIkonFactory) + "instead");
+			throw new NotSupportedException("Method overload not supported, use overload with " + nameof(AIkonFactory) + " instead");
 		}
 
 		/// <summary>

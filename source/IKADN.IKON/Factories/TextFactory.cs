@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 using Ikadn.Ikon.Types;
@@ -11,7 +12,7 @@ using Ikadn.Utilities;
 namespace Ikadn.Ikon.Factories
 {
 	/// <summary>
-	/// IKADN object factory for IKON  textual objects from backslash escaped
+	/// IKADN object factory for IKON textual objects from backslash escaped
 	/// format.
 	/// </summary>
 	public class TextFactory : AIkonFactory
@@ -32,6 +33,10 @@ namespace Ikadn.Ikon.Factories
 		/// </summary>
 		public override char Sign => OpeningSign;
 
+		/// <summary>
+		/// Constructs IKON textual object factory for backslash escaped format.
+		/// </summary>
+		/// <param name="registerName">Callback for registering IKADN object anchor</param>
 		public TextFactory(Action<string, IkadnBaseObject> registerName) : base(registerName)
 		{
 			//no extra operation
@@ -45,7 +50,7 @@ namespace Ikadn.Ikon.Factories
 		protected override IkadnBaseObject ParseObject(IkadnReader reader)
 		{
 			if (reader == null)
-				throw new System.ArgumentNullException("reader");
+				throw new System.ArgumentNullException(nameof(reader));
 
 			bool escaping = false;
 			int unicodeDigits = 0;
@@ -59,7 +64,7 @@ namespace Ikadn.Ikon.Factories
 					unicodeChar *= 16;
 					try
 					{
-						unicodeChar += Convert.ToInt32(c.ToString(), 16);
+						unicodeChar += Convert.ToInt32(c.ToString(CultureInfo.InvariantCulture), 16);
 					}
 					catch (FormatException)
 					{

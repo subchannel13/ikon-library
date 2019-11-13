@@ -64,16 +64,17 @@ namespace Ikadn.Ikon.Types
 		/// <returns>Converted value</returns>
 		public override T To<T>()
 		{
-			Type target = typeof(T);
+			var target = typeof(T);
 
 			if (target.IsAssignableFrom(typeof(IList<IkadnBaseObject>)))
-				return (T)elements;
-			else if (target.IsArray) {
+				return (T)this.elements;
+			else if (target.IsArray)
+			{
 				if (baseConverterMethod == null)
 					baseConverterMethod = typeof(IkadnBaseObject).GetMethod("To", new Type[] { });
 
-				MethodInfo converterMethod = baseConverterMethod.MakeGenericMethod(target.GetElementType());
-				Array array = Array.CreateInstance(target.GetElementType(), this.elements.Count);
+				var converterMethod = baseConverterMethod.MakeGenericMethod(target.GetElementType());
+				var array = Array.CreateInstance(target.GetElementType(), this.elements.Count);
 
 				for (int i = 0; i < this.elements.Count; i++)
 					array.SetValue(converterMethod.Invoke(this.elements[i], null), i);
@@ -82,18 +83,23 @@ namespace Ikadn.Ikon.Types
 			}
 			else if (target.IsAssignableFrom(this.GetType()))
 				return (T)(object)this;
-			else {
+			else
+			{
 				var subTypes = new List<Type> { target };
 				subTypes.AddRange(target.GetInterfaces());
 
 				foreach (var type in subTypes)
 					if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>) &&
-						target.IsAssignableFrom(typeof(List<>).MakeGenericType(type.GetGenericArguments()))) {
-						
-						if (iListConverterMethod == null)
-							iListConverterMethod = typeof(IkonArray).GetMethod("convertToIList", BindingFlags.NonPublic | BindingFlags.Instance);
+						target.IsAssignableFrom(typeof(List<>).MakeGenericType(type.GetGenericArguments())))
+					{
 
-						MethodInfo converterMethod = iListConverterMethod.MakeGenericMethod(type.GetGenericArguments()[0]);
+						if (iListConverterMethod == null)
+							iListConverterMethod = typeof(IkonArray).GetMethod(
+								nameof(this.convertToIList), 
+								BindingFlags.NonPublic | BindingFlags.Instance
+							);
+
+						var converterMethod = iListConverterMethod.MakeGenericMethod(type.GetGenericArguments()[0]);
 						return (T)converterMethod.Invoke(this, null);
 					}
 
@@ -106,10 +112,10 @@ namespace Ikadn.Ikon.Types
 			if (baseConverterMethod == null)
 				baseConverterMethod = typeof(IkadnBaseObject).GetMethod("To", new Type[] { });
 
-			Type target = typeof(T);
-			MethodInfo converterMethod = baseConverterMethod.MakeGenericMethod(target);
+			var target = typeof(T);
+			var converterMethod = baseConverterMethod.MakeGenericMethod(target);
 
-			List<T> list = new List<T>();
+			var list = new List<T>();
 			foreach (var item in this) {
 				list.Add((T)converterMethod.Invoke(item, null));
 			}
@@ -126,7 +132,7 @@ namespace Ikadn.Ikon.Types
 		public IkonArray Add(IkadnBaseObject firstValue, params IkadnBaseObject[] otherValues)
 		{
 			if (firstValue == null)
-				throw new System.ArgumentNullException("firstValue");
+				throw new ArgumentNullException(nameof(firstValue));
 
 			this.elements.Add(firstValue);
 
@@ -135,7 +141,7 @@ namespace Ikadn.Ikon.Types
 					if (item != null)
 						this.elements.Add(item);
 					else
-						throw new System.ArgumentNullException("otherValues");
+						throw new ArgumentNullException(nameof(otherValues));
 			
 			return this;
 		}
@@ -148,13 +154,13 @@ namespace Ikadn.Ikon.Types
 		public IkonArray AddAll(IEnumerable<IkadnBaseObject> values)
 		{
 			if (values == null)
-				throw new System.ArgumentNullException("values");
+				throw new ArgumentNullException(nameof(values));
 
 			foreach (var item in values)
 				if (item != null)
 					this.elements.Add(item);
 				else
-					throw new System.ArgumentNullException("values");
+					throw new ArgumentNullException(nameof(values));
 
 			return this;
 		}
@@ -166,18 +172,18 @@ namespace Ikadn.Ikon.Types
 		protected override void DoCompose(IkadnWriter writer)
 		{
 			if (writer == null)
-				throw new System.ArgumentNullException("writer");
+				throw new ArgumentNullException(nameof(writer));
 
 			writer.WriteLine(ArrayFactory.OpeningSign);
 			writer.Indentation.Increase();
 
-			foreach (var value in elements)
+			foreach (var value in this.elements)
 				value.Compose(writer);
 
 			writer.Indentation.Decrease();
 			writer.Write(ArrayFactory.ClosingChar);
 
-			WriteReferences(writer);
+			this.WriteReferences(writer);
 		}
 
 		#region IList<Value> interface
@@ -234,7 +240,7 @@ namespace Ikadn.Ikon.Types
 		void ICollection<IkadnBaseObject>.Add(IkadnBaseObject item)
 		{
 			if (item == null)
-				throw new System.ArgumentNullException("item");
+				throw new ArgumentNullException(nameof(item));
 
 			this.elements.Add(item);
 		}

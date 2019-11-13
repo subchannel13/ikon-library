@@ -48,10 +48,10 @@ namespace Ikadn.Ikon.Types
 		/// <returns>Converted value</returns>
 		public override T To<T>()
 		{
-			Type target = typeof(T);
+			var target = typeof(T);
 
 			if (target == typeof(string))
-				return (T)(object)text;
+				return (T)(object)this.text;
 			else if (target.IsAssignableFrom(this.GetType()))
 				return (T)(object)this;
 			else
@@ -76,19 +76,19 @@ namespace Ikadn.Ikon.Types
 		protected override void DoCompose(IkadnWriter writer)
 		{
 			if (writer == null)
-				throw new System.ArgumentNullException("writer");
+				throw new ArgumentNullException(nameof(writer));
 
 			if (this.text.Contains("\n"))
 				composeBlock(writer);
 			else
 				composeLine(writer);
-			
-			WriteReferences(writer);
+
+			this.WriteReferences(writer);
 		}
 		
 		private void composeLine(IkadnWriter writer)
 		{
-			StringBuilder sb = new StringBuilder(text);
+			var sb = new StringBuilder(text);
 			sb.Replace(@"\", @"\\");
 			sb.Replace(@"""", @"\""");
 			sb.Replace("\n", @"\n");
@@ -105,11 +105,20 @@ namespace Ikadn.Ikon.Types
 			writer.WriteLine(TextBlockFactory.OpeningSign);
 			writer.Indentation.Increase();
 			
-			foreach(var line in text.Split(LineEnds, StringSplitOptions.None))
+			foreach(var line in this.text.Split(LineEnds, StringSplitOptions.None))
 				writer.WriteLine(line);
 
 			writer.Indentation.Decrease();
 			writer.Write(TextBlockFactory.ClosingChar);
+		}
+
+		/// <summary>
+		/// Returns textual contents of the Ikadn.Ikon.Types.IkonText
+		/// </summary>
+		/// <returns>Text of the object</returns>
+		public override string ToString()
+		{
+			return this.text;
 		}
 	}
 }

@@ -48,10 +48,10 @@ namespace Ikadn.Ikon.Types
 		/// <returns>Converted value</returns>
 		public override T To<T>()
 		{
-			Type target = typeof(T);
+			var target = typeof(T);
 
 			if (target == typeof(string))
-				return (T)(object)name;
+				return (T)(object)this.name;
 			else if (target.IsAssignableFrom(this.GetType()))
 				return (T)(object)this;
 			else
@@ -65,12 +65,12 @@ namespace Ikadn.Ikon.Types
 		protected override void DoCompose(IkadnWriter writer)
 		{
 			if (writer == null)
-				throw new System.ArgumentNullException("writer");
+				throw new ArgumentNullException(nameof(writer));
 
 			writer.Write(ReferencedFactory.OpeningSign);
-			writer.Write(name);
+			writer.Write(this.name);
 
-			WriteReferences(writer);
+			this.WriteReferences(writer);
 		}
 	}
 }

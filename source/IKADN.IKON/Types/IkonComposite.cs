@@ -41,7 +41,7 @@ namespace Ikadn.Ikon.Types
 		/// <returns>Converted value</returns>
 		public override T To<T>()
 		{
-			Type target = typeof(T);
+			var target = typeof(T);
 
 			if (target.IsAssignableFrom(this.GetType()))
 				return (T)(object)this;
@@ -56,13 +56,13 @@ namespace Ikadn.Ikon.Types
 		/// <returns>Nested IKADN object</returns>
 		public IkadnBaseObject this[string memberName]
 		{
-			get { return members[memberName]; }
+			get { return this.members[memberName]; }
 			set
 			{
-				if (members.ContainsKey(memberName))
-					members[memberName] = value;
+				if (this.members.ContainsKey(memberName))
+					this.members[memberName] = value;
 				else
-					members.Add(memberName, value);
+					this.members.Add(memberName, value);
 			}
 		}
 
@@ -74,7 +74,7 @@ namespace Ikadn.Ikon.Types
 		/// <returns>Instance of the same IKON composite object method is called for.</returns>
 		public IkonComposite Add(string key, IkadnBaseObject item)
 		{
-			members.Add(key, item);
+			this.members.Add(key, item);
 			return this;
 		}
 
@@ -83,7 +83,7 @@ namespace Ikadn.Ikon.Types
 		/// </summary>
 		public ICollection<string> Keys
 		{
-			get { return members.Keys; }
+			get { return this.members.Keys; }
 		}
 
 		/// <summary>
@@ -91,7 +91,7 @@ namespace Ikadn.Ikon.Types
 		/// </summary>
 		public override object Tag
 		{
-			get { return dataTag; }
+			get { return this.dataTag; }
 		}
 
 		/// <summary>
@@ -101,18 +101,18 @@ namespace Ikadn.Ikon.Types
 		protected override void DoCompose(IkadnWriter writer)
 		{
 			if (writer == null)
-				throw new System.ArgumentNullException("writer");
+				throw new ArgumentNullException(nameof(writer));
 
 			writer.Write(CompositeFactory.OpeningSign);
 			writer.Write(" ");
-			writer.WriteLine(dataTag);
+			writer.WriteLine(this.dataTag);
 			writer.Indentation.Increase();
 
-			foreach (string key in members.Keys)
+			foreach (string key in this.members.Keys)
 			{
 				writer.Write(key);
 				writer.Write(" ");
-				members[key].Compose(writer);
+				this.members[key].Compose(writer);
 			}
 
 			writer.Indentation.Decrease();

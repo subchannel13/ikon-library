@@ -27,6 +27,10 @@ namespace Ikadn.Ikon.Factories
 		/// </summary>
 		public override char Sign => OpeningSign;
 
+		/// <summary>
+		/// Constructs IKON composite object factory.
+		/// </summary>
+		/// <param name="registerName">Callback for registering IKADN object anchor</param>
 		public CompositeFactory(Action<string, IkadnBaseObject> registerName) : base(registerName)
 		{
 			//no extra operation
@@ -40,13 +44,13 @@ namespace Ikadn.Ikon.Factories
 		protected override IkadnBaseObject ParseObject(IkadnReader reader)
 		{
 			if (reader == null)
-				throw new System.ArgumentNullException("reader");
+				throw new ArgumentNullException(nameof(reader));
 
-			var res = new IkonComposite(Ikadn.Ikon.IkonParser.ReadIdentifier(reader));
+			var res = new IkonComposite(IkonParser.ReadIdentifier(reader));
 
 			while (reader.PeekNextNonwhite() != ClosingChar)
 			{
-				string memberName = Ikadn.Ikon.IkonParser.ReadIdentifier(reader);
+				string memberName = IkonParser.ReadIdentifier(reader);
 				
 				string startPosition = reader.PositionDescription;
 				if (reader.HasNextObject())

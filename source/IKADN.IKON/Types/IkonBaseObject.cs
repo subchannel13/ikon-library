@@ -23,7 +23,7 @@ namespace Ikadn.Ikon.Types
 		/// </summary>
 		public ICollection<string> ReferenceNames
 		{
-			get { return referenceNames; }
+			get { return this.referenceNames; }
 		}
 
 		/// <summary>
@@ -33,10 +33,10 @@ namespace Ikadn.Ikon.Types
 		protected void WriteReferences(IkadnWriter writer)
 		{
 			if (writer == null)
-				throw new ArgumentNullException("writer");
+				throw new ArgumentNullException(nameof(writer));
 
-			if (referenceNames != null && referenceNames.Count > 0)
-				foreach (string name in referenceNames)
+			if (this.referenceNames != null && this.referenceNames.Count > 0)
+				foreach (string name in this.referenceNames)
 					writer.Write(" " + AnchorSign + name);
 		}
 	}

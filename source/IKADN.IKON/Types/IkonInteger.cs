@@ -75,10 +75,10 @@ namespace Ikadn.Ikon.Types
 		/// <returns>Converted value</returns>
 		public override T To<T>()
 		{
-			Type target = typeof(T);
+			var target = typeof(T);
 
-			if (converters.ContainsKey(target))
-				return (T)converters[target](value);
+			if (Converters.ContainsKey(target))
+				return (T)Converters[target](this.value);
 			else if (target.IsAssignableFrom(this.GetType()))
 				return (T)(object)this;
 			else
@@ -92,27 +92,27 @@ namespace Ikadn.Ikon.Types
 		protected override void DoCompose(IkadnWriter writer)
 		{
 			if (writer == null)
-				throw new System.ArgumentNullException("writer");
+				throw new ArgumentNullException(nameof(writer));
 
 			writer.Write(NumericFactory.OpeningSign);
-			writer.Write(value.ToString(NumericFactory.NumberFormat));
+			writer.Write(this.value.ToString(NumericFactory.NumberFormat));
 
-			WriteReferences(writer);
+			this.WriteReferences(writer);
 		}
 
-		private static Dictionary<Type, Func<long, object>> converters = new Dictionary<Type, Func<long, object>> {
-			{typeof(byte), x => (object)Convert.ToByte(x)},	
-			{typeof(sbyte), x => (object)Convert.ToSByte(x)},
-			{typeof(char), x => (object)Convert.ToChar(x)},
-			{typeof(decimal), x => (object)Convert.ToDecimal(x)},
-			{typeof(double), x => (object)Convert.ToDouble(x)},
-			{typeof(float), x => (object)Convert.ToSingle(x)},
-			{typeof(int), x => (object)Convert.ToInt32(x)},
-			{typeof(uint), x => (object)Convert.ToUInt32(x)},
-			{typeof(long), x => (object)x},
-			{typeof(ulong), x => (object)Convert.ToUInt64(x)},
-			{typeof(short), x => (object)Convert.ToInt16(x)},
-			{typeof(ushort), x => (object)Convert.ToUInt16(x)},
+		private static readonly Dictionary<Type, Func<long, object>> Converters = new Dictionary<Type, Func<long, object>> {
+			{typeof(byte), x => Convert.ToByte(x)},	
+			{typeof(sbyte), x => Convert.ToSByte(x)},
+			{typeof(char), x => Convert.ToChar(x)},
+			{typeof(decimal), x => Convert.ToDecimal(x)},
+			{typeof(double), x => Convert.ToDouble(x)},
+			{typeof(float), x => Convert.ToSingle(x)},
+			{typeof(int), x => Convert.ToInt32(x)},
+			{typeof(uint), x => Convert.ToUInt32(x)},
+			{typeof(long), x => x},
+			{typeof(ulong), x => Convert.ToUInt64(x)},
+			{typeof(short), x => Convert.ToInt16(x)},
+			{typeof(ushort), x => Convert.ToUInt16(x)},
 		};
 	}
 }
