@@ -11,16 +11,19 @@ namespace Ikadn.Ikon.Factories
 	/// </summary>
 	public abstract class AIkonFactory : IIkadnObjectFactory
 	{
-		private readonly Action<string, IkadnBaseObject> registerName;
+		internal Action<string, IkadnBaseObject> RegisterName { private get; set; }
 
 		/// <summary>
-		/// Constructs Ikadn.Ikon.Factories.AIkonFactory with anchor registration
-		/// callback.
+		/// Constructs Ikadn.Ikon.Factories.AIkonFactory.
 		/// </summary>
-		/// <param name="registerName">Callback for registering IKADN object anchor</param>
-		protected AIkonFactory(Action<string, IkadnBaseObject> registerName)
+		protected AIkonFactory()
 		{
-			this.registerName = registerName;
+			//no extra operation
+		}
+
+		internal AIkonFactory(Action<string, IkadnBaseObject> registerName)
+		{
+			this.RegisterName = registerName;
 		}
 
 		/// <summary>
@@ -40,7 +43,7 @@ namespace Ikadn.Ikon.Factories
 			while (!reader.SkipWhiteSpaces().EndOfStream && reader.Peek() == IkonBaseObject.AnchorSign)
 			{
 				reader.Read();
-				this.registerName(IkonParser.ReadIdentifier(reader), parsedObject);
+				this.RegisterName(IkonParser.ReadIdentifier(reader), parsedObject);
 			}
 
 			return parsedObject;

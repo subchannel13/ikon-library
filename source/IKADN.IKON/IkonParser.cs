@@ -71,7 +71,10 @@ namespace Ikadn.Ikon
 			base.RegisterFactory(new TextBlockFactory(this.registerName));
 
 			foreach (var factory in factories)
+			{
+				factory.RegisterName = this.registerName;
 				base.RegisterFactory(factory);
+			}
 		}
 
 		/// <summary>
