@@ -115,6 +115,30 @@ namespace Ikadn.Utilities
 		}
 
 		/// <summary>
+		/// Removes and returns all elements with a specified label. This is
+		/// performed in lazy manner.
+		/// </summary>
+		/// <param name="label">Label of objects to dequeue</param>
+		/// <returns>Sequence of objects</returns>
+		public IEnumerable<TValue> DequeueAll(TLabel label)
+		{
+			if (label == null)
+				throw new ArgumentNullException(nameof(label));
+
+			var group = this.labelGroups[label];
+
+			while(group.Count > 0)
+			{
+				var element = group.First.Value;
+				yield return element;
+
+				group.RemoveFirst();
+				this.elements.Remove(this.indices[element].ElementIndex);
+				this.indices.Remove(element);
+			}
+		}
+
+		/// <summary>
 		/// Adds an object to the end of the Ikadn.Utilities.LabeledQueue.
 		/// </summary>
 		/// <param name="label">Label of the object</param>
